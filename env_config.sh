@@ -24,12 +24,15 @@ ollama pull llama3.3
 # ollama pull llama3:70b
 ollama pull gemma3
 # ollama pull gemma3:27b
-# ollama pull deepseek-r1
+#ollama pull deepseek-r1
 # ollama pull deepseek-r1:70b
 ollama serve > /dev/null &
 
 echo "🔧 Installing base libraries..."
-pip install torch pandas tqdm 
+pip install torch pandas tqdm transformers
+huggingface-cli download meta-llama/Meta-Llama-3-8B --include "original/*" --local-dir meta-llama/Meta-Llama-3-8B
+huggingface-cli download meta-llama/Meta-Llama-3-8B --include "original/*" --local-dir meta-llama/Meta-Llama-3-8B-Instruct
+pip install huggingface_hub
 #unidecode surprisal transformers python-dotenv > /dev/null
 
 # echo "🧠 Installing sentiment analysis tools..."

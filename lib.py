@@ -1,6 +1,6 @@
 import pandas as pd
 import json
-import tqdm
+from tqdm import tqdm
 import csv
 import json
 

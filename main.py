@@ -51,17 +51,19 @@ def _clearResponse(response):
         # Step 1: Remove markdown formatting (e.g. ```json ... ```)
         response = re.sub(r"^```(?:json)?\n|```$", "", response.strip())
         response = json.loads(response)
-        for choice in RESPONSE_CHOICE:
-            answ = response["answer"] 
-            if answ == choice:
-                return choice
-        breakpoint
-        return ""
+        return response["answer"]
+        # for choice in RESPONSE_CHOICE:
+        #     answ = response["answer"] 
+        #     if answ == choice:
+        #         return choice
+        # breakpoint
+        # return ""
     except Exception as X:
         breakpoint
 
-#modelName = 'llama3'
-modelName = 'gemma3'
+modelName = 'llama3'
+#modelName = 'gemma3'
+
 lan = 'en'
 with open('data/criteria.json') as criteria_file:    
     criteria_file = json.load(criteria_file)
