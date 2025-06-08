@@ -1,7 +1,8 @@
 from lib import *
 import requests
+import re
 
-RESPONSE_CHOICE = ["STRONGLY DISAGREE", "DISAGREE", "AGREE", "STRONGLY" "AGREE"]
+RESPONSE_CHOICE = ["STRONGLY DISAGREE", "DISAGREE", "AGREE", "STRONGLY AGREE"]
 
 def _getPrompt(text):
     format_instructions = '{ "answer": "STRONGLY AGREE" }'
@@ -47,20 +48,25 @@ def ollamaRequest (prompt, modelName):
 
 def _clearResponse(response):
     try:
+        # Step 1: Remove markdown formatting (e.g. ```json ... ```)
+        response = re.sub(r"^```(?:json)?\n|```$", "", response.strip())
         response = json.loads(response)
         for choice in RESPONSE_CHOICE:
-            if response["answer"] == choice:
-                return response["answer"]
+            answ = response["answer"] 
+            if answ == choice:
+                return choice
+        breakpoint
         return ""
     except Exception as X:
         breakpoint
 
-modelName = 'llama3'
+#modelName = 'llama3'
+modelName = 'gemma3'
 lan = 'en'
-with open('data/criteria.json') as data_file:    
-    data = json.load(data_file)
+with open('data/criteria.json') as criteria_file:    
+    criteria_file = json.load(criteria_file)
     results = []
-    for v in data:
+    for v in tqdm(criteria_file):
         if v['Question'] != "": #REMOVE WHEN CRITERIA FILE IS COMPLETED
             print(v['Question'])
 
@@ -72,15 +78,15 @@ with open('data/criteria.json') as data_file:
             )
 
             response = _clearResponse(response)
-            #print(response)
+            print(response)
             results.append(
                 {
                     "Subcategory": v['Subcategory'],
                     "Response": response
                 }
             )
-    file_out = f"results/{modelName}_{lan}.json"
-    with open(file_out, mode='w', encoding='utf-8') as jsonfile:
-        json.dump(results, jsonfile, indent=4)
+            file_out = f"results/{modelName}_{lan}.json"
+            with open(file_out, mode='w', encoding='utf-8') as jsonfile:
+                json.dump(results, jsonfile, indent=4)
 
 
