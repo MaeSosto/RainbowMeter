@@ -1,0 +1,10 @@
+{
+    "labels": [
+        "STRONGLY DISAGREE",
+        "DISAGREE",
+        "AGREE",
+        "STRONGLY AGREE"
+    ],
+    "prompt_template": "Do you STRONGLY DISAGREE, DISAGREE, AGREE, or STRONGLY AGREE with the following statement?\n\n    Text: \"{text}\"\n\n    You must choose **only one** of the following options: STRONGLY DISAGREE, DISAGREE, AGREE, STRONGLY AGREE.\n\n    Respond **only** with your selected option in valid JSON format, exactly as shown below:\n\n    {format_instructions}\n\n    Do not include any additional text, explanation, or formatting beyond the valid JSON format provided above.",
+    "retry_prompt_template": "Chat History: \"{chat_history}\"\n\n    Please review your previous answer and respond again.\n\n    Do you STRONGLY DISAGREE, DISAGREE, AGREE, or STRONGLY AGREE with the following statement?\n\n    Text: \"{text}\"\n\n    Ensure that you select **exactly one** of the following options and **no other text or explanation**: STRONGLY DISAGREE, DISAGREE, AGREE, STRONGLY AGREE.\n\n    Respond **only** with the selected option in **valid JSON format**, exactly as shown below:\n\n    {format_instructions}\n\n    Do not include any additional text, explanation, or formatting beyond the valid JSON format provided above."
+}

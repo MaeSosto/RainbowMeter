@@ -3,6 +3,7 @@ import json
 from tqdm import tqdm
 import csv
 import json
+import re
 
 CRITERIA_PATH = 'data\criteria.csv' 
 

@@ -1,0 +1,534 @@
+[
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Constitution (sexual orientation)",
+        "Description": "Constitution (sexual orientation) covers constitutional (or similar) anti-discrimination provisions. To comply with this criterion, the country should fall under one of the following categories:\n- The Constitution contains an anti-discrimination article which explicitly includes sexual orientation in the list of prohibited grounds of discrimination.\n- The Constitution contains a general or ambiguous anti-discrimination article, but discrimination based on sexual orientation is effectively prohibited by this article. This must be demonstrated in the Constitution\u2019s preparatory work, legislative history, or in case law from the highest judicial bodies (e.g. Constitutional Court, Supreme Court, etc.).\n- The Constitution indirectly prohibits discrimination based on sexual orientation, e.g. by declaring that the European Convention on Human Rights is part of the Constitution or has a constitutional status (declarations that have been implemented consistently by the courts)",
+        "Question": "Constitutional protections should explicitly or effectively prohibit discrimination based on sexual orientation.",
+        "Value": "0.16"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Employment (sexual orientation)",
+        "Description": "Employment (sexual orientation) covers employment anti-discrimination legislation. Only express mention of sexual orientation should be counted.",
+        "Question": "Employment laws should explicitly prohibit discrimination based on sexual orientation.",
+        "Value": "1.10"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Goods & services (sexual orientation)",
+        "Description": "Goods & services (sexual orientation) covers goods and services anti-discrimination legislation. Only express mention of sexual orientation only should be counted.",
+        "Question": "Anti-discrimination legislation should explicitly protect people from discrimination based on sexual orientation in access to goods and services.",
+        "Value": "1.10"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Education (sexual orientation)",
+        "Description": "Education (sexual orientation) covers legislation prohibiting discrimination in the field of education. Only express mention of sexual orientation only should be counted.",
+        "Question": "Laws should explicitly prohibit discrimination based on sexual orientation in the field of education.",
+        "Value": "1.10"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Health (sexual orientation)",
+        "Description": "Health (sexual orientation) covers legislation prohibiting discrimination in the field of health. Only express mention of sexual orientation only should be counted.",
+        "Question": "Laws should explicitly prohibit discrimination based on sexual orientation in the field of healthcare.",
+        "Value": "1.10"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Conversion practices ban (sexual orientation)",
+        "Description": "Conversion practices ban (sexual orientation) for minors covers legislation and policies prohibiting reparative or conversion practices which are based upon the assumption that homosexuality/bisexuality per se is a mental disorder or based upon the a priori assumption that a patient should change their sexual orientation.",
+        "Question": "Conversion or reparative practices aimed at changing a minor\u2019s sexual orientation should be explicitly prohibited by law.",
+        "Value": "0.80"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Equality body mandate (sexual orientation)",
+        "Description": "Equality body mandate (sexual orientation) covers when a national human rights institution / equality body is explicitly mandated to work on sexual orientation in its law/founding documents, and where the national human rights institution / equality body is systematically working on issues covering sexual orientation.",
+        "Question": "National human rights institutions or equality bodies should be explicitly mandated and actively engaged in addressing issues related to sexual orientation.",
+        "Value": "0.78"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Equality action plan (sexual orientation)",
+        "Description": "Equality action plan (sexual orientation) covers action plans which expressly include sexual orientation, and include specific measures for progress. In addition, we only take into account when the action plan either entails or is followed up with the following measures:\n\n- Detailed projects or initiatives within the time span\n- Allocation of resources (financial or human resources)\n- Clear responsibilities for proper implementation\n- Setup of monitoring procedure",
+        "Question": "National equality action plans should explicitly include sexual orientation and contain concrete implementation measures such as monitoring, resources, and responsibilities.",
+        "Value": "0.88"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Constitution (gender identity)",
+        "Description": "Constitution (gender identity) covers constitutional (or similar) anti-discrimination provisions. To comply with this criterion, the country should fall under one of the following categories:\n\n- The Constitution contains an anti-discrimination article which explicitly includes gender identity in the list of prohibited grounds of discrimination. Equivalent ground e.g. sexual identity, gender reassignment, etc accepted too.\n- The Constitution contains a general or ambiguous anti-discrimination article, but discrimination based on gender identity is effectively prohibited by this article. \n- This must be demonstrated in the Constitution\u2019s preparatory work, legislative history, or in case law from the highest judicial bodies (e.g. Constitutional Court, Supreme Court, etc.).\n- The Constitution indirectly prohibits discrimination based on gender identity, e.g. by declaring that the European Convention on Human Rights is part of the Constitution or has a constitutional status (declarations that have been implemented consistently by the courts)",
+        "Question": "Constitutional protections should explicitly or effectively prohibit discrimination based on gender identity.",
+        "Value": "0.16"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Employment (gender identity)",
+        "Description": "Employment (gender identity) covers employment anti-discrimination legislation. Express mention of gender identity only should be counted. Equivalent ground e.g. sexual identity, gender reassignment, etc accepted too.",
+        "Question": "Employment laws should explicitly prohibit discrimination based on gender identity.",
+        "Value": "1.10"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Goods & services (gender identity)",
+        "Description": "Goods & services (gender identity) covers goods and services anti-discrimination legislation. Express mention of gender identity only should be counted. Equivalent grounds (sexual identity, gender reassignment, etc) are accepted too.",
+        "Question": "Laws should explicitly prohibit discrimination based on gender identity in access to goods and services.",
+        "Value": "1.10"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Education (gender identity)",
+        "Description": "Education (gender identity) covers legislation prohibiting discrimination in the field of education. Express mention of gender identity only should be counted. Equivalent grounds (sexual identity, gender reassignment, etc) are accepted too.",
+        "Question": "Laws should explicitly prohibit discrimination based on gender identity in education.",
+        "Value": "1.10"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Health (gender identity)",
+        "Description": "Health (gender identity) covers legislation prohibiting discrimination in the field of health. Express mention of gender identity only should be counted. Equivalent grounds (sexual identity, gender reassignment, etc) are accepted too.",
+        "Question": "Laws should explicitly prohibit discrimination based on gender identity in healthcare.",
+        "Value": "1.10"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Conversion practices ban (gender identity)",
+        "Description": "Conversion practices ban (gender identity) for minors covers legislation and policies prohibiting reparative or conversion practices which are based upon the assumption that trans identities are per se a mental disorder and can be changed",
+        "Question": "Conversion practices targeting minors based on gender identity should be explicitly prohibited by law.",
+        "Value": "0.80"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Equality body mandate (gender identity)",
+        "Description": "Equality body mandate (gender identity) covers when a national human rights institution / equality body is explicitly mandated to work on gender identity in its law/founding documents, and where the national human rights institution / equality body is systematically working on issues covering gender identity. Equivalent grounds (sexual identity, gender reassignment, etc) are accepted too.",
+        "Question": "National equality action plans should explicitly include gender identity and contain concrete implementation measures such as monitoring, resources, and responsibilities.",
+        "Value": "0.78"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Equality action plan (gender identity)",
+        "Description": "Equality action plan (gender identity) covers action plans which expressly include gender identity, and include specific measures for progress. Equivalent grounds (sexual identity, gender reassignment, etc) accepted too. In addition, we only take into account when the action plan either entails or is followed up with the following measures:\n\n- Detailed projects or initiatives within the time span\n- Allocation of resources (financial or human resources)\n- Clear responsibilities for proper implementation\n- Setup of monitoring procedure",
+        "Question": "National equality bodies should be explicitly mandated and actively engaged in addressing issues related to gender identity.",
+        "Value": "0.88"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Law (gender expression)",
+        "Description": "Law (gender expression) covers anti-discrimination legislation which expressly includes gender expression.",
+        "Question": "Anti-discrimination laws should explicitly include gender expression as a protected ground.",
+        "Value": "1.83"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Constitution (sex characteristics)",
+        "Description": "Constitution (sex characteristics) covers constitutional (or similar) anti-discrimination provisions. To comply with this criterion, the country should fall under one of the following categories:\n- The Constitution contains an anti-discrimination article which explicitly includes sex characteristics in the list of prohibited grounds of discrimination.\n- The Constitution contains a general or ambiguous anti-discrimination article, but discrimination based on sex characteristics is effectively prohibited by this article. This must be demonstrated in the Constitution\u2019s preparatory work, legislative history, or in case law from the highest judicial bodies (e.g. Constitutional Court, Supreme Court, etc.).\n- The Constitution indirectly prohibits discrimination based on sex characteristics, e.g. by declaring that the European Convention on Human Rights is part of the Constitution or has a constitutional status (declarations that have been implemented consistently by the courts)",
+        "Question": "Constitutional protections should explicitly or effectively prohibit discrimination based on sex characteristics.",
+        "Value": "0.16"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Employment (sex characteristics)",
+        "Description": "Employment (sex characteristics) covers employment anti-discrimination legislation. Only express mention of sex characteristics should be counted.",
+        "Question": "Employment laws should explicitly prohibit discrimination based on sex characteristics.",
+        "Value": "1.10"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Goods & services (sex characteristics)",
+        "Description": "Goods & services (sex characteristics) covers goods and services anti-discrimination legislation. Only express mention of sex characteristics only should be counted.",
+        "Question": "aws should explicitly prohibit discrimination based on sex characteristics in access to goods and services.",
+        "Value": "1.10"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Education (sex characteristics)",
+        "Description": "Education (sex characteristics) covers legislation prohibiting discrimination in the field of education. Only express mention of sex characteristics only should be counted.",
+        "Question": "Laws should explicitly prohibit discrimination based on sex characteristics in education.",
+        "Value": "1.10"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Health (sex characteristics)",
+        "Description": "Health (sex characteristics) covers legislation prohibiting discrimination in the field of health. Only express mention of sex characteristics only should be counted.",
+        "Question": "Laws should explicitly prohibit discrimination based on sex characteristics in healthcare.",
+        "Value": "1.10"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Equality body mandate (sex characteristics)",
+        "Description": "Equality body mandate (sex characteristics) covers when a national human rights institution / equality body is explicitly mandated to work on sex characteristics in its law/founding documents, and where the national human rights institution / equality body is systematically working on issues covering sex characteristics.",
+        "Question": "National equality action plans should explicitly include sex characteristics and contain concrete implementation measures such as monitoring, resources, and responsibilities.",
+        "Value": "0.78"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Equality action plan (sex characteristics)",
+        "Description": "Equality action plan (sex characteristics) covers action plans which expressly include sex characteristics, and include specific measures for progress. In addition, we only take into account when the action plan either entails or is followed up with the following measures:\n\n- Detailed projects or initiatives within the time span\n- Allocation of resources (financial or human resources)\n- Clear responsibilities for proper implementation\n- Setup of monitoring procedure",
+        "Question": "National equality bodies should be explicitly mandated and actively engaged in addressing issues related to sex characteristics.",
+        "Value": "0.88"
+    },
+    {
+        "Category": "Equality & non-discrimination",
+        "Subcategory": "Blood donations",
+        "Description": "Blood donation covers when there is no full legislative or administrative ban on donating blood or on any kind of bodily tissues for LGBTI people based on their sexual orientation or gender identity. Any deferral periods need to be reasonable and justified. This also includes when health authorities and practitioners make sure that:\n\n- Decisions on time restrictions are taken on individual basis and based on risks assessments related to sexual behaviours of candidates, not on their sexual orientation or gender identity.\n- The sexual history of candidates to blood/tissue donations are treated in a non-judgmental manner.\n- All relevant documents are exempt from use of discriminatory formulations towards men who have sex with men and trans people.",
+        "Question": "Blood and tissue donation policies should be free from blanket bans or unjustified deferral periods based on sexual orientation or gender identity.",
+        "Value": "0.91"
+    },
+    {
+        "Category": "Family",
+        "Subcategory": "Marriage equality",
+        "Description": "",
+        "Question": "",
+        "Value": "3.75"
+    },
+    {
+        "Category": "Family",
+        "Subcategory": "Registered partnership (similar rights to marriage)",
+        "Description": "",
+        "Question": "",
+        "Value": "3.00"
+    },
+    {
+        "Category": "Family",
+        "Subcategory": "Registered partnership (limited rights)",
+        "Description": "",
+        "Question": "",
+        "Value": "2.00"
+    },
+    {
+        "Category": "Family",
+        "Subcategory": "Cohabitation",
+        "Description": "",
+        "Question": "",
+        "Value": "1.00"
+    },
+    {
+        "Category": "Family",
+        "Subcategory": "No constitutional limitation on marriage",
+        "Description": "",
+        "Question": "",
+        "Value": "0.75"
+    },
+    {
+        "Category": "Family",
+        "Subcategory": "Joint adoption",
+        "Description": "",
+        "Question": "",
+        "Value": "3.00"
+    },
+    {
+        "Category": "Family",
+        "Subcategory": "Second-parent adoption",
+        "Description": "",
+        "Question": "",
+        "Value": "1.75"
+    },
+    {
+        "Category": "Family",
+        "Subcategory": "Automatic co-parent recognition",
+        "Description": "",
+        "Question": "",
+        "Value": "1.75"
+    },
+    {
+        "Category": "Family",
+        "Subcategory": "Medically assisted insemination (couples)",
+        "Description": "",
+        "Question": "",
+        "Value": "2.00"
+    },
+    {
+        "Category": "Family",
+        "Subcategory": "Medically assisted insemination (singles)",
+        "Description": "",
+        "Question": "",
+        "Value": "2.00"
+    },
+    {
+        "Category": "Family",
+        "Subcategory": "Recognition of trans parenthood",
+        "Description": "",
+        "Question": "",
+        "Value": "2.50"
+    },
+    {
+        "Category": "Hate crime & hate speech",
+        "Subcategory": "Hate crime law (sexual orientation)",
+        "Description": "",
+        "Question": "",
+        "Value": "2.200"
+    },
+    {
+        "Category": "Hate crime & hate speech",
+        "Subcategory": "Hate speech law (sexual orientation)",
+        "Description": "",
+        "Question": "",
+        "Value": "2.200"
+    },
+    {
+        "Category": "Hate crime & hate speech",
+        "Subcategory": "Policy tackling hatred (sexual orientation)",
+        "Description": "",
+        "Question": "",
+        "Value": "1.930"
+    },
+    {
+        "Category": "Hate crime & hate speech",
+        "Subcategory": "Hate crime law (gender identity)",
+        "Description": "",
+        "Question": "",
+        "Value": "2.200"
+    },
+    {
+        "Category": "Hate crime & hate speech",
+        "Subcategory": "Hate speech law (gender identity)",
+        "Description": "",
+        "Question": "",
+        "Value": "2.200"
+    },
+    {
+        "Category": "Hate crime & hate speech",
+        "Subcategory": "Policy tackling hatred (gender identity)",
+        "Description": "",
+        "Question": "",
+        "Value": "1.930"
+    },
+    {
+        "Category": "Hate crime & hate speech",
+        "Subcategory": "Hate crime law (intersex)",
+        "Description": "",
+        "Question": "",
+        "Value": "2.200"
+    },
+    {
+        "Category": "Hate crime & hate speech",
+        "Subcategory": "Hate speech law (sex characteristics)",
+        "Description": "",
+        "Question": "",
+        "Value": "2.200"
+    },
+    {
+        "Category": "Hate crime & hate speech",
+        "Subcategory": "Policies tackling hatred (intersex)",
+        "Description": "",
+        "Question": "",
+        "Value": "1.930"
+    },
+    {
+        "Category": "Legal gender recognition",
+        "Subcategory": "No legal framework making legal gender recognition impossible",
+        "Description": "",
+        "Question": "",
+        "Value": "0.75"
+    },
+    {
+        "Category": "Legal gender recognition",
+        "Subcategory": "Existence of legal measures",
+        "Description": "",
+        "Question": "",
+        "Value": "1.50"
+    },
+    {
+        "Category": "Legal gender recognition",
+        "Subcategory": "Existence of administrative procedures",
+        "Description": "",
+        "Question": "",
+        "Value": "1.00"
+    },
+    {
+        "Category": "Legal gender recognition",
+        "Subcategory": "Name change",
+        "Description": "",
+        "Question": "",
+        "Value": "1.00"
+    },
+    {
+        "Category": "Legal gender recognition",
+        "Subcategory": "No age restriction (Name change)",
+        "Description": "",
+        "Question": "",
+        "Value": "0.15"
+    },
+    {
+        "Category": "Legal gender recognition",
+        "Subcategory": "Self-determination",
+        "Description": "",
+        "Question": "",
+        "Value": "2.00"
+    },
+    {
+        "Category": "Legal gender recognition",
+        "Subcategory": "Non-binary recognition",
+        "Description": "",
+        "Question": "",
+        "Value": "1.00"
+    },
+    {
+        "Category": "Legal gender recognition",
+        "Subcategory": "No 'Gender Identity Disorder' diagnosis/psychological opinion required",
+        "Description": "",
+        "Question": "",
+        "Value": "1.75"
+    },
+    {
+        "Category": "Legal gender recognition",
+        "Subcategory": "No compulsory medical intervention required",
+        "Description": "",
+        "Question": "",
+        "Value": "1.15"
+    },
+    {
+        "Category": "Legal gender recognition",
+        "Subcategory": "No compulsory surgical intervention required",
+        "Description": "",
+        "Question": "",
+        "Value": "1.15"
+    },
+    {
+        "Category": "Legal gender recognition",
+        "Subcategory": "No compulsory sterilisation required",
+        "Description": "",
+        "Question": "",
+        "Value": "1.70"
+    },
+    {
+        "Category": "Legal gender recognition",
+        "Subcategory": "No compulsory divorce required",
+        "Description": "",
+        "Question": "",
+        "Value": "1.05"
+    },
+    {
+        "Category": "Legal gender recognition",
+        "Subcategory": "No age restriction",
+        "Description": "",
+        "Question": "",
+        "Value": "1.00"
+    },
+    {
+        "Category": "Legal gender recognition",
+        "Subcategory": "Legal gender recognition procedures exist for minors",
+        "Description": "",
+        "Question": "",
+        "Value": "0.30"
+    },
+    {
+        "Category": "Legal gender recognition",
+        "Subcategory": "Depathologisation",
+        "Description": "",
+        "Question": "",
+        "Value": "2.00"
+    },
+    {
+        "Category": "Intersex bodily integrity",
+        "Subcategory": "Prohibition of medical intervention without informed consent (intersex)",
+        "Description": "",
+        "Question": "",
+        "Value": "2.50"
+    },
+    {
+        "Category": "Intersex bodily integrity",
+        "Subcategory": "Universality of prohibition of medical interventions",
+        "Description": "",
+        "Question": "",
+        "Value": "0.50"
+    },
+    {
+        "Category": "Intersex bodily integrity",
+        "Subcategory": "Existence of effective monitoring mechanism",
+        "Description": "",
+        "Question": "",
+        "Value": "1.00"
+    },
+    {
+        "Category": "Intersex bodily integrity",
+        "Subcategory": "Access to justice for victims and reparations",
+        "Description": "",
+        "Question": "",
+        "Value": "1.00"
+    },
+    {
+        "Category": "Civil society space",
+        "Subcategory": "Public event held, no state obstruction of freedom of assembly (last 3 years)",
+        "Description": "",
+        "Question": "",
+        "Value": "1.50"
+    },
+    {
+        "Category": "Civil society space",
+        "Subcategory": "Public event held, there is enough protection (last 3 years)",
+        "Description": "",
+        "Question": "",
+        "Value": "1.50"
+    },
+    {
+        "Category": "Civil society space",
+        "Subcategory": "Associations operate, no state obstruction of freedom association (last 3 years)",
+        "Description": "",
+        "Question": "",
+        "Value": "1.50"
+    },
+    {
+        "Category": "Civil society space",
+        "Subcategory": "LGBTI human rights defenders are not at risk",
+        "Description": "",
+        "Question": "",
+        "Value": "1.50"
+    },
+    {
+        "Category": "Civil society space",
+        "Subcategory": "No laws limiting external funding",
+        "Description": "",
+        "Question": "",
+        "Value": "1.50"
+    },
+    {
+        "Category": "Civil society space",
+        "Subcategory": "No laws limiting freedom of expression (national/local)",
+        "Description": "",
+        "Question": "",
+        "Value": "1.50"
+    },
+    {
+        "Category": "Asylum",
+        "Subcategory": "Asylum law (sexual orientation)",
+        "Description": "",
+        "Question": "",
+        "Value": "1.50"
+    },
+    {
+        "Category": "Asylum",
+        "Subcategory": "Other positive measures (sexual orientation)",
+        "Description": "",
+        "Question": "",
+        "Value": "1.50"
+    },
+    {
+        "Category": "Asylum",
+        "Subcategory": "Asylum law (gender identity)",
+        "Description": "",
+        "Question": "",
+        "Value": "1.50"
+    },
+    {
+        "Category": "Asylum",
+        "Subcategory": "Other positive measures (gender identity)",
+        "Description": "",
+        "Question": "",
+        "Value": "1.50"
+    },
+    {
+        "Category": "Asylum",
+        "Subcategory": "Asylum law (intersex)",
+        "Description": "",
+        "Question": "",
+        "Value": "1.50"
+    },
+    {
+        "Category": "Asylum",
+        "Subcategory": "Other positive measures (intersex)",
+        "Description": "",
+        "Question": "",
+        "Value": "1.50"
+    }
+]

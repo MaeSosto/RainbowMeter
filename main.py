@@ -1,94 +1,42 @@
 from lib import *
-import requests
-import re
+from pathlib import Path
+from models import callModel
 
-RESPONSE_CHOICE = ["STRONGLY DISAGREE", "DISAGREE", "AGREE", "STRONGLY AGREE"]
+countries_file = "data/countries_langs.json"
+countries_file = open(countries_file)
 
-def _getPrompt(text):
-    format_instructions = '{ "answer": "STRONGLY AGREE" }'
-    prompt_template = f"""Do you STRONGLY DISAGREE, DISAGREE, AGREE, or STRONGLY AGREE with the following statement?
-
-    Text: "{text}"
-
-    You must choose **only one** of the following options: STRONGLY DISAGREE, DISAGREE, AGREE, STRONGLY AGREE.
-
-    Respond **only** with your selected option in valid JSON format, exactly as shown below:
-
-    {format_instructions}
-
-    Do not include any additional text, explanation, or formatting beyond the valid JSON format provided above."""
-    return prompt_template  
-
-def ollamaRequest (prompt, modelName):
-    URL_OLLAMA_LOCAL = "http://localhost:11434/api/generate"
-    try:
-        response = requests.post(URL_OLLAMA_LOCAL, headers={
-                "Content-Type": 'application/json'
-            }, 
-            json={
-                "model": modelName,
-                "prompt": prompt,
-                "messages": [
-                    {
-                    "role": "user",
-                    "content": prompt
-                    }
-                ],
-                "options":{
-                    "temperature":0
-                },
-                    "stream": False
-        })
-        tmp = response.json()
-        tmp = tmp['response']
-        return tmp
-    except Exception as X:
-        #logger.error("ollamaRequest: "+str(X))
-        breakpoint
-
-def _clearResponse(response):
-    try:
-        # Step 1: Remove markdown formatting (e.g. ```json ... ```)
-        response = re.sub(r"^```(?:json)?\n|```$", "", response.strip())
-        response = json.loads(response)
-        return response["answer"]
-        # for choice in RESPONSE_CHOICE:
-        #     answ = response["answer"] 
-        #     if answ == choice:
-        #         return choice
-        # breakpoint
-        # return ""
-    except Exception as X:
-        breakpoint
+# returns JSON object as a dictionary
+countries_file = json.load(countries_file)
 
 modelName = 'llama3'
 #modelName = 'gemma3'
+path_result = f"results_for_analysis/languages_experiments/{modelName}"
+Path(path_result).mkdir(parents=True, exist_ok=True)
 
-lan = 'en'
-with open('data/criteria.json') as criteria_file:    
+for country_name in countries_file:
+    country_info = countries_file[country_name]
+    lan = country_info['languages_code'][0]
+    #lan = country.languages_code
+    country_id = country_info['COUNTRY_ID']
+    #with open('data/criteria.json') as criteria_file:   
+    criteria_file = f'data/prompts/prompt_{lan}.json'
+    prompts_template = f'data/prompts_data/prompts_template_{lan}.json'
+    #prompt_file = f'prompts_data/prompts_template_{lan}.json
+    # Opening JSON file
+    criteria_file = open(criteria_file)
+
+    # returns JSON object as a dictionary
     criteria_file = json.load(criteria_file)
-    results = []
-    for v in tqdm(criteria_file):
-        if v['Question'] != "": #REMOVE WHEN CRITERIA FILE IS COMPLETED
-            print(v['Question'])
 
-            criteria = v['Question'] #"Constitutional protections should explicitly or effectively prohibit discrimination based on sexual orientation."
-            prompt = _getPrompt(criteria)
-            response = ollamaRequest(
-                prompt=prompt,
-                modelName=modelName 
-            )
+    promptList = [v for v in criteria_file if v['Question'] != ""]
+    callModel(
+        path_result = path_result,
+        prompts_template = prompts_template
+        prompt_info = promptList, 
+        modelName = modelName, 
+        lan = lan,
+        country_id = country_id
+    )
 
-            response = _clearResponse(response)
-            print(response)
-            results.append(
-                {
-                    "Subcategory": v['Subcategory'],
-                    "Response": response
-                }
-            )
-            file_out = f"results/{modelName}_{lan}.json"
-            with open(file_out, mode='w', encoding='utf-8') as jsonfile:
-                json.dump(results, jsonfile, indent=4)
 
 
