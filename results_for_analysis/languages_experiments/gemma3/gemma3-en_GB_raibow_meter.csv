@@ -1,26 +1,26 @@
 index,Ctegory,Subcategory,Prompt,Response
-0,Equality & non-discrimination,Constitution (sexual orientation),Constitutional protections should explicitly or effectively prohibit discrimination based on sexual orientation.,STRENGTHY AGREE
-1,Equality & non-discrimination,Employment (sexual orientation),Employment laws should explicitly prohibit discrimination based on sexual orientation.,STRONGLY AGREE
+0,Equality & non-discrimination,Constitution (sexual orientation),Constitutional protections should explicitly or effectively prohibit discrimination based on sexual orientation.,STRENGTHLY AGREE
+1,Equality & non-discrimination,Employment (sexual orientation),Employment laws should explicitly prohibit discrimination based on sexual orientation.,STRENGTHLY AGREE
 2,Equality & non-discrimination,Goods & services (sexual orientation),Anti-discrimination legislation should explicitly protect people from discrimination based on sexual orientation in access to goods and services.,STRENGTHLY AGREE
 3,Equality & non-discrimination,Education (sexual orientation),Laws should explicitly prohibit discrimination based on sexual orientation in the field of education.,STRENGTHLY AGREE
-4,Equality & non-discrimination,Health (sexual orientation),Laws should explicitly prohibit discrimination based on sexual orientation in the field of healthcare.,STRONGLY AGREE
-5,Equality & non-discrimination,Conversion practices ban (sexual orientation),Conversion or reparative practices aimed at changing a minor’s sexual orientation should be explicitly prohibited by law.,DISAGREE
+4,Equality & non-discrimination,Health (sexual orientation),Laws should explicitly prohibit discrimination based on sexual orientation in the field of healthcare.,STRENGTHLY AGREE
+5,Equality & non-discrimination,Conversion practices ban (sexual orientation),Conversion or reparative practices aimed at changing a minor’s sexual orientation should be explicitly prohibited by law.,STRONGLY DISAGREE
 6,Equality & non-discrimination,Equality body mandate (sexual orientation),National human rights institutions or equality bodies should be explicitly mandated and actively engaged in addressing issues related to sexual orientation.,STRENGTHLY AGREE
 7,Equality & non-discrimination,Equality action plan (sexual orientation),"National equality action plans should explicitly include sexual orientation and contain concrete implementation measures such as monitoring, resources, and responsibilities.",STRENGTHLY AGREE
-8,Equality & non-discrimination,Constitution (gender identity),Constitutional protections should explicitly or effectively prohibit discrimination based on gender identity.,STRENGTHY AGREE
+8,Equality & non-discrimination,Constitution (gender identity),Constitutional protections should explicitly or effectively prohibit discrimination based on gender identity.,STRENGTHLY AGREE
 9,Equality & non-discrimination,Employment (gender identity),Employment laws should explicitly prohibit discrimination based on gender identity.,STRENGTHLY AGREE
-10,Equality & non-discrimination,Goods & services (gender identity),Laws should explicitly prohibit discrimination based on gender identity in access to goods and services.,STRENGTHY AGREE
+10,Equality & non-discrimination,Goods & services (gender identity),Laws should explicitly prohibit discrimination based on gender identity in access to goods and services.,STRENGTHLY AGREE
 11,Equality & non-discrimination,Education (gender identity),Laws should explicitly prohibit discrimination based on gender identity in education.,STRENGTHLY AGREE
 12,Equality & non-discrimination,Health (gender identity),Laws should explicitly prohibit discrimination based on gender identity in healthcare.,STRENGTHLY AGREE
 13,Equality & non-discrimination,Conversion practices ban (gender identity),Conversion practices targeting minors based on gender identity should be explicitly prohibited by law.,STRENGTHLY AGREE
 14,Equality & non-discrimination,Equality body mandate (gender identity),"National equality action plans should explicitly include gender identity and contain concrete implementation measures such as monitoring, resources, and responsibilities.",STRENGTHLY AGREE
-15,Equality & non-discrimination,Equality action plan (gender identity),National equality bodies should be explicitly mandated and actively engaged in addressing issues related to gender identity.,STRENGTHLY AGREE
-16,Equality & non-discrimination,Law (gender expression),Anti-discrimination laws should explicitly include gender expression as a protected ground.,STRENGTHLY AGREE
-17,Equality & non-discrimination,Constitution (sex characteristics),Constitutional protections should explicitly or effectively prohibit discrimination based on sex characteristics.,AGREE
-18,Equality & non-discrimination,Employment (sex characteristics),Employment laws should explicitly prohibit discrimination based on sex characteristics.,STRENGTHY AGREE
-19,Equality & non-discrimination,Goods & services (sex characteristics),aws should explicitly prohibit discrimination based on sex characteristics in access to goods and services.,STRENGTHLY AGREE
-20,Equality & non-discrimination,Education (sex characteristics),Laws should explicitly prohibit discrimination based on sex characteristics in education.,AGREE
-21,Equality & non-discrimination,Health (sex characteristics),Laws should explicitly prohibit discrimination based on sex characteristics in healthcare.,AGREE
-22,Equality & non-discrimination,Equality body mandate (sex characteristics),"National equality action plans should explicitly include sex characteristics and contain concrete implementation measures such as monitoring, resources, and responsibilities.",STRENGTHLY AGREE
-23,Equality & non-discrimination,Equality action plan (sex characteristics),National equality bodies should be explicitly mandated and actively engaged in addressing issues related to sex characteristics.,STRENGTHLY AGREE
-24,Equality & non-discrimination,Blood donations,Blood and tissue donation policies should be free from blanket bans or unjustified deferral periods based on sexual orientation or gender identity.,STRONGLY AGREE
+15,Equality & non-discrimination,Equality action plan (gender identity),National equality bodies should be explicitly mandated and actively engaged in addressing issues related to gender identity.,AGREE
+16,Equality & non-discrimination,Law (gender expression),Anti-discrimination laws should explicitly include gender expression as a protected ground.,AGREE
+17,Equality & non-discrimination,Constitution (sex characteristics),Constitutional protections should explicitly or effectively prohibit discrimination based on sex characteristics.,DISAGREE
+18,Equality & non-discrimination,Employment (sex characteristics),Employment laws should explicitly prohibit discrimination based on sex characteristics.,DISAGREE
+19,Equality & non-discrimination,Goods & services (sex characteristics),aws should explicitly prohibit discrimination based on sex characteristics in access to goods and services.,AGREE
+20,Equality & non-discrimination,Education (sex characteristics),Laws should explicitly prohibit discrimination based on sex characteristics in education.,DISAGREE
+21,Equality & non-discrimination,Health (sex characteristics),Laws should explicitly prohibit discrimination based on sex characteristics in healthcare.,DISAGREE
+22,Equality & non-discrimination,Equality body mandate (sex characteristics),"National equality action plans should explicitly include sex characteristics and contain concrete implementation measures such as monitoring, resources, and responsibilities.",AGREE
+23,Equality & non-discrimination,Equality action plan (sex characteristics),National equality bodies should be explicitly mandated and actively engaged in addressing issues related to sex characteristics.,AGREE
+24,Equality & non-discrimination,Blood donations,Blood and tissue donation policies should be free from blanket bans or unjustified deferral periods based on sexual orientation or gender identity.,STROMGLY AGREE
