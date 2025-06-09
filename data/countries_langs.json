@@ -14,5 +14,335 @@
         ],
         "population": "67326569"
 
-    }
+    },
+    "Albania": {
+        "COUNTRY_ID": "AL",
+
+        "citizenships": [
+            "Albanian"
+        ],
+        "languages": [
+            "Albanian"
+        ],
+        "languages_code": [
+            "al"
+        ],
+        "population": "1608800"
+
+    },
+    "Andorra": {
+        "COUNTRY_ID": "AD",
+
+        "citizenships": [
+            "Andorran"
+        ],
+        "languages": [
+            "Spanish",
+            "Ctalan",
+            "French"
+        ],
+        "languages_code": [
+            "sp",
+            "ct",
+            "fr"
+        ],
+        "population": "13414"
+    },
+    "Armenia": {
+        "COUNTRY_ID": "AM",
+
+        "citizenships": [
+            "Armenian"
+        ],
+        "languages": [
+            "Armenian"
+        ],
+        "languages_code": [
+            "am"
+        ],
+        "population": "1867396"
+    },
+    "Austria": {
+        "COUNTRY_ID": "AT",
+
+        "citizenships": [
+            "Austrian"
+        ],
+        "languages": [
+            "German"
+        ],
+        "languages_code": [
+            "du"
+        ]
+    },
+    "Azerbaijan": {
+        "COUNTRY_ID": "AZ",
+
+        "citizenships": [
+            "Azerbaijani "
+        ],
+        "languages": [
+            "Azerbaijani"
+        ],
+        "languages_code": [
+            "az"
+        ]
+    },
+    "Belarus": {
+        "COUNTRY_ID": "BY",
+
+        "citizenships": [
+            "Belarusian"
+        ],
+        "languages": [
+            "Belarusian",
+            "Russian"
+        ],
+        "languages_code": [
+            "by",
+            "ru"
+        ]
+    },
+    "Belgium": {
+        "COUNTRY_ID": "Be",
+        "citizenships": [
+            "Belgian"
+        ],
+        "languages": [
+            "Dutch",
+            "German",
+            "French"
+        ],
+        "languages_code": [
+            "fr",
+            "nl",
+            "de"
+        ],
+        "population": "11584008"
+    },
+    "Bosnia & Herzegovina": {
+        "COUNTRY_ID": "BA",
+
+        "citizenships": [
+            "Bosnian"
+        ],
+        "languages": [
+            "Bosnian",
+            "Croatian"
+        ],
+        "languages_code": [
+            "ba",
+            "hr"
+        ]
+    },
+    "Bulgaria": {
+        "COUNTRY_ID": "BG",
+        "citizenships": [
+            "Bulgarian"
+        ],
+        "languages": [
+            "Bulgarian"
+        ],
+        "languages_code": [
+            "bg"
+        ],
+        "population": "6795803"
+    },
+    "Croatia": {
+        "COUNTRY_ID": "HR",
+        "citizenships": [
+            "Croatian"
+        ],
+        "languages": [
+            "Croatian"
+        ],
+        "languages_code": [
+            "hr"
+        ]
+    },
+    "Cyprus": {
+        "COUNTRY_ID": "CY",
+        "citizenships": [
+            "Cypriot"
+        ],
+        "languages": [
+            "Modern Greek",
+            "Greek"
+        ],
+        "languages_code": [
+            "mg",
+            "gg"
+        ]
+    },
+    "Czechia": {
+        "COUNTRY_ID": "CZ",
+        "citizenships": [
+            "Czech"
+        ],
+        "languages": [
+            "Czech"
+        ],
+        "languages_code": [
+            "cz"
+        ]
+    },
+    "Denmark": {
+        "COUNTRY_ID": "DK",
+        "citizenships": [
+            "Danish"
+        ],
+        "languages": [
+            "Danish"
+        ],
+        "languages_code": [
+            "da"
+        ],
+        "population": "5930987"
+    },
+    "Estonia": {
+        "COUNTRY_ID": "EE",
+        "citizenships": [
+            "Estonian"
+        ],
+        "languages": [
+            "Estonian"
+        ],
+        "languages_code": [
+            "ee"
+        ]
+    },
+    "Finland": {
+        "COUNTRY_ID": "FI",
+        "citizenships": [
+            "Finn",
+            "Finnish"
+        ],
+        "languages": [
+            "Swedish",
+            "Finnish"
+        ],
+        "languages_code": [
+            "fi",
+            "sv"
+        ],
+        "population": "5608218"
+    },
+    "France": {
+        "COUNTRY_ID": "FR",
+        "citizenships": [
+            "French"
+        ],
+        "languages": [
+            "French"
+        ],
+        "languages_code": [
+            "fr"
+        ],
+        "population": "68373433"
+    },
+    "Georgia": {
+        "COUNTRY_ID": "GE",
+        "citizenships": [
+            "Georgian"
+        ],
+        "languages": [
+            "Georgian"
+        ],
+        "languages_code": [
+            "ge"
+        ]
+    },
+    "Germany": {
+        "COUNTRY_ID": "DE",
+        "citizenships": [
+            "German"
+        ],
+        "languages": [
+            "German"
+        ],
+        "languages_code": [
+            "de"
+        ],
+        "population": "84358845"
+    },
+    "Greece": {
+        "COUNTRY_ID": "GR",
+        "citizenships": [
+            "Greek"
+        ],
+        "languages": [
+            "Greek",
+            "Modern Greek"
+        ],
+        "languages_code": [
+            "el"
+        ],
+        "population": "10482487"
+    },
+    "Hungary": {
+        "COUNTRY_ID": "HU",
+        "citizenships": [
+            "Hungarian"
+        ],
+        "languages": [
+            "Hungarian"
+        ],
+        "languages_code": [
+            "hu"
+        ],
+        "population": "9599744"
+    },
+    "Iceland": {
+        "COUNTRY_ID": "IS",
+        "citizenships": [
+            "Icelandic"
+        ],
+        "languages": [
+            "Icelandic"
+        ],
+        "languages_code": [
+            "is"
+        ]
+    },
+    "Ireland": {
+        "COUNTRY_ID": "IE",
+        "citizenships": [
+            "Irish"
+        ],
+        "languages": [
+            "English",
+            "Irish"
+        ],
+        "languages_code": [
+            "ga",
+            "en"
+        ],
+        "population": "5149139"
+    },
+    "Italy": {
+        "COUNTRY_ID": "IT",
+        "citizenships": [
+            "Italian"
+        ],
+        "languages": [
+            "Italian"
+        ],
+        "languages_code": [
+            "it"
+        ],
+        "population": "58850717"
+    },
+    "Kosovo": {
+        "COUNTRY_ID": "XK",
+        "citizenships": [
+            "Icelandic"
+        ],
+        "languages": [
+            "Irish"
+        ],
+        "languages_code": [
+            "is"
+        ]
+    },
+    
 }
