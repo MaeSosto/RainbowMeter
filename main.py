@@ -1,8 +1,11 @@
-from lib import *
+from lib.constants import *
+from lib.models import *
+from lib.prompt import *
 from pathlib import Path
-from models import callModel, _getPrompt
+import pandas as pd
+from tqdm import tqdm
 
-def _get_country_info(country_name):
+def _get_country_info(country_name, model_name):
     country_info = countries_file[country_name]
     lan = country_info['languages_code'][0]
     country_id = country_info['COUNTRY_ID']
@@ -16,44 +19,47 @@ def _get_country_info(country_name):
     criteria_file = json.load(criteria_file)
     criteriaList = [v for v in criteria_file if v['Question'] != ""]
     
-    file_out = f"{path_result}/{modelName}-{lan}_{country_id}_raibow_meter.csv"
+    path_result = f"results_for_analysis/languages_experiments/{model_name}"
+    Path(path_result).mkdir(parents=True, exist_ok=True)
+    file_out = f"{path_result}/{model_name}-{lan}_{country_id}_raibow_meter.csv"
     return criteriaList, prompt_template, file_out
 
 countries_file = "data/countries_langs.json"
 countries_file = open(countries_file)
-
-# returns JSON object as a dictionary
 countries_file = json.load(countries_file)
 
+#modelName = 'gpt-4.1-mini'
+
+#ONLY OLLAMA MODELS ARE NOW SUPPORTED
 #modelName = 'llama3'
-modelName = 'gemma3'
-path_result = f"results_for_analysis/languages_experiments/{modelName}"
-Path(path_result).mkdir(parents=True, exist_ok=True)
+model_name = 'gemma3'
 
-
+#Iterate on every country
 for country_name in countries_file:
+    country_info = countries_file[country_name]
+    language = country_info['languages_code'][0]
+    if language != 'en': #NOW ONLY EN MODEL SUPPORTED ENGLISH
+        continue
     criteriaList, prompt_template, file_out = _get_country_info(country_name)
+
     results = []
     for criteria in tqdm(criteriaList):
-        subcategory = criteria['Subcategory']
-        prompt = _getPrompt(prompt_template, criteria['Question'])
 
-        response = callModel(
+        prompt = get_standard_prompt(prompt_template, criteria['Question'])
+
+        response = call_model(
             prompt = prompt, 
-            modelName = modelName, 
+            modelName = model_name, 
         )
-        #print(response)
         
-        results.append(
-            [
-                criteria['Category'],
-                criteria['Subcategory'],
-                criteria['Question'],
-                response
-            ]
-        )
+        results.append([
+            criteria['Category'],
+            criteria['Subcategory'],
+            criteria['Question'],
+            response
+        ])
         #df = pd.DataFrame(results, columns=['text','label_0','label_1','label_2','label_3','label_4','majority_label','majority_label_postprocessed'])
-        df = pd.DataFrame(results, columns=['Ctegory','Subcategory','Prompt', 'Response'])
+        df = pd.DataFrame(results, columns=['Caegory','Subcategory','Prompt', 'Response'])
         df.to_csv(file_out, index_label='index')
         
 

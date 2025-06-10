@@ -1,13 +1,6 @@
-import pandas as pd
 import json
-from tqdm import tqdm
 import csv
-import json
-import re
 
-CRITERIA_PATH = 'data\criteria.csv' 
-
-LANGUAGES = ['EN']
 
 def _convertCSVtoJSON(file_in, file_out):
     with open(file_in, mode='r', newline='', encoding='utf-8') as csvfile:

@@ -1,23 +1,6 @@
 {
-    "United Kingdom": {
-        "COUNTRY_ID": "GB",
-
-        "citizenships": [
-            "Briton",
-            "British"
-        ],
-        "languages": [
-            "English"
-        ],
-        "languages_code": [
-            "en"
-        ],
-        "population": "67326569"
-
-    },
     "Albania": {
         "COUNTRY_ID": "AL",
-
         "citizenships": [
             "Albanian"
         ],
@@ -28,11 +11,9 @@
             "al"
         ],
         "population": "1608800"
-
     },
     "Andorra": {
         "COUNTRY_ID": "AD",
-
         "citizenships": [
             "Andorran"
         ],
@@ -50,7 +31,6 @@
     },
     "Armenia": {
         "COUNTRY_ID": "AM",
-
         "citizenships": [
             "Armenian"
         ],
@@ -64,7 +44,6 @@
     },
     "Austria": {
         "COUNTRY_ID": "AT",
-
         "citizenships": [
             "Austrian"
         ],
@@ -77,7 +56,6 @@
     },
     "Azerbaijan": {
         "COUNTRY_ID": "AZ",
-
         "citizenships": [
             "Azerbaijani "
         ],
@@ -344,5 +322,18 @@
             "is"
         ]
     },
-    
+    "United Kingdom": {
+        "COUNTRY_ID": "GB",
+        "citizenships": [
+            "Briton",
+            "British"
+        ],
+        "languages": [
+            "English"
+        ],
+        "languages_code": [
+            "en"
+        ],
+        "population": "67326569"
+    }
 }
