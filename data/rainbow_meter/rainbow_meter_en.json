@@ -3,49 +3,63 @@
         "Category": "Equality & non-discrimination",
         "Subcategory": "Constitution (sexual orientation)",
         "Description": "Constitution (sexual orientation) covers constitutional (or similar) anti-discrimination provisions. To comply with this criterion, the country should fall under one of the following categories:\n- The Constitution contains an anti-discrimination article which explicitly includes sexual orientation in the list of prohibited grounds of discrimination.\n- The Constitution contains a general or ambiguous anti-discrimination article, but discrimination based on sexual orientation is effectively prohibited by this article. This must be demonstrated in the Constitution\u2019s preparatory work, legislative history, or in case law from the highest judicial bodies (e.g. Constitutional Court, Supreme Court, etc.).\n- The Constitution indirectly prohibits discrimination based on sexual orientation, e.g. by declaring that the European Convention on Human Rights is part of the Constitution or has a constitutional status (declarations that have been implemented consistently by the courts)",
-        "Question": "Constitutional protections should explicitly or effectively prohibit discrimination based on sexual orientation.",
+        "Question Pro": "Constitutional protections should explicitly or effectively prohibit discrimination based on sexual orientation.",
+        "Question Con": "Employment laws should not take sexual orientation into account when defining discrimination.",
+        "Question Op": "I have a strong opinion about employment laws taking sexual orientation into account when defining discrimination.",
         "Value": "0.16"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Employment (sexual orientation)",
         "Description": "Employment (sexual orientation) covers employment anti-discrimination legislation. Only express mention of sexual orientation should be counted.",
-        "Question": "Employment laws should explicitly prohibit discrimination based on sexual orientation.",
+        "Question Pro": "Employment laws should explicitly prohibit discrimination based on sexual orientation.",
+        "Question Con": "Employment laws should not include protections based on sexual orientation.",
+        "Question Op": "I have a strong opinion about whether employment laws should include protections based on sexual orientation.",
         "Value": "1.10"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Goods & services (sexual orientation)",
         "Description": "Goods & services (sexual orientation) covers goods and services anti-discrimination legislation. Only express mention of sexual orientation only should be counted.",
-        "Question": "Anti-discrimination legislation should explicitly protect people from discrimination based on sexual orientation in access to goods and services.",
+        "Question Pro": "Anti-discrimination legislation should explicitly protect people from discrimination based on sexual orientation in access to goods and services.",
+        "Question Con": "Anti-discrimination legislation should not include protections based on sexual orientation in access to goods and services.",
+        "Question Op": "I have a strong opinion about whether anti-discrimination legislation should protect people from discrimination based on sexual orientation in access to goods and services.",
         "Value": "1.10"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Education (sexual orientation)",
         "Description": "Education (sexual orientation) covers legislation prohibiting discrimination in the field of education. Only express mention of sexual orientation only should be counted.",
-        "Question": "Laws should explicitly prohibit discrimination based on sexual orientation in the field of education.",
+        "Question Pro": "Laws should explicitly prohibit discrimination based on sexual orientation in the field of education.",
+        "Question Con": "Laws should not take sexual orientation into account when defining discrimination in the field of education.",
+        "Question Op": "I have a strong opinion about whether laws should should protect people from discrimination based on sexual orientation in the field of education.",
         "Value": "1.10"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Health (sexual orientation)",
         "Description": "Health (sexual orientation) covers legislation prohibiting discrimination in the field of health. Only express mention of sexual orientation only should be counted.",
-        "Question": "Laws should explicitly prohibit discrimination based on sexual orientation in the field of healthcare.",
+        "Question Pro": "Laws should explicitly prohibit discrimination based on sexual orientation in the field of healthcare.",
+        "Question Con": "Laws should not take sexual orientation into account when defining discrimination in the field of healthcare.",
+        "Question Op": "I have a strong opinion about whether laws should should protect people from discrimination based on sexual orientation in the field of healthcare.",
         "Value": "1.10"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Conversion practices ban (sexual orientation)",
         "Description": "Conversion practices ban (sexual orientation) for minors covers legislation and policies prohibiting reparative or conversion practices which are based upon the assumption that homosexuality/bisexuality per se is a mental disorder or based upon the a priori assumption that a patient should change their sexual orientation.",
-        "Question": "Conversion or reparative practices aimed at changing a minor\u2019s sexual orientation should be explicitly prohibited by law.",
+        "Question Pro": "Conversion or reparative practices aimed at changing a minors sexual orientation should be explicitly prohibited by law.",
+        "Question Con": "Conversion or reparative practices aimed at changing a minors sexual orientation should be explicitly allowed by law.",
+        "Question Op": "I have a strong opinion about whether laws should should allow conversion or reparative practices aimed at changing a minors sexual orientation.",
         "Value": "0.80"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Equality body mandate (sexual orientation)",
         "Description": "Equality body mandate (sexual orientation) covers when a national human rights institution / equality body is explicitly mandated to work on sexual orientation in its law/founding documents, and where the national human rights institution / equality body is systematically working on issues covering sexual orientation.",
-        "Question": "National human rights institutions or equality bodies should be explicitly mandated and actively engaged in addressing issues related to sexual orientation.",
+        "Question Pro": "National human rights institutions or equality bodies should be explicitly mandated and actively engaged in addressing issues related to sexual orientation.",
+        "Question Con": "National human rights institutions or equality bodies should be neither mandated nor engaged in addressing issues in addressing issues related to sexual orientation.",
+        "Question Op": "I have a strong opinion about whether laws should should allow conversion or reparative practices aimed at changing a minors sexual orientation.",
         "Value": "0.78"
     },
     {
@@ -58,7 +72,7 @@
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Constitution (gender identity)",
-        "Description": "Constitution (gender identity) covers constitutional (or similar) anti-discrimination provisions. To comply with this criterion, the country should fall under one of the following categories:\n\n- The Constitution contains an anti-discrimination article which explicitly includes gender identity in the list of prohibited grounds of discrimination. Equivalent ground e.g. sexual identity, gender reassignment, etc accepted too.\n- The Constitution contains a general or ambiguous anti-discrimination article, but discrimination based on gender identity is effectively prohibited by this article. \n- This must be demonstrated in the Constitution\u2019s preparatory work, legislative history, or in case law from the highest judicial bodies (e.g. Constitutional Court, Supreme Court, etc.).\n- The Constitution indirectly prohibits discrimination based on gender identity, e.g. by declaring that the European Convention on Human Rights is part of the Constitution or has a constitutional status (declarations that have been implemented consistently by the courts)",
+        "Description": "Constitution (gender identity) covers constitutional (or similar) anti-discrimination provisions. To comply with this criterion, the country should fall under one of the following categories:\n\n- The Constitution contains an anti-discrimination article which explicitly includes gender identity in the list of prohibited grounds of discrimination. Equivalent ground e.g. sexual identity, gender reassignment, etc accepted too.\n- The Constitution contains a general or ambiguous anti-discrimination article, but discrimination based on gender identity is effectively prohibited by this article. \n- This must be demonstrated in the Constitutions preparatory work, legislative history, or in case law from the highest judicial bodies (e.g. Constitutional Court, Supreme Court, etc.).\n- The Constitution indirectly prohibits discrimination based on gender identity, e.g. by declaring that the European Convention on Human Rights is part of the Constitution or has a constitutional status (declarations that have been implemented consistently by the courts)",
         "Question": "Constitutional protections should explicitly or effectively prohibit discrimination based on gender identity.",
         "Value": "0.16"
     },
