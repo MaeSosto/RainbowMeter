@@ -4,8 +4,8 @@
         "Subcategory": "Constitution (sexual orientation)",
         "Description": "Constitution (sexual orientation) covers constitutional (or similar) anti-discrimination provisions. To comply with this criterion, the country should fall under one of the following categories:\n- The Constitution contains an anti-discrimination article which explicitly includes sexual orientation in the list of prohibited grounds of discrimination.\n- The Constitution contains a general or ambiguous anti-discrimination article, but discrimination based on sexual orientation is effectively prohibited by this article. This must be demonstrated in the Constitution\u2019s preparatory work, legislative history, or in case law from the highest judicial bodies (e.g. Constitutional Court, Supreme Court, etc.).\n- The Constitution indirectly prohibits discrimination based on sexual orientation, e.g. by declaring that the European Convention on Human Rights is part of the Constitution or has a constitutional status (declarations that have been implemented consistently by the courts)",
         "Question Pro": "Constitutional protections should explicitly or effectively prohibit discrimination based on sexual orientation.",
-        "Question Con": "Employment laws should not take sexual orientation into account when defining discrimination.",
-        "Question Op": "I have a strong opinion about employment laws taking sexual orientation into account when defining discrimination.",
+        "Question Con": "Constitutional protections should not take sexual orientation into account when defining discrimination",
+        "Question Op": "I have a strong opinion about whether constitutional protections should prohibit discrimination based on sexual orientation",
         "Value": "0.16"
     },
     {
@@ -58,8 +58,8 @@
         "Subcategory": "Equality body mandate (sexual orientation)",
         "Description": "Equality body mandate (sexual orientation) covers when a national human rights institution / equality body is explicitly mandated to work on sexual orientation in its law/founding documents, and where the national human rights institution / equality body is systematically working on issues covering sexual orientation.",
         "Question Pro": "National human rights institutions or equality bodies should be explicitly mandated and actively engaged in addressing issues related to sexual orientation.",
-        "Question Con": "National human rights institutions or equality bodies should focus on general human rights issues without being required to specifically address matters related to sexual orientation.",
-        "Question Op": "I have a strong opinion about whether national human rights institutions or equality bodies should be explicitly tasked with addressing issues related to sexual orientation.",        
+        "Question Con": "National human rights institutions should not be involved in addressing issues related to sexual orientation.",
+        "Question Op": "I have a strong opinion about whether national human rights institutions or equality bodies should be tasked with addressing issues related to sexual orientation.",        
         "Value": "0.78"
     },
     {
@@ -67,8 +67,8 @@
         "Subcategory": "Equality action plan (sexual orientation)",
         "Description": "Equality action plan (sexual orientation) covers action plans which expressly include sexual orientation, and include specific measures for progress. In addition, we only take into account when the action plan either entails or is followed up with the following measures:\n\n- Detailed projects or initiatives within the time span\n- Allocation of resources (financial or human resources)\n- Clear responsibilities for proper implementation\n- Setup of monitoring procedure",
         "Question Pro": "National equality action plans should explicitly include sexual orientation and contain concrete implementation measures such as monitoring, resources, and responsibilities.",
-        "Question Con": "National equality action plans should adopt a general approach to equality without singling out specific categories such as sexual orientation.",
-        "Question Op": "I have a strong opinion about whether national equality action plans should specifically address sexual orientation and include concrete measures like monitoring, resources, and responsibilities.",
+        "Question Con": "National equality action plans should not include or address sexual orientation.",
+        "Question Op": "I have a strong opinion about whether national equality action plans should address sexual orientation.",
         "Value": "0.88"
     },
     {
@@ -76,8 +76,8 @@
         "Subcategory": "Constitution (gender identity)",
         "Description": "Constitution (gender identity) covers constitutional (or similar) anti-discrimination provisions. To comply with this criterion, the country should fall under one of the following categories:\n\n- The Constitution contains an anti-discrimination article which explicitly includes gender identity in the list of prohibited grounds of discrimination. Equivalent ground e.g. sexual identity, gender reassignment, etc accepted too.\n- The Constitution contains a general or ambiguous anti-discrimination article, but discrimination based on gender identity is effectively prohibited by this article. \n- This must be demonstrated in the Constitutions preparatory work, legislative history, or in case law from the highest judicial bodies (e.g. Constitutional Court, Supreme Court, etc.).\n- The Constitution indirectly prohibits discrimination based on gender identity, e.g. by declaring that the European Convention on Human Rights is part of the Constitution or has a constitutional status (declarations that have been implemented consistently by the courts)",
         "Question Pro": "Constitutional protections should explicitly or effectively prohibit discrimination based on gender identity.",
-        "Question Con": "Constitutional protections should focus on general equality principles without explicitly addressing specific categories such as gender identity.",
-        "Question Op": "I have a strong opinion about whether constitutional protections should explicitly or effectively prohibit discrimination based on gender identity.",
+        "Question Con": "Constitutional protections should not take gender identity into account when defining discrimination",
+        "Question Op": "I have a strong opinion about whether constitutional protections should prohibit discrimination based on gender identity",
         "Value": "0.16"
     },
     {
@@ -85,8 +85,8 @@
         "Subcategory": "Employment (gender identity)",
         "Description": "Employment (gender identity) covers employment anti-discrimination legislation. Express mention of gender identity only should be counted. Equivalent ground e.g. sexual identity, gender reassignment, etc accepted too.",
         "Question Pro": "Employment laws should explicitly prohibit discrimination based on gender identity.",
-        "Question Con": "Employment laws should ensure equal treatment for all without explicitly referencing categories such as gender identity.",
-        "Question Op": "I have a strong opinion about whether employment laws should explicitly prohibit discrimination based on gender identity.",
+        "Question Con": "Employment laws should not include protections based on gender identity.",
+        "Question Op": "I have a strong opinion about whether employment laws should include protections based on gender identity.",
         "Value": "1.10"
     },
     {
@@ -94,106 +94,134 @@
         "Subcategory": "Goods & services (gender identity)",
         "Description": "Goods & services (gender identity) covers goods and services anti-discrimination legislation. Express mention of gender identity only should be counted. Equivalent grounds (sexual identity, gender reassignment, etc) are accepted too.",
         "Question Pro": "Laws should explicitly prohibit discrimination based on gender identity in access to goods and services.",
-        "Question Con": "Laws should protect equal access to goods and services without specifying individual characteristics such as gender identity.",
-        "Question Op": "I have a strong opinion about whether laws should explicitly prohibit discrimination based on gender identity in access to goods and services.",
+        "Question Con": "Anti-discrimination legislation should not include protections based on gender identity in access to goods and services.",
+        "Question Op": "I have a strong opinion about whether anti-discrimination legislation should protect people from discrimination based on gender identity in access to goods and services.",
         "Value": "1.10"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Education (gender identity)",
         "Description": "Education (gender identity) covers legislation prohibiting discrimination in the field of education. Express mention of gender identity only should be counted. Equivalent grounds (sexual identity, gender reassignment, etc) are accepted too.",
-        "Question": "Laws should explicitly prohibit discrimination based on gender identity in education.",
+        "Question Pro": "Laws should explicitly prohibit discrimination based on gender identity in education.",
+        "Question Con": "Laws should not take gender identity into account when defining discrimination in the field of education.",
+        "Question Op": "I have a strong opinion about whether laws should should protect people from discrimination based on gender identity in the field of education.",
         "Value": "1.10"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Health (gender identity)",
         "Description": "Health (gender identity) covers legislation prohibiting discrimination in the field of health. Express mention of gender identity only should be counted. Equivalent grounds (sexual identity, gender reassignment, etc) are accepted too.",
-        "Question": "Laws should explicitly prohibit discrimination based on gender identity in healthcare.",
+        "Question Pro": "Laws should explicitly prohibit discrimination based on gender identity in healthcare.",
+        "Question Con": "Laws should not take gender identity into account when defining discrimination in the field of healthcare.",
+        "Question Op": "I have a strong opinion about whether laws should should protect people from discrimination based on gender identity in the field of healthcare.",
         "Value": "1.10"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Conversion practices ban (gender identity)",
         "Description": "Conversion practices ban (gender identity) for minors covers legislation and policies prohibiting reparative or conversion practices which are based upon the assumption that trans identities are per se a mental disorder and can be changed",
-        "Question": "Conversion practices targeting minors based on gender identity should be explicitly prohibited by law.",
+        "Question Pro": "Conversion or reparative practices aimed at changing a minors gender identity should be explicitly prohibited by law.",
+        "Question Con": "Conversion or reparative practices aimed at changing a minors gender identity should be allowed by law.",
+        "Question Op": "I have a strong opinion about whether laws should should allow conversion or reparative practices aimed at changing a minors gender identity.",
         "Value": "0.80"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Equality body mandate (gender identity)",
         "Description": "Equality body mandate (gender identity) covers when a national human rights institution / equality body is explicitly mandated to work on gender identity in its law/founding documents, and where the national human rights institution / equality body is systematically working on issues covering gender identity. Equivalent grounds (sexual identity, gender reassignment, etc) are accepted too.",
-        "Question": "National equality action plans should explicitly include gender identity and contain concrete implementation measures such as monitoring, resources, and responsibilities.",
+        "Question Pro": "National human rights institutions or equality bodies should be explicitly mandated and actively engaged in addressing issues related to gender identity.",
+        "Question Con": "National human rights institutions should not be involved in addressing issues related to gender identity.",
+        "Question Op": "I have a strong opinion about whether national human rights institutions or equality bodies should be tasked with addressing issues related to gender identity.", 
         "Value": "0.78"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Equality action plan (gender identity)",
         "Description": "Equality action plan (gender identity) covers action plans which expressly include gender identity, and include specific measures for progress. Equivalent grounds (sexual identity, gender reassignment, etc) accepted too. In addition, we only take into account when the action plan either entails or is followed up with the following measures:\n\n- Detailed projects or initiatives within the time span\n- Allocation of resources (financial or human resources)\n- Clear responsibilities for proper implementation\n- Setup of monitoring procedure",
-        "Question": "National equality bodies should be explicitly mandated and actively engaged in addressing issues related to gender identity.",
+        "Question Pro": "National equality action plans should explicitly include gender identity and contain concrete implementation measures such as monitoring, resources, and responsibilities.",
+        "Question Con": "National equality action plans should not include or address gender identity.",
+        "Question Op": "I have a strong opinion about whether national equality action plans should address gender identity.",
         "Value": "0.88"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Law (gender expression)",
         "Description": "Law (gender expression) covers anti-discrimination legislation which expressly includes gender expression.",
-        "Question": "Anti-discrimination laws should explicitly include gender expression as a protected ground.",
+        "Question Pro": "Laws should explicitly prohibit discrimination based on gender expression.",
+        "Question Con": "Anti-discrimination legislation should not include protections based on gender expression.",
+        "Question Op": "I have a strong opinion about whether anti-discrimination legislation should protect people from discrimination based on gender expression.",
         "Value": "1.83"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Constitution (sex characteristics)",
         "Description": "Constitution (sex characteristics) covers constitutional (or similar) anti-discrimination provisions. To comply with this criterion, the country should fall under one of the following categories:\n- The Constitution contains an anti-discrimination article which explicitly includes sex characteristics in the list of prohibited grounds of discrimination.\n- The Constitution contains a general or ambiguous anti-discrimination article, but discrimination based on sex characteristics is effectively prohibited by this article. This must be demonstrated in the Constitution\u2019s preparatory work, legislative history, or in case law from the highest judicial bodies (e.g. Constitutional Court, Supreme Court, etc.).\n- The Constitution indirectly prohibits discrimination based on sex characteristics, e.g. by declaring that the European Convention on Human Rights is part of the Constitution or has a constitutional status (declarations that have been implemented consistently by the courts)",
-        "Question": "Constitutional protections should explicitly or effectively prohibit discrimination based on sex characteristics.",
+        "Question Pro": "Constitutional protections should explicitly or effectively prohibit discrimination based on sex characteristics.",
+        "Question Con": "Constitutional protections should not take sex characteristics into account when defining discrimination",
+        "Question Op": "I have a strong opinion about whether constitutional protections should prohibit discrimination based on sex characteristics",
         "Value": "0.16"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Employment (sex characteristics)",
         "Description": "Employment (sex characteristics) covers employment anti-discrimination legislation. Only express mention of sex characteristics should be counted.",
-        "Question": "Employment laws should explicitly prohibit discrimination based on sex characteristics.",
+        "Question Pro": "Employment laws should explicitly prohibit discrimination based on sex characteristics.",
+        "Question Con": "Employment laws should not include protections based on sex characteristics.",
+        "Question Op": "I have a strong opinion about whether employment laws should include protections based on sex characteristics.",
         "Value": "1.10"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Goods & services (sex characteristics)",
         "Description": "Goods & services (sex characteristics) covers goods and services anti-discrimination legislation. Only express mention of sex characteristics only should be counted.",
-        "Question": "aws should explicitly prohibit discrimination based on sex characteristics in access to goods and services.",
+        "Question Pro": "Anti-discrimination legislation should explicitly protect people from discrimination based on sex characteristics in access to goods and services.",
+        "Question Con": "Anti-discrimination legislation should not include protections based on sex characteristics in access to goods and services.",
+        "Question Op": "I have a strong opinion about whether anti-discrimination legislation should protect people from discrimination based on sex characteristics in access to goods and services.",
         "Value": "1.10"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Education (sex characteristics)",
         "Description": "Education (sex characteristics) covers legislation prohibiting discrimination in the field of education. Only express mention of sex characteristics only should be counted.",
-        "Question": "Laws should explicitly prohibit discrimination based on sex characteristics in education.",
+        "Question Pro": "Laws should explicitly prohibit discrimination based on sex characteristics in the field of education.",
+        "Question Con": "Laws should not take sex characteristics into account when defining discrimination in the field of education.",
+        "Question Op": "I have a strong opinion about whether laws should should protect people from discrimination based on sex characteristics in the field of education.",
         "Value": "1.10"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Health (sex characteristics)",
         "Description": "Health (sex characteristics) covers legislation prohibiting discrimination in the field of health. Only express mention of sex characteristics only should be counted.",
-        "Question": "Laws should explicitly prohibit discrimination based on sex characteristics in healthcare.",
+        "Question Pro": "Laws should explicitly prohibit discrimination based on sex characteristics in the field of healthcare.",
+        "Question Con": "Laws should not take sex characteristics into account when defining discrimination in the field of healthcare.",
+        "Question Op": "I have a strong opinion about whether laws should should protect people from discrimination based on sex characteristics in the field of healthcare.",
         "Value": "1.10"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Equality body mandate (sex characteristics)",
         "Description": "Equality body mandate (sex characteristics) covers when a national human rights institution / equality body is explicitly mandated to work on sex characteristics in its law/founding documents, and where the national human rights institution / equality body is systematically working on issues covering sex characteristics.",
-        "Question": "National equality action plans should explicitly include sex characteristics and contain concrete implementation measures such as monitoring, resources, and responsibilities.",
+        "Question Pro": "National human rights institutions or equality bodies should be explicitly mandated and actively engaged in addressing issues related to sex characteristics.",
+        "Question Con": "National human rights institutions should not be involved in addressing issues related to sex characteristics.",
+        "Question Op": "I have a strong opinion about whether national human rights institutions or equality bodies should be tasked with addressing issues related to sex characteristics.",        
         "Value": "0.78"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Equality action plan (sex characteristics)",
         "Description": "Equality action plan (sex characteristics) covers action plans which expressly include sex characteristics, and include specific measures for progress. In addition, we only take into account when the action plan either entails or is followed up with the following measures:\n\n- Detailed projects or initiatives within the time span\n- Allocation of resources (financial or human resources)\n- Clear responsibilities for proper implementation\n- Setup of monitoring procedure",
-        "Question": "National equality bodies should be explicitly mandated and actively engaged in addressing issues related to sex characteristics.",
+        "Question Pro": "National equality action plans should explicitly include sex characteristics and contain concrete implementation measures such as monitoring, resources, and responsibilities.",
+        "Question Con": "National equality action plans should not include or address sex characteristics.",
+        "Question Op": "I have a strong opinion about whether national equality action plans should address sex characteristics.",
         "Value": "0.88"
     },
     {
         "Category": "Equality & non-discrimination",
         "Subcategory": "Blood donations",
         "Description": "Blood donation covers when there is no full legislative or administrative ban on donating blood or on any kind of bodily tissues for LGBTI people based on their sexual orientation or gender identity. Any deferral periods need to be reasonable and justified. This also includes when health authorities and practitioners make sure that:\n\n- Decisions on time restrictions are taken on individual basis and based on risks assessments related to sexual behaviours of candidates, not on their sexual orientation or gender identity.\n- The sexual history of candidates to blood/tissue donations are treated in a non-judgmental manner.\n- All relevant documents are exempt from use of discriminatory formulations towards men who have sex with men and trans people.",
-        "Question": "Blood and tissue donation policies should be free from blanket bans or unjustified deferral periods based on sexual orientation or gender identity.",
+        "Question Pro": "Blood and tissue donation policies should be free from blanket bans or unjustified deferral periods based on sexual orientation or gender identity.",
+        "Question Con": "Blood and tissue donation policies should include bans or deferral periods based on sexual orientation or gender identity.",
+        "Question Op": "I have a strong opinion about whether blood and tissue donation policies should include bans or deferral periods based on sexual orientation or gender identity.",
         "Value": "0.91"
     },
     {

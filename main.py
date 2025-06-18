@@ -5,7 +5,10 @@ from pathlib import Path
 import pandas as pd
 from tqdm import tqdm
 
-def _get_country_info(country_name, model_name):
+# def _get_short_prompt_type(prompt_type):
+#     return prompt_type.split()[1].lower()
+
+def _get_country_info(country_name, model_name, prompt_type = "Question Pro"):
     country_info = countries_file[country_name]
     lan = country_info['languages_code'][0]
     country_id = country_info['COUNTRY_ID']
@@ -17,22 +20,21 @@ def _get_country_info(country_name, model_name):
     criteria_file = f'data/rainbow_meter/rainbow_meter_{lan}.json'
     criteria_file = open(criteria_file)
     criteria_file = json.load(criteria_file)
-    criteriaList = [v for v in criteria_file if v['Question'] != ""]
+    criteriaList = [v for v in criteria_file if prompt_type in v and v[prompt_type] != ""]
     
     path_result = f"results_for_analysis/languages_experiments/{model_name}"
     Path(path_result).mkdir(parents=True, exist_ok=True)
-    file_out = f"{path_result}/{model_name}-{lan}_{country_id}_raibow_meter.csv"
+    file_out = f"{path_result}/{lan}_{country_id}_raibow_meter.csv"
     return criteriaList, prompt_template, file_out
 
 countries_file = "data/countries_langs.json"
 countries_file = open(countries_file)
 countries_file = json.load(countries_file)
 
-#modelName = 'gpt-4.1-mini'
-
 #ONLY OLLAMA MODELS ARE NOW SUPPORTED
-#modelName = 'llama3'
+#model_name = 'llama3'
 model_name = 'gemma3'
+prompt_types = ['Question Pro', 'Question Con', 'Question Op']
 
 #Iterate on every country
 for country_name in countries_file:
@@ -40,27 +42,33 @@ for country_name in countries_file:
     language = country_info['languages_code'][0]
     if language != 'en': #NOW ONLY EN MODEL SUPPORTED ENGLISH
         continue
-    criteriaList, prompt_template, file_out = _get_country_info(country_name)
+    
+    criteriaList, prompt_template, file_out = _get_country_info(country_name, model_name)
 
     results = []
     for criteria in tqdm(criteriaList):
-
-        prompt = get_standard_prompt(prompt_template, criteria['Question'])
-
-        response = call_model(
-            prompt = prompt, 
-            modelName = model_name, 
-        )
         
-        results.append([
-            criteria['Category'],
-            criteria['Subcategory'],
-            criteria['Question'],
-            response
-        ])
-        #df = pd.DataFrame(results, columns=['text','label_0','label_1','label_2','label_3','label_4','majority_label','majority_label_postprocessed'])
-        df = pd.DataFrame(results, columns=['Caegory','Subcategory','Prompt', 'Response'])
-        df.to_csv(file_out, index_label='index')
+        risp = {
+            'Category': criteria['Category'],
+            'Subcategory': criteria['Subcategory']
+        }
+        
+        for prompt_type in prompt_types:
+            question = criteria[prompt_type]
+            prompt = get_standard_prompt(prompt_template, question)
+
+            response = call_model(
+                prompt = prompt, 
+                modelName = model_name, 
+            )
+            
+            risp[prompt_type] = response
+        
+        results.append(risp)
+        json_object = json.dumps(results, indent=4)
+
+        with open(file_out, "w") as outfile:
+            outfile.write(json_object)
         
 
 

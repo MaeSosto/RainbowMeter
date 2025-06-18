@@ -1,7 +1,7 @@
-from prompt import *
+from lib.prompt import *
 import requests
 
-RESPONSE_CHOICE = ["STRONGLY DISAGREE", "DISAGREE", "AGREE", "STRONGLY AGREE"]
+RESPONSE_CHOICE = ["DISAGREE", "AGREE"]
 
 def call_model(prompt, modelName):
     response = ollamaRequest(

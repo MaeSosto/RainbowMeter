@@ -20,7 +20,7 @@ echo "📦 Installing Ollama and starting the service..."
 pip install ollama > /dev/null
 # Uncomment the models you want to pull
 ollama pull llama3
-ollama pull llama3.3
+#ollama pull llama3.3
 # ollama pull llama3:70b
 ollama pull gemma3
 # ollama pull gemma3:27b
