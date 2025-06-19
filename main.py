@@ -1,12 +1,6 @@
 from lib.constants import *
 from lib.models import *
 from lib.prompt import *
-from pathlib import Path
-import pandas as pd
-from tqdm import tqdm
-
-# def _get_short_prompt_type(prompt_type):
-#     return prompt_type.split()[1].lower()
 
 def _get_country_info(country_name, model_name, prompt_type = "Question Pro"):
     country_info = countries_file[country_name]
@@ -23,7 +17,7 @@ def _get_country_info(country_name, model_name, prompt_type = "Question Pro"):
     criteriaList = [v for v in criteria_file if prompt_type in v and v[prompt_type] != ""]
     
     path_result = f"results_for_analysis/languages_experiments/{model_name}"
-    Path(path_result).mkdir(parents=True, exist_ok=True)
+    os.makedirs(path_result, exist_ok=True)
     file_out = f"{path_result}/{lan}_{country_id}_raibow_meter.csv"
     return criteriaList, prompt_template, file_out
 
@@ -31,10 +25,9 @@ countries_file = "data/countries_langs.json"
 countries_file = open(countries_file)
 countries_file = json.load(countries_file)
 
-#ONLY OLLAMA MODELS ARE NOW SUPPORTED
-#model_name = 'llama3'
-model_name = 'gemma3'
+model_name = GPT4_MINI
 prompt_types = ['Question Pro', 'Question Con', 'Question Op']
+model = Model(model_name)
 
 #Iterate on every country
 for country_name in countries_file:
@@ -56,11 +49,8 @@ for country_name in countries_file:
         for prompt_type in prompt_types:
             question = criteria[prompt_type]
             prompt = get_standard_prompt(prompt_template, question)
-
-            response = call_model(
-                prompt = prompt, 
-                modelName = model_name, 
-            )
+            
+            response = model.call_model(prompt)
             
             risp[prompt_type] = response
         

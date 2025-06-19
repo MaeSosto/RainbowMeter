@@ -20,19 +20,19 @@ echo "📦 Installing Ollama and starting the service..."
 pip install ollama > /dev/null
 # Uncomment the models you want to pull
 ollama pull llama3
-#ollama pull llama3.3
-# ollama pull llama3:70b
+ollama pull llama3.3
+ollama pull llama3:70b
 ollama pull gemma3
-# ollama pull gemma3:27b
+ollama pull gemma3:27b
 #ollama pull deepseek-r1
 # ollama pull deepseek-r1:70b
 ollama serve > /dev/null &
 
-echo "🔧 Installing base libraries..."
-pip install torch pandas tqdm transformers
-huggingface-cli download meta-llama/Meta-Llama-3-8B --include "original/*" --local-dir meta-llama/Meta-Llama-3-8B
-huggingface-cli download meta-llama/Meta-Llama-3-8B --include "original/*" --local-dir meta-llama/Meta-Llama-3-8B-Instruct
-pip install huggingface_hub
+# echo "🔧 Installing base libraries..."
+# pip install torch pandas tqdm transformers
+# huggingface-cli download meta-llama/Meta-Llama-3-8B --include "original/*" --local-dir meta-llama/Meta-Llama-3-8B
+# huggingface-cli download meta-llama/Meta-Llama-3-8B --include "original/*" --local-dir meta-llama/Meta-Llama-3-8B-Instruct
+# pip install huggingface_hub
 #unidecode surprisal transformers python-dotenv > /dev/null
 
 # echo "🧠 Installing sentiment analysis tools..."
@@ -41,8 +41,8 @@ pip install huggingface_hub
 # echo "☁️ Setting up Google Cloud clients..."
 # pip install --upgrade google-api-python-client google-cloud google-cloud-language google-cloud-translate > /dev/null
 
-# echo "🤖 Installing model APIs..."
-# pip install openai google-generativeai > /dev/null
+echo "🤖 Installing model APIs..."
+pip install openai > /dev/null
 
 # echo "🔧 Installing ipykernel for Jupyter support..."
 # pip install ipykernel > /dev/null
