@@ -28,6 +28,7 @@ torch.set_default_device(device)
 logger.info(f"Using device: {device}")
 
 LLAMA3 = 'llama3'
+LLAMA4 = 'llama4'
 LLAMA3_70B = 'llama3:70b'
 GEMMA3 = 'gemma3'
 GEMMA3_27B = 'gemma3:27b'

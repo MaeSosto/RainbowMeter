@@ -19,11 +19,11 @@ echo "📦 Upgrading pip..."
 echo "📦 Installing Ollama and starting the service..."
 pip install ollama > /dev/null
 # Uncomment the models you want to pull
-ollama pull llama3
-ollama pull llama3.3
-ollama pull llama3:70b
-ollama pull gemma3
-ollama pull gemma3:27b
+# ollama pull llama3
+# ollama pull llama3.3
+# ollama pull llama3:70b
+# ollama pull gemma3
+# ollama pull gemma3:27b
 #ollama pull deepseek-r1
 # ollama pull deepseek-r1:70b
 ollama serve > /dev/null &
@@ -43,6 +43,18 @@ ollama serve > /dev/null &
 
 echo "🤖 Installing model APIs..."
 pip install openai > /dev/null
+
+echo "🔧 Installing base libraries..."
+for pkg in torch pandas tqdm unidecode surprisal transformers python-dotenv; do
+    echo "   → Installing $pkg..."
+    pip install "$pkg" || { echo "❌ Failed to install $pkg"; exit 1; }
+done
+
+echo "📊 Installing graph & ML libraries..."
+for pkg in tf-keras seaborn scikit-learn scipy matplotlib wordcloud python-ternary; do
+    echo "   → Installing $pkg..."
+    pip install "$pkg" || { echo "❌ Failed to install $pkg"; exit 1; }
+done
 
 # echo "🔧 Installing ipykernel for Jupyter support..."
 # pip install ipykernel > /dev/null
