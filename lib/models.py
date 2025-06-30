@@ -1,8 +1,8 @@
-from lib.prompt import *
 from lib.constants import *
 import requests
 from openai import OpenAI
-
+import re
+        
 def initialize_gpt(model_name=None): 
     key = os.getenv('OPENAI_API_KEY')
     return OpenAI(api_key=key)
@@ -64,11 +64,13 @@ class Model:
         self.client = initialize_models[model_name]() if model_name in initialize_models else None
         
     def call_model(self, prompt):
+        try: 
+            response = request_models[self.model_name](
+                prompt=prompt,
+                modelName=self.model_name,
+                client = self.client
+            )
+            return response
+        except Exception as X:
+            logger.error(X)
         
-        response = request_models[self.model_name](
-            prompt=prompt,
-            modelName=self.model_name,
-            client = self.client
-        )
-        response = clear_response(response)
-        return response

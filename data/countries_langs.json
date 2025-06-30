@@ -1,64 +1,47 @@
 {
     "Albania": {
         "COUNTRY_ID": "AL",
-        "citizenships": [
-            "Albanian"
-        ],
+        "citizenships": [],
         "languages": [
             "Albanian"
         ],
         "languages_code": [
-            "al"
-        ],
-        "population": "1608800"
+            "sq"
+        ]
     },
     "Andorra": {
         "COUNTRY_ID": "AD",
-        "citizenships": [
-            "Andorran"
-        ],
+        "citizenships": [],
         "languages": [
-            "Spanish",
-            "Ctalan",
-            "French"
+            "Catalan"
         ],
         "languages_code": [
-            "sp",
-            "ct",
-            "fr"
-        ],
-        "population": "13414"
+            "ca"
+        ]
     },
     "Armenia": {
         "COUNTRY_ID": "AM",
-        "citizenships": [
-            "Armenian"
-        ],
+        "citizenships": [],
         "languages": [
             "Armenian"
         ],
         "languages_code": [
-            "am"
-        ],
-        "population": "1867396"
+            "hy"
+        ]
     },
     "Austria": {
         "COUNTRY_ID": "AT",
-        "citizenships": [
-            "Austrian"
-        ],
+        "citizenships": [],
         "languages": [
             "German"
         ],
         "languages_code": [
-            "du"
+            "de"
         ]
     },
     "Azerbaijan": {
         "COUNTRY_ID": "AZ",
-        "citizenships": [
-            "Azerbaijani "
-        ],
+        "citizenships": [],
         "languages": [
             "Azerbaijani"
         ],
@@ -68,69 +51,57 @@
     },
     "Belarus": {
         "COUNTRY_ID": "BY",
-
-        "citizenships": [
+        "citizenships": [],
+        "languages": [
+            "Russian",
             "Belarusian"
         ],
-        "languages": [
-            "Belarusian",
-            "Russian"
-        ],
         "languages_code": [
-            "by",
-            "ru"
+            "ru",
+            "be"
         ]
     },
     "Belgium": {
-        "COUNTRY_ID": "Be",
-        "citizenships": [
-            "Belgian"
-        ],
+        "COUNTRY_ID": "BE",
+        "citizenships": [],
         "languages": [
-            "Dutch",
             "German",
-            "French"
+            "French",
+            "Dutch"
         ],
         "languages_code": [
             "fr",
-            "nl",
-            "de"
-        ],
-        "population": "11584008"
+            "de",
+            "nl"
+        ]
     },
     "Bosnia & Herzegovina": {
         "COUNTRY_ID": "BA",
-
-        "citizenships": [
-            "Bosnian"
-        ],
+        "citizenships": [],
         "languages": [
+            "Serbian",
             "Bosnian",
             "Croatian"
         ],
         "languages_code": [
-            "ba",
-            "hr"
+            "hr",
+            "bs",
+            "sr"
         ]
     },
     "Bulgaria": {
         "COUNTRY_ID": "BG",
-        "citizenships": [
-            "Bulgarian"
-        ],
+        "citizenships": [],
         "languages": [
             "Bulgarian"
         ],
         "languages_code": [
             "bg"
-        ],
-        "population": "6795803"
+        ]
     },
     "Croatia": {
         "COUNTRY_ID": "HR",
-        "citizenships": [
-            "Croatian"
-        ],
+        "citizenships": [],
         "languages": [
             "Croatian"
         ],
@@ -140,61 +111,50 @@
     },
     "Cyprus": {
         "COUNTRY_ID": "CY",
-        "citizenships": [
-            "Cypriot"
-        ],
+        "citizenships": [],
         "languages": [
+            "Greek",
             "Modern Greek",
-            "Greek"
+            "Turkish"
         ],
         "languages_code": [
-            "mg",
-            "gg"
+            "tr",
+            "el"
         ]
     },
     "Czechia": {
         "COUNTRY_ID": "CZ",
-        "citizenships": [
-            "Czech"
-        ],
+        "citizenships": [],
         "languages": [
             "Czech"
         ],
         "languages_code": [
-            "cz"
+            "cs"
         ]
     },
     "Denmark": {
         "COUNTRY_ID": "DK",
-        "citizenships": [
-            "Danish"
-        ],
+        "citizenships": [],
         "languages": [
             "Danish"
         ],
         "languages_code": [
             "da"
-        ],
-        "population": "5930987"
+        ]
     },
     "Estonia": {
         "COUNTRY_ID": "EE",
-        "citizenships": [
-            "Estonian"
-        ],
+        "citizenships": [],
         "languages": [
             "Estonian"
         ],
         "languages_code": [
-            "ee"
+            "et"
         ]
     },
     "Finland": {
         "COUNTRY_ID": "FI",
-        "citizenships": [
-            "Finn",
-            "Finnish"
-        ],
+        "citizenships": [],
         "languages": [
             "Swedish",
             "Finnish"
@@ -202,79 +162,64 @@
         "languages_code": [
             "fi",
             "sv"
-        ],
-        "population": "5608218"
+        ]
     },
     "France": {
         "COUNTRY_ID": "FR",
-        "citizenships": [
-            "French"
-        ],
+        "citizenships": [],
         "languages": [
             "French"
         ],
         "languages_code": [
             "fr"
-        ],
-        "population": "68373433"
+        ]
     },
     "Georgia": {
         "COUNTRY_ID": "GE",
-        "citizenships": [
-            "Georgian"
-        ],
+        "citizenships": [],
         "languages": [
+            "Abkhaz",
             "Georgian"
         ],
         "languages_code": [
-            "ge"
+            "ka",
+            "ab"
         ]
     },
     "Germany": {
         "COUNTRY_ID": "DE",
-        "citizenships": [
-            "German"
-        ],
+        "citizenships": [],
         "languages": [
             "German"
         ],
         "languages_code": [
             "de"
-        ],
-        "population": "84358845"
+        ]
     },
     "Greece": {
         "COUNTRY_ID": "GR",
-        "citizenships": [
-            "Greek"
-        ],
+        "citizenships": [],
         "languages": [
             "Greek",
             "Modern Greek"
         ],
         "languages_code": [
             "el"
-        ],
-        "population": "10482487"
+        ]
     },
     "Hungary": {
         "COUNTRY_ID": "HU",
-        "citizenships": [
-            "Hungarian"
-        ],
+        "citizenships": [],
         "languages": [
             "Hungarian"
         ],
         "languages_code": [
             "hu"
-        ],
-        "population": "9599744"
+        ]
     },
     "Iceland": {
         "COUNTRY_ID": "IS",
-        "citizenships": [
-            "Icelandic"
-        ],
+        "citizenships": [],
         "languages": [
             "Icelandic"
         ],
@@ -284,56 +229,306 @@
     },
     "Ireland": {
         "COUNTRY_ID": "IE",
-        "citizenships": [
-            "Irish"
-        ],
+        "citizenships": [],
         "languages": [
             "English",
             "Irish"
         ],
         "languages_code": [
-            "ga",
-            "en"
-        ],
-        "population": "5149139"
+            "en",
+            "ga"
+        ]
     },
     "Italy": {
         "COUNTRY_ID": "IT",
-        "citizenships": [
-            "Italian"
-        ],
+        "citizenships": [],
         "languages": [
             "Italian"
         ],
         "languages_code": [
             "it"
+        ]
+    },
+    "Netherlands": {
+        "COUNTRY_ID": "NL",
+        "citizenships": [],
+        "languages": [
+            "Dutch"
         ],
-        "population": "58850717"
+        "languages_code": [
+            "nl"
+        ]
     },
     "Kosovo": {
         "COUNTRY_ID": "XK",
-        "citizenships": [
-            "Icelandic"
-        ],
+        "citizenships": [],
         "languages": [
-            "Irish"
+            "Serbian",
+            "Albanian"
         ],
         "languages_code": [
-            "is"
+            "sq",
+            "sr"
+        ]
+    },
+    "Latvia": {
+        "COUNTRY_ID": "LV",
+        "citizenships": [],
+        "languages": [
+            "Latvian"
+        ],
+        "languages_code": [
+            "lv"
+        ]
+    },
+    "Liechtenstein": {
+        "COUNTRY_ID": "LI",
+        "citizenships": [],
+        "languages": [
+            "German"
+        ],
+        "languages_code": [
+            "de"
+        ]
+    },
+    "Lithuania": {
+        "COUNTRY_ID": "LT",
+        "citizenships": [],
+        "languages": [
+            "Lithuanian"
+        ],
+        "languages_code": [
+            "lt"
+        ]
+    },
+    "Luxembourg": {
+        "COUNTRY_ID": "LU",
+        "citizenships": [],
+        "languages": [
+            "German",
+            "Luxembourgish",
+            "French"
+        ],
+        "languages_code": [
+            "de",
+            "fr",
+            "lb"
+        ]
+    },
+    "Malta": {
+        "COUNTRY_ID": "MT",
+        "citizenships": [],
+        "languages": [
+            "English",
+            "Maltese"
+        ],
+        "languages_code": [
+            "en",
+            "mt"
+        ]
+    },
+    "Moldova": {
+        "COUNTRY_ID": "MD",
+        "citizenships": [],
+        "languages": [
+            "Romanian"
+        ],
+        "languages_code": [
+            "ro"
+        ]
+    },
+    "Monaco": {
+        "COUNTRY_ID": "MC",
+        "citizenships": [],
+        "languages": [
+            "French"
+        ],
+        "languages_code": [
+            "fr"
+        ]
+    },
+    "Montenegro": {
+        "COUNTRY_ID": "ME",
+        "citizenships": [],
+        "languages": [
+            "Montenegrin"
+        ],
+        "languages_code": [
+            "cnr"
+        ]
+    },
+    "North Macedonia": {
+        "COUNTRY_ID": "MK",
+        "citizenships": [],
+        "languages": [
+            "Macedonian",
+            "Albanian"
+        ],
+        "languages_code": [
+            "sq",
+            "mk"
+        ]
+    },
+    "Norway": {
+        "COUNTRY_ID": "NO",
+        "citizenships": [],
+        "languages": [
+            "Norwegian",
+            "Bokm\u00e5l",
+            "Nynorsk"
+        ],
+        "languages_code": [
+            "nb",
+            "nn",
+            "no"
+        ]
+    },
+    "Poland": {
+        "COUNTRY_ID": "PL",
+        "citizenships": [],
+        "languages": [
+            "Polish"
+        ],
+        "languages_code": [
+            "pl"
+        ]
+    },
+    "Portugal": {
+        "COUNTRY_ID": "PT",
+        "citizenships": [],
+        "languages": [
+            "Mirandese",
+            "Portuguese"
+        ],
+        "languages_code": [
+            "pt",
+            "mwl"
+        ]
+    },
+    "Romania": {
+        "COUNTRY_ID": "RO",
+        "citizenships": [],
+        "languages": [
+            "Romanian"
+        ],
+        "languages_code": [
+            "ro"
+        ]
+    },
+    "Russia": {
+        "COUNTRY_ID": "RU",
+        "citizenships": [],
+        "languages": [
+            "Russian"
+        ],
+        "languages_code": [
+            "ru"
+        ]
+    },
+    "San Marino": {
+        "COUNTRY_ID": "SM",
+        "citizenships": [],
+        "languages": [
+            "Italian"
+        ],
+        "languages_code": [
+            "it"
+        ]
+    },
+    "Serbia": {
+        "COUNTRY_ID": "RS",
+        "citizenships": [],
+        "languages": [
+            "Serbian"
+        ],
+        "languages_code": [
+            "sr"
+        ]
+    },
+    "Slovakia": {
+        "COUNTRY_ID": "SK",
+        "citizenships": [],
+        "languages": [
+            "Slovak"
+        ],
+        "languages_code": [
+            "sk"
+        ]
+    },
+    "Slovenia": {
+        "COUNTRY_ID": "SI",
+        "citizenships": [],
+        "languages": [
+            "Slovene"
+        ],
+        "languages_code": [
+            "sl"
+        ]
+    },
+    "Spain": {
+        "COUNTRY_ID": "ES",
+        "citizenships": [],
+        "languages": [
+            "Spanish"
+        ],
+        "languages_code": [
+            "es"
+        ]
+    },
+    "Sweden": {
+        "COUNTRY_ID": "SE",
+        "citizenships": [],
+        "languages": [
+            "Swedish"
+        ],
+        "languages_code": [
+            "sv"
+        ]
+    },
+    "Switzerland": {
+        "COUNTRY_ID": "CH",
+        "citizenships": [],
+        "languages": [
+            "German",
+            "Italian",
+            "Romansh",
+            "French"
+        ],
+        "languages_code": [
+            "de",
+            "fr",
+            "it",
+            "rm"
+        ]
+    },
+    "Turkey": {
+        "COUNTRY_ID": "TR",
+        "citizenships": [],
+        "languages": [
+            "Turkish"
+        ],
+        "languages_code": [
+            "tr"
+        ]
+    },
+    "Ukraine": {
+        "COUNTRY_ID": "UA",
+        "citizenships": [],
+        "languages": [
+            "Ukrainian"
+        ],
+        "languages_code": [
+            "uk"
         ]
     },
     "United Kingdom": {
         "COUNTRY_ID": "GB",
-        "citizenships": [
-            "Briton",
-            "British"
-        ],
+        "citizenships": [],
         "languages": [
             "English"
         ],
         "languages_code": [
             "en"
-        ],
-        "population": "67326569"
+        ]
     }
 }
