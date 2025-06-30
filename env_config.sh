@@ -28,12 +28,9 @@ pip install ollama > /dev/null
 # ollama pull deepseek-r1:70b
 ollama serve > /dev/null &
 
-# echo "🔧 Installing base libraries..."
-# pip install torch pandas tqdm transformers
-# huggingface-cli download meta-llama/Meta-Llama-3-8B --include "original/*" --local-dir meta-llama/Meta-Llama-3-8B
-# huggingface-cli download meta-llama/Meta-Llama-3-8B --include "original/*" --local-dir meta-llama/Meta-Llama-3-8B-Instruct
-# pip install huggingface_hub
-#unidecode surprisal transformers python-dotenv > /dev/null
+echo "🔧 Installing base libraries..."
+pip install torch pandas tqdm transformers deep-translator SPARQLWrapper   
+unidecode surprisal transformers python-dotenv > /dev/null
 
 # echo "🧠 Installing sentiment analysis tools..."
 # pip install afinn vadersentiment > /dev/null

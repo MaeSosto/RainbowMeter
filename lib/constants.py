@@ -10,9 +10,10 @@ import os
 # =============================
 logger = logging.getLogger()
 #logging.basicConfig(filename='.log', encoding='utf-8', level=logging.DEBUG)
-console = logging.StreamHandler()
-console.setLevel(logging.INFO)
-logger.addHandler(console)
+logging.basicConfig(level=logging.INFO)
+# console = logging.StreamHandler()
+# console.setLevel(logging.INFO)
+# logger.addHandler(console)
 
 # =============================
 # Device Configuration
@@ -36,9 +37,18 @@ GPT4_MINI = 'gpt-4o-mini'
 GPT4 = 'gpt-4o'
 
 
-def _convertCSVtoJSON(file_in, file_out):
-    with open(file_in, mode='r', newline='', encoding='utf-8') as csvfile:
+def csv_to_json(csv_path, json_path):
+    with open(csv_path, mode='r', newline='', encoding='utf-8') as csvfile:
         data = list(csv.DictReader(csvfile))
 
-    with open(file_out, mode='w', encoding='utf-8') as jsonfile:
+    with open(json_path, mode='w', encoding='utf-8') as jsonfile:
         json.dump(data, jsonfile, indent=4)
+        
+def json_to_csv(json_path, csv_path):
+    with open(json_path, 'r', encoding='utf-8') as json_file:
+        data = json.load(json_file)
+
+    with open(csv_path, 'w', newline='', encoding='utf-8') as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=data[0].keys())
+        writer.writeheader()
+        writer.writerows(data)
