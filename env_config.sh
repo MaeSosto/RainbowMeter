@@ -16,17 +16,17 @@ echo "📦 Upgrading pip..."
 # pip install evaluate > /dev/null
 # cd ..
 
-echo "📦 Installing Ollama and starting the service..."
-pip install ollama > /dev/null
+# echo "📦 Installing Ollama and starting the service..."
+# pip install ollama > /dev/null
 # Uncomment the models you want to pull
 # ollama pull llama3
 # ollama pull llama3.3
 # ollama pull llama3:70b
 # ollama pull gemma3
 # ollama pull gemma3:27b
-#ollama pull deepseek-r1
+# ollama pull deepseek-r1
 # ollama pull deepseek-r1:70b
-ollama serve > /dev/null &
+# ollama serve > /dev/null &
 
 echo "🔧 Installing base libraries..."
 pip install torch pandas tqdm transformers deep-translator SPARQLWrapper   
