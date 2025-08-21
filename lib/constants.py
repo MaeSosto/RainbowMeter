@@ -35,6 +35,10 @@ GEMMA3 = 'gemma3'
 GEMMA3_27B = 'gemma3:27b'
 GPT4_MINI = 'gpt-4o-mini'
 GPT4 = 'gpt-4o'
+GEMINI_2_0_FLASH = "gemini-2.0-flash"
+GEMINI_2_0_FLASH_LITE = "gemini-2.0-flash-lite"
+DEEPSEEK = 'deepseek-r1'
+DEEPSEEK_671B = 'deepseek-reasoner'
 
 
 def csv_to_json(csv_path, json_path):

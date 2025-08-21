@@ -29,8 +29,7 @@ echo "📦 Upgrading pip..."
 # ollama serve > /dev/null &
 
 echo "🔧 Installing base libraries..."
-pip install torch pandas tqdm transformers deep-translator SPARQLWrapper   
-unidecode surprisal transformers python-dotenv > /dev/null
+pip install torch pandas tqdm transformers deep-translator SPARQLWrapper unidecode surprisal transformers python-dotenv > /dev/null
 
 # echo "🧠 Installing sentiment analysis tools..."
 # pip install afinn vadersentiment > /dev/null
@@ -41,11 +40,16 @@ unidecode surprisal transformers python-dotenv > /dev/null
 echo "🤖 Installing model APIs..."
 pip install openai > /dev/null
 
-echo "🔧 Installing base libraries..."
-for pkg in torch pandas tqdm unidecode surprisal transformers python-dotenv; do
+for pkg in openai google-generativeai; do
     echo "   → Installing $pkg..."
     pip install "$pkg" || { echo "❌ Failed to install $pkg"; exit 1; }
 done
+
+# echo "🔧 Installing base libraries..."
+# for pkg in torch pandas tqdm unidecode surprisal transformers python-dotenv; do
+#     echo "   → Installing $pkg..."
+#     pip install "$pkg" || { echo "❌ Failed to install $pkg"; exit 1; }
+# done
 
 echo "📊 Installing graph & ML libraries..."
 for pkg in tf-keras seaborn scikit-learn scipy matplotlib wordcloud python-ternary; do

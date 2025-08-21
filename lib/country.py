@@ -2,15 +2,15 @@ import re
 import json
 import os
 
-prompt_types = ['Question Pro', 'Question Con'] #, 'Question Op'] #Let's stay with just this now 
+prompt_types = ['Statement Pro', 'Statement Con'] #, 'Question Op'] #Let's stay with just this now 
 
-def get_country_file():
+def get_country_list():
         countries_file = "data/countries_langs.json"
         countries_file = open(countries_file)
         countries_file = json.load(countries_file)
         return countries_file
-    
-class Prompt:
+        
+class Country:
     def __init__(self, country_info):
         self.country_info = country_info
         self.country_id = country_info["COUNTRY_ID"]
@@ -18,10 +18,16 @@ class Prompt:
         self.language = self.country_info['languages_code'][0]
         if self.language == "en": #NOW ONLY EN MODEL SUPPORTED ENGLISH
             self.prompt_template, self.retry_prompt_template, self.labels = self._get_prompt_templates()
-            self.criteria_file = self._get_criteria_file()
+            self.criteria_file = self._get_criteria_file() #NOW RETURN ONLY COMPLETE CRITERIAS 
         
     def get_language(self):
         return self.language
+    
+    def get_country_id(self):
+        return self.country_id
+    
+    def get_criteria_file(self):
+        return self.criteria_file
 
     def _get_prompt_templates(self):
         prompt_template = f'data/prompts_data/prompts_template_{self.language}.json'
@@ -34,10 +40,15 @@ class Prompt:
         criteria_file = open(criteria_file)
         criteria_file = json.load(criteria_file)
         
-        #NOW ONLY COMPLETE CRITERIAS 
+        #NOW RETURN ONLY COMPLETE CRITERIAS 
         criteria_file = [criteria for criteria in criteria_file if criteria[prompt_types[0]] != ""] 
         return criteria_file
     
+    def check_result_already_exist(self, model_name):
+        path_result = f"results_for_analysis/languages_experiments/{model_name}"
+        file_out = f"{path_result}/{self.language}_raibow_meter.csv"
+        return os.path.exists(file_out)
+
     def export_language_results(self, results, model_name):
         json_object = json.dumps(results, indent=4)
         path_result = f"results_for_analysis/languages_experiments/{model_name}"
@@ -71,17 +82,6 @@ class Prompt:
         return prompt_template
     
     def check_response(self, response):
-        try:
-            response = re.sub(r"^```(?:json)?\n|```$", "", response.strip())
-            response = json.loads(response)
-            if response["answer"] in self.labels:
-                return response["answer"]
-            else:
-                return None
-        except Exception as X:
-            return None
-    
-    def clean_response(self, response):
         try:
             response = re.sub(r"^```(?:json)?\n|```$", "", response.strip())
             response = json.loads(response)
