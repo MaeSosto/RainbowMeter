@@ -47,7 +47,13 @@ class Country:
     def check_result_already_exist(self, model_name):
         path_result = f"results_for_analysis/languages_experiments/{model_name}"
         file_out = f"{path_result}/{self.language}_raibow_meter.csv"
-        return os.path.exists(file_out)
+        if os.path.exists(file_out):
+            file_out = open(file_out)
+            file_out = json.load(file_out)
+            
+            if len(file_out) == len(self.criteria_file):
+                return True
+        return False 
 
     def export_language_results(self, results, model_name):
         json_object = json.dumps(results, indent=4)
@@ -84,6 +90,7 @@ class Country:
     def check_response(self, response):
         try:
             response = re.sub(r"^```(?:json)?\n|```$", "", response.strip())
+            response = re.sub(r'<think>.*?</think>', '', response, flags=re.DOTALL)
             response = json.loads(response)
             if response["answer"] in self.labels:
                 return response["answer"]

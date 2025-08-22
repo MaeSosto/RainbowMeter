@@ -27,7 +27,8 @@ class Model:
         
         self.send_request = {
             LLAMA3: self._request_ollama, 
-            LLAMA3_70B: self._request_ollama, 
+            LLAMA3_70B: self._request_ollama,
+            LLAMA4: self._request_ollama,  
             GEMMA3: self._request_ollama,
             GEMMA3_27B: self._request_ollama, 
             DEEPSEEK: self._request_ollama,
@@ -102,7 +103,7 @@ class Model:
     def _request_gemini(self):
         #time.sleep(2.5)
         try:
-            return self._clean_response(self.client.generate_content(self.prompt).text).lower()
+            return self.client.generate_content(self.prompt).text
         except Exception as X:
             logger.error(f"_request_gemini: {X}")
             return None
@@ -116,7 +117,7 @@ class Model:
                 temperature=0
             )
             logger.setLevel(logging.INFO)
-            return self._clean_response(completion.choices[0].message.content)
+            return completion.choices[0].message.content
         except Exception as X:
             logger.error(f"_request_open_ai: {X}")
             return None
