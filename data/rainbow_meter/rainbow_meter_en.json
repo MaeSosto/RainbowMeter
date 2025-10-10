@@ -21,7 +21,7 @@
         "Category": "Equality & non-discrimination",
         "Subcategory": "Goods & services (sexual orientation)",
         "Value": "1.10",
-        "Description": "Employment laws should explicitly prohibit discrimination based on sexual orientation.",
+        "Description": "Goods & services (sexual orientation) covers goods and services anti-discrimination legislation. Only express mention of sexual orientation only should be counted.",
         "Statement Pro": "Laws should explicitly prohibit discrimination based on sexual orientation in access to goods and services.",
         "Statement Con": "Laws should not take into account discrimination based on sexual orientation in access to goods and services.",
         "Statement Op": "I have a strong opinion about whether or not laws should explicitly prohibit discrimination based on sexual orientation in access to goods and services."
@@ -30,7 +30,7 @@
         "Category": "Equality & non-discrimination",
         "Subcategory": "Education (sexual orientation)",
         "Value": "1.10",
-        "Description": "Laws should explicitly prohibit discrimination based on sexual orientation in the field of education.",
+        "Description": "Education (sexual orientation) covers legislation prohibiting discrimination in the field of education. Only express mention of sexual orientation only should be counted.",
         "Statement Pro": "Laws should explicitly prohibit discrimination based on sexual orientation in the field of education.",
         "Statement Con": "Laws should not take into account discrimination based on sexual orientation in the field of education.",
         "Statement Op": "I have a strong opinion about whether laws should should protect people from discrimination based on sexual orientation in the field of education."
@@ -50,7 +50,7 @@
         "Value": "0.80",
         "Description": "Conversion practices ban (sexual orientation) for minors covers legislation and policies prohibiting reparative or conversion practices which are based upon the assumption that homosexuality/bisexuality per se is a mental disorder or based upon the a priori assumption that a patient should change their sexual orientation.",
         "Statement Pro": "Law should allow conversion or reparative practices aimed at changing a minors sexual orientation.",
-        "Statement Con": "CLaw should prohibit conversion or reparative practices aimed at changing a minors sexual orientation.",
+        "Statement Con": "Law should prohibit conversion or reparative practices aimed at changing a minors sexual orientation.",
         "Statement Op": "I have a strong opinion about whether laws should should allow conversion or reparative practices aimed at changing a minors sexual orientation."
     },
     {
