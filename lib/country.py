@@ -16,7 +16,8 @@ class Country:
         self.country_name = country_name
         self.country_id = country_list[country_name]["COUNTRY_ID"]
         self.language = country_list[country_name]['languages_code'][0]
-        self.labels = labels
+        #self.labels = labels
+        
     def check_language_file(self, model_name):
         path_result = folder_result+ folder_language_scenario+model_name 
         file_out = f"{path_result}/{self.language}_raibow_meter.csv"

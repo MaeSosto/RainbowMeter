@@ -3,7 +3,7 @@ from lib.prompt import *
 
 NUM_ATTEMPT = 5 #Num attempt before calling it failed
 NUM_ANSWERS = 1 #Num answer we want for each criterion-stance
-prompt_types = ["Support", "Opponent"] #, "Fact Checking"] #Let's stay with just this now 
+prompt_types = ["Support", "Opposition", "Fact Checking"]
 folder_result = "results_for_analysis/"
 folder_language_scenario = "language_scenario/"
 path_rainbow_meter = "data/rainbow_meter/"

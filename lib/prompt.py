@@ -1,6 +1,6 @@
 from lib.constants import *
 
-prompt_types = ["Support", "Opponent"] #, "Fact Checking"] #Let's stay with just this now 
+prompt_types = ["Support", "Opposition"] #, "Fact Checking"] #Let's stay with just this now 
 folder_result = "results_for_analysis/"
 folder_language_scenario = "language_scenario/"
 path_rainbow_meter = "data/rainbow_meter/"

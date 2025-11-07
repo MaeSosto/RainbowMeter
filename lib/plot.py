@@ -45,7 +45,7 @@ def plot_llm_alignment_heatmap_multiple_models(model_names):
     # Plot rectangles
     for i, (model_name, data) in enumerate(zip(model_names, data_by_model)):
         for j, item in enumerate(data):
-            pro, con, op = item["Support"], item["Opponent"], item["Factual Check"]
+            pro, con, op = item["Support"], item["Opposition"], item["Fact-Check"]
 
             # Determine alignment color
             if pro == "AGREE" and con == "DISAGREE":
