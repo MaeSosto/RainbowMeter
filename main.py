@@ -33,5 +33,6 @@ for model_name in MODEL_LIST:
                 logger.info(f"✔️ {MODELS_LABELS[model_name]} - {country.country_id} - {country.language}")
                 continue
             
+            rainbow_meter.get_answers()
             logger.info(f"🔄 {MODELS_LABELS[model_name]} - {country.country_id} - {country.language}")
             #break

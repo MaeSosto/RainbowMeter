@@ -1,26 +1,50 @@
 from lib.constants import *
+import re
 
-prompt_types = ["Support", "Opposition"] #, "Fact Checking"] #Let's stay with just this now 
+prompt_types = ["Support", "Opposition", "Fact-Check"]
 folder_result = "results_for_analysis/"
 folder_language_scenario = "language_scenario/"
 path_rainbow_meter = "data/rainbow_meter/"
 
 class Prompt:
-    def __init__(self, country):
+    def __init__(self, prompt_type, criteria, country):
         self.country = country
-        self.prompt_template, self.retry_prompt_template, self.country.labels = self._get_prompt_templates()
+        self.prompt_type = prompt_type
+        self.criteria_text = criteria[prompt_type]
+        self.stance_type = "FC" if prompt_type == "Fact-Check" else "BS"
+        self.prompt_template = self._get_prompt_templates()
+        self.format_instructions = f'{{ "answer": "{self.prompt_template[self.stance_type]['labels'][0]}" }}'
 
     def _get_prompt_templates(self):
-        prompt_template = f'data/prompts_data/prompts_template_{self.country.language}.json'
+        prompt_template = f'data/prompts_data/prompt_template_{self.country.language}.json'
         prompt_template = open(prompt_template)
         prompt_template = json.load(prompt_template)
-        return prompt_template["prompt_template"], prompt_template["retry_prompt_template"], prompt_template["labels"]
+        return prompt_template
+        #self.BS_standard_template, self.retry_prompt_template, self.country.labels =  prompt_template["prompt_template"], prompt_template["retry_prompt_template"], prompt_template["labels"]
     
-    def get_standard_prompt(self, text):
-        format_instructions = f'{{ "answer": "{self.country.labels[0]}" }}'
-
-        prompt_template = self.prompt_template.format(
-            text=text,
-            format_instructions=format_instructions
+    def get_standard_prompt(self,):
+        prompt_template = self.prompt_template[self.stance_type]["standard"].format(
+            text=self.criteria_text,
+            format_instructions=self.format_instructions
         )
         return prompt_template
+    
+    def get_retry_prompt(self, chat_history):
+        prompt_template = self.prompt_template[self.stance_type]["retry"].format(
+            chat_history = chat_history,
+            text=self.criteria_text,
+            format_instructions=self.format_instructions
+        )
+        return prompt_template
+    
+    def check_response(self, response):
+        try:
+            #response = re.sub(r"^```(?:json)?\n|```$", "", response.strip())
+            #response = re.sub(r'<think>.*?</think>', '', response, flags=re.DOTALL)
+            response = json.loads(response)
+            if response["answer"] in self.prompt_template[self.stance_type]["labels"]:
+                return response["answer"]
+            else:
+                return None
+        except Exception as X:
+            return None
