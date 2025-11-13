@@ -55,6 +55,20 @@ MODELS_LABELS = {
     DEEPSEEK_671B: 'DeepSeek R1 (671b)',
 }
 
+MODELS_ID = {
+    LLAMA3 : "meta-llama/Meta-Llama-3-8B",
+    LLAMA3_70B : "meta-llama/Meta-Llama-3-70B",
+    #LLAMA4 : 'Llama 4',
+    GEMMA3 : 'google/gemma-7b',
+    GEMMA3_27B : 'google/gemma-3-27b-it',
+    DEEPSEEK: 'deepseek-ai/DeepSeek-R1',
+    #DEEPSEEK_671B: 'DeepSeek R1 (671b)',
+    GEMINI_2_0_FLASH : "Gemini 2.0 Flash",
+    GEMINI_2_0_FLASH_LITE : "Gemini 2.0 Flash Lite",
+    GPT4_MINI : 'GPT4o Mini',
+    GPT4 : 'GPT4o',
+}
+
 def csv_to_json(csv_path, json_path):
     with open(csv_path, mode='r', newline='', encoding='utf-8') as csvfile:
         data = list(csv.DictReader(csvfile))

@@ -4,7 +4,7 @@ from lib.country import *
 from lib.rainbow_meter import *
 
 #Iterate on each model
-for model_name in MODEL_LIST:
+for model_name in [LLAMA3, LLAMA3_70B, GEMMA3, GEMMA3_27B, DEEPSEEK]:#, GPT4, GPT4_MINI, GEMINI_2_0_FLASH, GEMINI_2_0_FLASH_LITE ]:
     
     #Setup the model
     # model_name = LLAMA3

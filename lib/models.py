@@ -2,37 +2,39 @@ from lib.constants import *
 import requests
 from openai import OpenAI
 import google.generativeai as genai
+from vllm import LLM, SamplingParams
+from huggingface_hub import login 
 import re
 
-URL_OLLAMA_LOCAL = "http://localhost:11434/api"
-URL_DEEPSEEK = "https://api.deepseek.com"
+#URL_OLLAMA_LOCAL = "http://localhost:11434/api"
+#URL_DEEPSEEK = "https://api.deepseek.com"
 
 class Model:
     def __init__(self, name):
         self.name = name
         
         self.func_initialize_model = {
-            LLAMA3: self._initialize_Ollama, 
-            LLAMA3_70B: self._initialize_Ollama,
-            LLAMA4: self._initialize_Ollama,
-            GEMMA3: self._initialize_Ollama,
-            GEMMA3_27B: self._initialize_Ollama, 
+            LLAMA3: self._initialize_vLLM, 
+            LLAMA3_70B: self._initialize_vLLM,
+            LLAMA4: self._initialize_vLLM,
+            GEMMA3: self._initialize_vLLM,
+            GEMMA3_27B: self._initialize_vLLM, 
             GPT4: self._initialize_GPT, 
             GPT4_MINI: self._initialize_GPT,
-            DEEPSEEK: self._initialize_Ollama,
-            DEEPSEEK_671B: self._initialize_DeepSeeek,
+            DEEPSEEK: self._initialize_vLLM,
+            #DEEPSEEK_671B: self._initialize_DeepSeeek,
             GEMINI_2_0_FLASH: self._initialize_Gemini, 
             GEMINI_2_0_FLASH_LITE: self._initialize_Gemini,
         }
         
         self.send_request = {
-            LLAMA3: self._request_ollama, 
-            LLAMA3_70B: self._request_ollama,
-            LLAMA4: self._request_ollama,  
-            GEMMA3: self._request_ollama,
-            GEMMA3_27B: self._request_ollama, 
-            DEEPSEEK: self._request_ollama,
-            DEEPSEEK_671B: self._request_open_ai,
+            LLAMA3: self._request_vLLM, 
+            LLAMA3_70B: self._request_vLLM,
+            LLAMA4: self._request_vLLM,  
+            GEMMA3: self._request_vLLM,
+            GEMMA3_27B: self._request_vLLM, 
+            DEEPSEEK: self._request_vLLM,
+            #DEEPSEEK_671B: self._request_open_ai,
             GPT4: self._request_open_ai, 
             GPT4_MINI: self._request_open_ai,
             GEMINI_2_0_FLASH: self._request_gemini, 
@@ -62,42 +64,41 @@ class Model:
         self.client = OpenAI(api_key=api_key)
         return False
 
-    def _initialize_Ollama(self):
-        try:
-            response = requests.get(f"{URL_OLLAMA_LOCAL}/tags")
-            if not(response.status_code == 200):
-                logger.error(f"⚠️ Ollama server is not running")
-                return True
-            return False
-        except requests.RequestException:
-            logger.error(f"⚠️ Ollama server is not running")
-            return True
-
-    def _initialize_DeepSeeek(self): 
-        api_key = os.getenv('DEEPSEEK_API_KEY')
-        if api_key is None:
-            logger.error(f"⚠️ DEEPSEEK_API_KEY is missing")
-            return True
-        self.client = OpenAI(api_key=api_key, base_url=URL_DEEPSEEK)
+    def _initialize_vLLM(self):
+        # try:
+        #     response = requests.get(f"{URL_OLLAMA_LOCAL}/tags")
+        #     if not(response.status_code == 200):
+        #         logger.error(f"⚠️ Ollama server is not running")
+        #         return True
+        #     return False
+        # except requests.RequestException:
+        #     logger.error(f"⚠️ Ollama server is not running")
+        #     return True
         return False
+
+    # def _initialize_DeepSeeek(self): 
+    #     api_key = os.getenv('DEEPSEEK_API_KEY')
+    #     if api_key is None:
+    #         logger.error(f"⚠️ DEEPSEEK_API_KEY is missing")
+    #         return True
+    #     self.client = OpenAI(api_key=api_key, base_url=URL_DEEPSEEK)
+    #     return False
     
-    def _request_ollama(self):
+    def _request_vLLM(self):
         try:
-            response = requests.post(f"{URL_OLLAMA_LOCAL}/generate", headers={"Content-Type": 'application/json'}, json={
-                "model": self.name,
-                "prompt": self.prompt,
-                "messages": [{"role": "user", "content": self.prompt}],
-                "options": {"temperature": 0},
-                "stream": False
-            })
-            response = response.json()['response']
+            llm = LLM(model=MODELS_ID[self.name])
+            sampling_params = SamplingParams(
+                temperature=0
+            )
+            response = llm.generate(self.prompt, sampling_params)
+            response = response[0].outputs[0].text
             if response == None or response == "":
-                logger.error(f"_request_ollama: {response}")
+                logger.error(f"_request_vLLM: {response}")
                 return None
             return response
         
         except Exception as X:
-            logger.error(f"_request_ollama: {response['text']}")
+            logger.error(f"_request_vLLM: {response['text']}")
             return None
 
     def _request_gemini(self):
