@@ -1,10 +1,10 @@
 from lib.constants import *
 import re
 
-prompt_types = ["Support", "Opposition", "Fact-Check"]
-folder_result = "results_for_analysis/"
-folder_language_scenario = "language_scenario/"
-path_rainbow_meter = "data/rainbow_meter/"
+PROMPT_TYPES = ["Support", "Opposition", "Fact-Check"]
+RESULT_FOLDER = "results/"
+SCENARIO_LANGUAGE_FOLDER = "language_scenario/"
+RAINBOW_METER_DATA_PATH = "data/rainbow_meter/"
 
 class Prompt:
     def __init__(self, prompt_type, criteria, country):
@@ -39,8 +39,8 @@ class Prompt:
     
     def check_response(self, response):
         try:
-            #response = re.sub(r"^```(?:json)?\n|```$", "", response.strip())
-            #response = re.sub(r'<think>.*?</think>', '', response, flags=re.DOTALL)
+            response = re.sub(r"^```(?:json)?\n|```$", "", response.strip())
+            response = re.sub(r'<think>.*?</think>', '', response, flags=re.DOTALL)
             response = json.loads(response)
             if response["answer"] in self.prompt_template[self.stance_type]["labels"]:
                 return response["answer"]

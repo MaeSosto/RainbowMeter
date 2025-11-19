@@ -39,6 +39,7 @@ class Model:
             GEMINI_2_0_FLASH_LITE: self._request_gemini,
         }
         
+        
     def initialize_model(self):
         if self.name in self.func_initialize_model: 
             err = self.func_initialize_model[self.name]()
