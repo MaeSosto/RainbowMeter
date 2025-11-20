@@ -83,3 +83,7 @@ def check_result_already_exist(model_name, language, ):
         if len(file_out) == len(_get_criteria_list(language)):
             return True
     return False
+
+##Rainbow Map Queries
+def get_country_rainbowmap(country):
+    

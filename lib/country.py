@@ -7,7 +7,14 @@ def get_country_list():
         countries_file = open(countries_file)
         countries_file = json.load(countries_file)
         return countries_file
+
+def get_country_language_list():
+    country_list = get_country_list()
+    
+    for name in country_list:
+        lan = country_list[name]['languages_code'][0]
         
+    
 class Country:
     def __init__(self, country_list, name):
         self.name = name
