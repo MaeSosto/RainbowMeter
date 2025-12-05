@@ -31,30 +31,30 @@ class Rainbow_Meter:
             }
                 
             #Iterate on the prompt types
-            for prompt_type in PROMPT_TYPES:
+            for prompt_type in ["Support", "Fact-Check"]: #PROMPT_TYPES:
                 self.prompt_settings = Prompt(prompt_type, criteria, self.country)
                 risp[prompt_type] = ""
                 #logger.info(prompt_type)    
                 
                 #Try with standard prompt    
                 attempt = 0
-                prompt = self.prompt_settings.get_standard_prompt()
+                prompt = criteria[prompt_type] #self.prompt_settings.get_standard_prompt()
                 
                 #Try to get a NUM_ANSWERS ok answers until NUM_ATTEMPTS attempts
                 while attempt < NUM_ATTEMPT and len(risp[prompt_type]) < NUM_ANSWERS: 
                     response = self.model.call_model(prompt)
-                    clean_response = self.prompt_settings.check_response(response)
+                    clean_response = response #self.prompt_settings.check_response(response)
 
                     if clean_response != None: #Response is valid
                         risp[prompt_type] = clean_response
                         #logger.info(f"{attempt} | {risp[prompt_type]}")
                         attempt = 0
-                        prompt = self.prompt_settings.get_standard_prompt()
+                        prompt = criteria[prompt_type] #self.prompt_settings.get_standard_prompt()
                     else:
                         logger.info(f"{attempt} | {response}")
                         #Try with retry prompt
                         attempt += 1
-                        prompt = self.prompt_settings.get_retry_prompt(response)
+                        prompt = f"Anser yes or no only\n"+criteria[prompt_type] #self.prompt_settings.get_retry_prompt(response)
                 
                 #After 5 attempts return error
                 if attempt == NUM_ATTEMPT:
