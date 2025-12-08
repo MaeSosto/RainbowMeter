@@ -88,7 +88,8 @@ class Model:
                 "model": self.name,
                 "prompt": self.prompt,
                 "messages": [{"role": "user", "content": self.prompt}],
-                "options": {"temperature": 0},
+                "options": {
+                    "temperature": 0},
                 "stream": False
             })
             response = response.json()['response']
