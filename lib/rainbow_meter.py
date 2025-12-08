@@ -72,16 +72,19 @@ def _get_criteria_list(language):
     criteria_file = json.load(criteria_file)
     
     #NOW RETURN ONLY COMPLETE CRITERIAS 
-    criteria_file = [criteria for criteria in criteria_file if criteria[PROMPT_TYPES[0]] != ""] 
+    criteria_file = [criteria for criteria in criteria_file if criteria[PROMPT_TYPES[0]] != "" and criteria[PROMPT_TYPES[0]] != None] 
     return criteria_file
 
 def check_result_already_exist(model_name, language, ):
     path_result = RESULT_FOLDER+SCENARIO_LANGUAGE_FOLDER+model_name 
     file_out = f"{path_result}/{language}_raibow_meter.json"
     if os.path.exists(file_out):
-        file_out = open(file_out)
-        file_out = json.load(file_out)
+        try:
+            file_out = open(file_out)
+            file_out = json.load(file_out)
         
-        if len(file_out) == len(_get_criteria_list(language)):
-            return True
+            if len(file_out) == len(_get_criteria_list(language)):
+                return True
+        except Exception as X:
+            return False
     return False
