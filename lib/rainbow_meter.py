@@ -15,7 +15,7 @@ class Rainbow_Meter:
         json_object = json.dumps(results, indent=4)
         path_result = RESULT_FOLDER+ SCENARIO_LANGUAGE_FOLDER+self.model.name 
         os.makedirs(path_result, exist_ok=True)
-        file_out = f"{path_result}/{self.country.language}_raibow_meter.csv"
+        file_out = f"{path_result}/{self.country.language}_raibow_meter.json"
         with open(file_out, "w") as outfile:
             outfile.write(json_object) 
     
@@ -31,7 +31,7 @@ class Rainbow_Meter:
             }
                 
             #Iterate on the prompt types
-            for prompt_type in ["Support", "Fact-Check"]: #PROMPT_TYPES:
+            for prompt_type in ["Support", "Fact"]: #PROMPT_TYPES:
                 self.prompt_settings = Prompt(prompt_type, criteria, self.country)
                 risp[prompt_type] = ""
                 #logger.info(prompt_type)    
@@ -46,6 +46,7 @@ class Rainbow_Meter:
                     clean_response = response #self.prompt_settings.check_response(response)
 
                     if clean_response != None: #Response is valid
+                        risp[prompt_type+" attempt"] = attempt
                         risp[prompt_type] = clean_response
                         #logger.info(f"{attempt} | {risp[prompt_type]}")
                         attempt = 0
@@ -54,11 +55,12 @@ class Rainbow_Meter:
                         logger.info(f"{attempt} | {response}")
                         #Try with retry prompt
                         attempt += 1
-                        prompt = f"Anser yes or no only\n"+criteria[prompt_type] #self.prompt_settings.get_retry_prompt(response)
+                        prompt = f"Anwser only with yes or no\n"+criteria[prompt_type] #self.prompt_settings.get_retry_prompt(response)
                 
                 #After 5 attempts return error
                 if attempt == NUM_ATTEMPT:
                     logger.error(f"Error: {prompt_type}" )
+                    risp[prompt_type+" attempt"] = attempt
                     risp[prompt_type] = None
             results.append(risp)
             
@@ -75,7 +77,7 @@ def _get_criteria_list(language):
 
 def check_result_already_exist(model_name, language, ):
     path_result = RESULT_FOLDER+SCENARIO_LANGUAGE_FOLDER+model_name 
-    file_out = f"{path_result}/{language}_raibow_meter.csv"
+    file_out = f"{path_result}/{language}_raibow_meter.json"
     if os.path.exists(file_out):
         file_out = open(file_out)
         file_out = json.load(file_out)
@@ -83,7 +85,3 @@ def check_result_already_exist(model_name, language, ):
         if len(file_out) == len(_get_criteria_list(language)):
             return True
     return False
-
-##Rainbow Map Queries
-def get_country_rainbowmap(country):
-    

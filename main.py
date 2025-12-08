@@ -5,10 +5,7 @@ from lib.rainbow_meter import *
 
 error = False
 #Iterate on each model
-for model_name in [LLAMA3, LLAMA3_70B, GEMMA3, GPT4, GPT4_MINI, GEMINI_2_0_FLASH, GEMINI_2_0_FLASH_LITE, DEEPSEEK_671B]:
-    
-    #Setup the model
-    # model_name = LLAMA3
+for model_name in [LLAMA3]:
             
     #Get country file
     country_list = get_country_list()

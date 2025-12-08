@@ -17,10 +17,8 @@ pip install pandas tqdm python-dotenv > /dev/null
 echo "🤖 Installing model APIs..."
 pip install openai > /dev/null
 
-for pkg in openai google-generativeai; do
-    echo "   → Installing $pkg..."
-    pip install "$pkg" || { echo "❌ Failed to install $pkg"; exit 1; }
-done
+pip install google-generativeai > /dev/null
+
 
 echo "📊 Installing graph & ML libraries..."
 for pkg in tf-keras seaborn scikit-learn scipy matplotlib wordcloud python-ternary; do
@@ -28,4 +26,5 @@ for pkg in tf-keras seaborn scikit-learn scipy matplotlib wordcloud python-terna
     pip install "$pkg" || { echo "❌ Failed to install $pkg"; exit 1; }
 done
 
+pip install --upgrade pip
 echo "✅ Environment setup complete!"

@@ -1,7 +1,7 @@
 from lib.constants import *
 import re
 
-PROMPT_TYPES = ["Support", "Opposition", "Fact-Check"]
+PROMPT_TYPES = ["Support", "Opposition", "Fact"]
 RESULT_FOLDER = "results/"
 SCENARIO_LANGUAGE_FOLDER = "language_scenario/"
 RAINBOW_METER_DATA_PATH = "data/rainbow_meter/"
@@ -11,7 +11,7 @@ class Prompt:
         self.country = country
         self.prompt_type = prompt_type
         self.criteria_text = criteria[prompt_type]
-        self.stance_type = "FC" if prompt_type == "Fact-Check" else "BS"
+        self.stance_type = "FC" if prompt_type == "Fact" else "BS"
         self.prompt_template = self._get_prompt_templates()
         self.format_instructions = f'{{ "answer": "{self.prompt_template[self.stance_type]['labels'][0]}" }}'
 
