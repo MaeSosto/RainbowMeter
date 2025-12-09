@@ -25,13 +25,14 @@ class Rainbow_Meter:
         classifier = Model(GPT4_MINI)
         classifier.initialize_model()
         
-        model = Model(self.model_name)
-        error = model.initialize_model()
+        self.model = Model(self.model_name)
+        error = self.model.initialize_model()
+        
         if error: #If there are no errors in initializing the model
             return True  
         
         #Iterate on the criteria list
-        logger.info(self.model.name +"|"+ self.country.language)
+        logger.info(self.model_name +"|"+ self.country.language)
         for criteria in tqdm(self.criteria_list):        
             risp = {
                 'Category': criteria['Category'],
@@ -42,6 +43,7 @@ class Rainbow_Meter:
             for prompt_type in PROMPT_TYPES:
                 self.prompt_settings = Prompt(prompt_type, criteria, self.country)
                 risp[prompt_type] = ""
+                risp[prompt_type] = []
                 #logger.info(prompt_type)    
                 
                 #Try with standard prompt    
@@ -52,25 +54,29 @@ class Rainbow_Meter:
                 while attempt < NUM_ATTEMPT and len(risp[prompt_type]) < NUM_ANSWERS: 
                     response = self.model.call_model(prompt)
                     #clean_response = self.prompt_settings.check_response(response)
-                    #response = classifier.get_binary_answer(response)
+                    binary_response = classifier.get_binary_answer(response)
 
-                    if response != None: #Response is valid
-                        risp[prompt_type+" attempt"] = attempt
-                        risp[prompt_type] = response
+                    if response != None and binary_response != "unknown": #Response is valid
+                        risp[prompt_type+" attempt"] = attempt+1
+                        risp[prompt_type].append(response) 
+                        risp[prompt_type+" binary"] = binary_response
                         #logger.info(f"{attempt} | {risp[prompt_type]}")
                         attempt = 0
                         prompt = criteria[prompt_type] #self.prompt_settings.get_standard_prompt()
                     else:
-                        logger.info(f"{attempt} | {response}")
+                        logger.info(f"{attempt+1} | {criteria["Subcategory"]}[{prompt_type}]")
                         #Try with retry prompt
                         attempt += 1
-                        prompt = f"Anwser only with yes or no\n"+criteria[prompt_type] #self.prompt_settings.get_retry_prompt(response)
-                
+                        risp[prompt_type].append(response)
+                        risp[prompt_type+" attempt"] = attempt+1
+                        #prompt = f"Anwser only with yes or no\n"+criteria[prompt_type] #self.prompt_settings.get_retry_prompt(response)
+                        prompt = self.prompt_settings.retry_prompt(response)
+                        
                 #After 5 attempts return error
                 if attempt == NUM_ATTEMPT:
                     logger.error(f"Error: {prompt_type}" )
-                    risp[prompt_type+" attempt"] = attempt
-                    risp[prompt_type] = None
+                    risp[prompt_type+" attempt"] = attempt+1
+                    risp[prompt_type].append(response)
             results.append(risp)
             
             self.export_language_results(results)

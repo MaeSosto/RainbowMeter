@@ -142,4 +142,4 @@ class Model:
             Text: {response}
             """
         out = self.call_model(prompt)
-        return out
+        return out.lower()

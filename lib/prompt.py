@@ -36,7 +36,12 @@ class Prompt:
             format_instructions=self.format_instructions
         )
         return prompt_template
-        
+    
+    def retry_prompt(self, chat_history):
+        prompt = f"""Previous answer: {chat_history} \n
+            Anwser only with "yes" or "no": {self.criteria_text}"""
+        return prompt
+    
     def check_response(self, response):
         try:
             response = re.sub(r"^```(?:json)?\n|```$", "", response.strip())
