@@ -61,8 +61,9 @@ MODELS_LABELS = {
 
 PROMPT_SUP = "Support"
 PROMPT_OPP = "Opposition"
-PROMPT_FC = "Fact" 
-PROMPT_TYPES = ["Support", "Opposition", "Fact"]
+PROMPT_FC = "Fact"
+PROMPT_TYPES = ["Support", "Fact"] 
+#PROMPT_TYPES = ["Support", "Opposition", "Fact"]
 RESULT_FOLDER = "results/"
 SCENARIO_LANGUAGE_FOLDER = "language_scenario/"
 RAINBOW_METER_DATA_PATH = "data/rainbow_meter/"

@@ -131,4 +131,15 @@ class Model:
             return response
         except Exception as X:
             logger.error(X)
-        
+    
+    def get_binary_answer(self, response):
+        prompt = f"""
+            Determine whether the following text expresses YES or NO.
+
+            Answer only with "yes" or "no".
+            If unclear, answer "unknown".
+
+            Text: {response}
+            """
+        out = self.call_model(prompt)
+        return out

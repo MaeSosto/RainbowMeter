@@ -21,17 +21,17 @@ for model_name in [LLAMA3]:
         #If results already exist for this model and language then skip 
         if check_result_already_exist(model_name, country.language):
             logger.info(f"✔️ {MODELS_LABELS[model_name]} - {country.country_id} - {country.language}")
+            if not check_binary_answers(model_name, country.language):
+                rainbow_meter = Rainbow_Meter(model_name, country)
+                rainbow_meter.process_binary_answers()
             continue
         
-        model = Model(model_name)
-        error = model.initialize_model()
+    
+        
+        rainbow_meter = Rainbow_Meter(model_name, country)
+        logger.info(f"🔄 {MODELS_LABELS[model_name]} - {country.country_id} - {country.language}")
+        err = rainbow_meter.get_answers()
         if error: #If there are no errors in initializing the model
             break  
-        
-        rainbow_meter = Rainbow_Meter(model, country)
-        logger.info(f"🔄 {MODELS_LABELS[model_name]} - {country.country_id} - {country.language}")
-        rainbow_meter.get_answers()
-        
-        #break
     if error:
         break

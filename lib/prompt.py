@@ -36,7 +36,7 @@ class Prompt:
             format_instructions=self.format_instructions
         )
         return prompt_template
-    
+        
     def check_response(self, response):
         try:
             response = re.sub(r"^```(?:json)?\n|```$", "", response.strip())
