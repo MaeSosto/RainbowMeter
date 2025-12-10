@@ -20,10 +20,11 @@ for model_name in [LLAMA3]:
         
         #If results already exist for this model and language then skip 
         if check_result_already_exist(model_name, country.language):
-            logger.info(f"✔️ {MODELS_LABELS[model_name]} - {country.country_id} - {country.language}")
-            #if not check_binary_answers(model_name, country.language):
-            rainbow_meter = Rainbow_Meter(model_name, country)
-            #rainbow_meter.process_binary_answers()
+            if not check_binary_answers(model_name, country.language):
+                logger.info(f"🔄 {MODELS_LABELS[model_name]}[{country.language}] - {country.country_id}")
+                process_binary_answers(model_name, country)
+            else:
+                logger.info(f"✔️ {MODELS_LABELS[model_name]} - {country.country_id} - {country.language}")
             continue
         
     
