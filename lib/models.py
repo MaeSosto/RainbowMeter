@@ -129,9 +129,6 @@ class Model:
             return response
         except Exception as X:
             logger.error(X)
-<<<<<<< Updated upstream
-        
-=======
             return None
     
     def get_binary_answer(self, question, response):
@@ -139,7 +136,16 @@ class Model:
             You are performing a binary classification task.
 
             Classify whether the answer expresses "yes" or "no" with respect to the question.
+            You are performing a binary classification task.
 
+            Classify whether the answer expresses "yes" or "no" with respect to the question.
+
+            Classification rules:
+            - Answer "yes" if the response clearly affirms or supports the proposition in the question.
+            - Answer "no" if the response clearly denies or opposes the proposition.
+            - Answer "unknown" if the response is ambiguous, mixed, conditional, or does not directly address the question.
+
+            Respond with exactly one label: yes, no, or unknown.
             Classification rules:
             - Answer "yes" if the response clearly affirms or supports the proposition in the question.
             - Answer "no" if the response clearly denies or opposes the proposition.
@@ -169,4 +175,3 @@ class Model:
 
         return out
                 
->>>>>>> Stashed changes

@@ -5,13 +5,6 @@ import os
 prompt_types = ['Statement Pro', 'Statement Con'] #, 'Question Op'] #Let's stay with just this now 
 
 def get_country_list():
-<<<<<<< Updated upstream
-        countries_file = "data/countries_langs.json"
-        countries_file = open(countries_file)
-        countries_file = json.load(countries_file)
-        return countries_file
-        
-=======
         countries_file = COUNTRIES_FILE
         countries_file = open(countries_file)
         countries_file = json.load(countries_file)
@@ -34,8 +27,19 @@ def get_countries_specific_language(language):
         if country.language == language:
             country_lan.append(country)
     return country_lan
+
+def get_countries_specific_language(language):
+    country_lan = []
+    #Get country file
+    country_list = get_country_list()
+
+    #Iterate on every country
+    for country_name in country_list: 
+        country = Country(country_list, country_name)
+        if country.language == language:
+            country_lan.append(country)
+    return country_lan
     
->>>>>>> Stashed changes
 class Country:
     def __init__(self, country_info):
         self.country_info = country_info

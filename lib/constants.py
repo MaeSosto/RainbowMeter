@@ -55,23 +55,6 @@ MODELS_LABELS = {
     DEEPSEEK_671B: 'DeepSeek R1 (671b)',
 }
 
-<<<<<<< Updated upstream
-def csv_to_json(csv_path, json_path):
-    with open(csv_path, mode='r', newline='', encoding='utf-8') as csvfile:
-        data = list(csv.DictReader(csvfile))
-
-    with open(json_path, mode='w', encoding='utf-8') as jsonfile:
-        json.dump(data, jsonfile, indent=4)
-        
-def json_to_csv(json_path, csv_path):
-    with open(json_path, 'r', encoding='utf-8') as json_file:
-        data = json.load(json_file)
-
-    with open(csv_path, 'w', newline='', encoding='utf-8') as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=data[0].keys())
-        writer.writeheader()
-        writer.writerows(data)
-=======
 QUESTION_SUPPORT = "Support"
 QUESTION_OPPOSITION = "Opposition"
 QUESTION_FACT = "Fact"
@@ -82,10 +65,15 @@ RAINBOW_METER_DATA_PATH = "data/rainbow_meter/"
 RAINBOW_MAP_DATA_PATH = "data/rainbow_map/"
 CRITERIA_FILE = "rainbow_map/criteria.json"
 COUNTRIES_FILE = "data/countries.json"
+RAINBOW_MAP_DATA_PATH = "data/rainbow_map/"
+CRITERIA_FILE = "rainbow_map/criteria.json"
+COUNTRIES_FILE = "data/countries.json"
 GRAPHS_FOLDER = f'graphs/'
+
 
         
 def csv_to_json(path_json, path_csv):
+    csv_file = pd.DataFrame(pd.read_csv(path_csv, sep = ",", header = 0, index_col = False))
     csv_file = pd.DataFrame(pd.read_csv(path_csv, sep = ",", header = 0, index_col = False))
     csv_file.to_json(path_json, indent = 4, orient = "records", double_precision = 10, force_ascii = True, date_unit = "ms", default_handler = None)
     
@@ -95,4 +83,3 @@ def json_to_csv(path_json, path_csv):
     
     
 csv_to_json("data/rainbow_meter/rainbow_meter_en_.json", "data/rainbow_meter/rainbow_meter_en.csv")
->>>>>>> Stashed changes
