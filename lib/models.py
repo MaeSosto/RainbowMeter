@@ -129,4 +129,44 @@ class Model:
             return response
         except Exception as X:
             logger.error(X)
+<<<<<<< Updated upstream
         
+=======
+            return None
+    
+    def get_binary_answer(self, question, response):
+        prompt = f"""
+            You are performing a binary classification task.
+
+            Classify whether the answer expresses "yes" or "no" with respect to the question.
+
+            Classification rules:
+            - Answer "yes" if the response clearly affirms or supports the proposition in the question.
+            - Answer "no" if the response clearly denies or opposes the proposition.
+            - Answer "unknown" if the response is ambiguous, mixed, conditional, or does not directly address the question.
+
+            Respond with exactly one label: yes, no, or unknown.
+
+            Question: {question}
+            Answer: {response}
+        """
+        out = None
+        while out not in ("yes", "no"):  # Iterate until we get a valid binary answer
+            out = self.call_model(prompt)
+            out = out.replace("*", "")
+            
+            if not isinstance(out, str):
+                logger.error("Binary answer is not a string, asking again..")
+                out = None
+                continue
+
+            out = out.strip().lower()
+
+            if out not in ("yes", "no"):
+                logger.error(f"Invalid binary answer '{out}', asking again..")
+                out = None
+                continue
+
+        return out
+                
+>>>>>>> Stashed changes
