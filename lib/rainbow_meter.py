@@ -1,169 +1,111 @@
 from lib.constants import *
-from lib.prompt import *
-from lib.models import *
+from lib.country import *
 
-NUM_ATTEMPT = 5 #Num attempt before calling it failed
-NUM_ANSWERS = 1 #Num answer we want for each criterion-stance
-CLASSIFIER_MODEL = LLAMA3 #Model used to classifier the answers in a binary format
+NUM_ANSWERS = 5 #Num answer we want for each criterion-stance
+
+
+PROMPTS = [
+    """{0}
+        Provide a yes or no answer.""",
+    """{0}
+        Provide a "yes", "no" or "unsure" answer.""", 
+]
 
 class Rainbow_Meter:
-    def __init__(self, model_name, country):
-        self.country = country
-        self.criteria_list = _get_criteria_list(country.language) 
-        self.model_name = model_name
-        #logger.info(model.name)
-        #logger.info(country.name)
-
-    def export_language_results(self, results):
-        json_object = json.dumps(results, indent=4)
-        path_result = RESULT_FOLDER+ SCENARIO_LANGUAGE_FOLDER+self.model_name 
-        os.makedirs(path_result, exist_ok=True)
-        file_out = f"{path_result}/{self.country.language}_raibow_meter.json"
-        with open(file_out, "w") as outfile:
-            outfile.write(json_object) 
-    
-    def get_answers(self):
-        results = []
-        classifier = Model(CLASSIFIER_MODEL)
-        classifier.initialize_model()
+    def __init__(self, model, country, prompt_num, criteria_filled = 0):
+        self.prompt_num = prompt_num
+        self.model = model
+        self.country = Country(country)
+        self.criteria_file = self.country.criteria_file
+        logger.info(f"🔄 {MODELS_LABELS[self.model.model_name]} - {self.country.id} - {self.country.language}")
         
-        self.model = Model(self.model_name)
-        error = self.model.initialize_model()
+        rainbow_meter_row = {
+            CATEGORY: [],
+            SUBCATEGORY: [],
+            QUESTION_FACT: [], 
+            QUESTION_SUPPORT: [], 
+            QUESTION_OPPOSITION: [],
+        }
         
-        if error: #If there are no errors in initializing the model
-            return True  
+        #If the csv contains answers already, then fill it up until there and continue from there
+        for subcategory, row in self.criteria_file[:criteria_filled].iterrows():
+            rainbow_meter_row[CATEGORY].append(row[CATEGORY])
+            rainbow_meter_row[SUBCATEGORY].append(subcategory)
+            rainbow_meter_row[QUESTION_FACT].append(row[QUESTION_FACT])
+            rainbow_meter_row[QUESTION_SUPPORT].append(row[QUESTION_SUPPORT])
+            rainbow_meter_row[QUESTION_OPPOSITION].append(row[QUESTION_OPPOSITION])
+            
         
-        #Iterate on the criteria list
-        #logger.info(self.model_name +"|"+ self.country.language)
-        for criteria in tqdm(self.criteria_list):        
-            risp = {
-                'Category': criteria['Category'],
-                'Subcategory': criteria['Subcategory'],
-            }
-                
+        #Get answers for the missing criterion in the csv file
+        for subcategory, row in self.criteria_file[criteria_filled:].iterrows():
+            rainbow_meter_row[CATEGORY].append(row[CATEGORY])
+            rainbow_meter_row[SUBCATEGORY].append(subcategory)
+            
             #Iterate on the prompt types
-            for prompt_type in PROMPT_TYPES:
-                self.prompt_settings = Prompt(prompt_type, criteria, self.country)
-                #logger.info(prompt_type)    
+            for question_type in QUESTION_TYPES:
+                full_prompt = PROMPTS[self.prompt_num].format(row[question_type])
                 
-                #Try with standard prompt    
+                responses = []
                 attempt = 0
-                prompt = f"""{criteria[prompt_type]}
-                    Provide a yes or no answer."""
-                #prompt = criteria[prompt_type] #self.prompt_settings.get_standard_prompt()
-                risp[prompt_type+" question"] = criteria[prompt_type]
-                risp[prompt_type] = []
-                risp[prompt_type+" attempt"] = attempt+1
-                risp[prompt_type+" binary"] = []
+                x = 0
+                while x < NUM_ANSWERS and attempt < 5:
+                    resp = self.model.call_model(full_prompt)
+                    resp = self.check_binary_answer(resp)
+                    if resp == UNDEFINED:
+                        attempt = attempt + 1
+                        continue
+                    attempt = 0
+                    responses.append(resp)
+                    x = x + 1
+                if attempt == 5:
+                    responses.append(UNDEFINED)
+                    x = x + 1
+                logger.info(f"{subcategory} - {question_type}: {responses}")
+                rainbow_meter_row[question_type].append(self.combine_binary_answers(responses))
                 
-                #Reprompt until 5 times
-                while attempt < NUM_ATTEMPT: 
-                    response = self.model.call_model(prompt)
-                    # if len(response)> 3:
-                    #     print(response)
-                    #     breakpoint
-                    #clean_response = self.prompt_settings.check_response(response)
-                    binary_response = classifier.get_binary_answer(criteria[prompt_type], response)
+            #Export Rainbow Meter
+            rainbow_meter_df = pd.DataFrame(rainbow_meter_row)
+            self.export_rainbow_meter(rainbow_meter_df)
 
-                    risp[prompt_type].append(response) 
-                    risp[prompt_type+" attempt"] = attempt+1
-                    risp[prompt_type+" binary"].append(binary_response)
-                    if (response != None and response != "") and (binary_response == "yes" or binary_response == "no"): #Response is valid
-                        break
-                    else: #Response is not valid
-                        #logger.info(f"{attempt+1} | {criteria["Subcategory"]}[{prompt_type}]")
-                        #Try with retry prompt
-                        attempt += 1
-                        prompt = self.prompt_settings.retry_prompt(response)
-                        
-                #After 5 attempts return error
-                if attempt == NUM_ATTEMPT:
-                    logger.error(f"Error: {prompt_type}" )
-                    risp[prompt_type+" attempt"] = attempt+1
-                    risp[prompt_type].append(response)
-                    risp[prompt_type+" binary"].append(binary_response)
-            results.append(risp)
-            
-            self.export_language_results(results)
-        return False
+    #Return yes/no/unsure/undefined based on the answer
+    def check_binary_answer(self, response):
+        response = response.lower().replace(".", "").replace("*", "").replace('"', '').strip()
+        first_word = response.split()[0].strip(",;:!?.")
+        if self.prompt_num == 0 and response and first_word in {YES, NO}: #Response is valid
+                    return first_word
+        elif self.prompt_num == 1 and response and first_word in {YES, NO, "unsure"}:
+                    return first_word
+        #Response is not valid
+        return UNDEFINED
     
-def process_binary_answers(model_name, country):
-    classifier = Model(CLASSIFIER_MODEL)
-    classifier.initialize_model()
-    path_result = RESULT_FOLDER+ SCENARIO_LANGUAGE_FOLDER+model_name
-    file = f"{path_result}/{country.language}_raibow_meter.json"
-    file = open(file)
-    file = json.load(file)
-    for criterion_item in file:
-        for prompt_type in PROMPT_TYPES:
-            response = criterion_item[prompt_type]
-            response = classifier.get_binary_answer(response)
-            criterion_item[prompt_type+ " binary"] = response
-        export_language_results(file, model_name, country)
+    #Combine the answers get for each criterion and combine them, returns the average score (yes=1, no=0, unsure=0.5) of the values and -1 if at least one "undefined" is present
+    def combine_binary_answers(self, responses):
+        if UNDEFINED in responses:
+            return -1
 
-def export_language_results(results, model_name, country):
-        json_object = json.dumps(results, indent=4)
-        path_result = RESULT_FOLDER+ SCENARIO_LANGUAGE_FOLDER+model_name 
-        os.makedirs(path_result, exist_ok=True)
-        file_out = f"{path_result}/{country.language}_raibow_meter.json"
-        with open(file_out, "w") as outfile:
-            outfile.write(json_object) 
-            
-def _get_criteria_list(language):
-    criteria_file = RAINBOW_METER_DATA_PATH+ f'rainbow_meter_{language}.json'
-    criteria_file = open(criteria_file)
-    criteria_file = json.load(criteria_file)
-    
-    #NOW RETURN ONLY COMPLETE CRITERIAS 
-    criteria_file = [criteria for criteria in criteria_file if criteria[PROMPT_TYPES[0]] != "" and criteria[PROMPT_TYPES[0]] != None] 
-    return criteria_file
+        mapping = {
+            YES: 1.0,
+            NO: 0.0,
+            "unsure": 0.5
+        }
 
-#Return True if the file already axist and it has the same number of criterion as the the one in the original of criteria, else False
-def check_result_already_exist(model_name, language):
-    path_result = RESULT_FOLDER+SCENARIO_LANGUAGE_FOLDER+model_name 
-    file_out = f"{path_result}/{language}_raibow_meter.json"
-    if os.path.exists(file_out):
         try:
-            file_out = open(file_out)
-            file_out = json.load(file_out)
-        
-            if len(file_out) == len(_get_criteria_list(language)):
-                return True
-        except Exception as X:
-            return False
-    return False
+            values = [mapping[l] for l in responses]
+        except KeyError as e:
+            raise ValueError(f"Unexpected label found: {e}")
 
-#Return True if all the criterion has the binary answers, else False
-def check_binary_answers(model_name, language):
-    file_out = f"{RESULT_FOLDER+SCENARIO_LANGUAGE_FOLDER+model_name}/{language}_raibow_meter.json"
-    file_out = open(file_out)
-    file_out = json.load(file_out)
-    try:
-        ok_answers = [
-            answ
-            for answ in file_out
-            if any(answ[prompt+" binary"] not in ["", None] for prompt in PROMPT_TYPES)
-        ]
-        if len(ok_answers) == len(_get_criteria_list(language)):
-            return True
-        return False
-    except Exception as X:
-        return False
+        return sum(values) / len(values)
     
-def lan_to_int(text):
-    if text == "yes":
-        return 1.0
-    elif text == "no":
-        return 0
-    else:
-        return False
-    
-#Get criterion answers
-def get_criterion_answer(model_name, language, subcategory): 
-    with open(f'{RESULT_FOLDER+SCENARIO_LANGUAGE_FOLDER+model_name}/{language}_raibow_meter.json', 'r') as rainbow_meter_file:
-        criteria_list = json.load(rainbow_meter_file)
-    
-    for criterion in criteria_list:
-        if criterion["Subcategory"] == subcategory:
-            return lan_to_int(criterion["Fact binary"][-1]), lan_to_int(criterion["Support binary"][-1]), lan_to_int(criterion["Opposition binary"][-1])
-        
+    #Export and save the Rainbow Meter
+    def export_rainbow_meter(self, rainbow_meter_df):
+            result_path = f"{RESULT_PATH}/{SCENARIO_LANGUAGE_PATH}/{self.model.model_name}/"
+            os.makedirs(result_path, exist_ok=True)
+            rainbow_meter_df.to_csv(f"{result_path}{self.country.language}_rainbow_meter_{self.prompt_num}.csv", index=False)
+
+#Return True if the results exists, otherwise False
+def rainbow_meter_exist(model_name, language, prompt_num):
+    result_path = f"{RESULT_PATH}/{SCENARIO_LANGUAGE_PATH}/{model_name}/{language}_rainbow_meter_{prompt_num}.csv"
+    if os.path.exists(result_path):
+        num_rows = len(pd.read_csv(result_path))
+        return True, num_rows
+    return False, 0

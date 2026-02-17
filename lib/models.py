@@ -87,7 +87,7 @@ class Model:
                 "model": self.model_name,
                 "prompt": self.prompt,
                 "messages": [{"role": "user", "content": self.prompt}],
-                "options": {"temperature": 0},
+                # "options": {"temperature": 0},
                 "stream": False
             })
             response = response.json()['response']
@@ -131,47 +131,47 @@ class Model:
             logger.error(X)
             return None
     
-    def get_binary_answer(self, question, response):
-        prompt = f"""
-            You are performing a binary classification task.
+    # def get_binary_answer(self, question, response):
+    #     prompt = f"""
+    #         You are performing a binary classification task.
 
-            Classify whether the answer expresses "yes" or "no" with respect to the question.
-            You are performing a binary classification task.
+    #         Classify whether the answer expresses "yes" or "no" with respect to the question.
+    #         You are performing a binary classification task.
 
-            Classify whether the answer expresses "yes" or "no" with respect to the question.
+    #         Classify whether the answer expresses "yes" or "no" with respect to the question.
 
-            Classification rules:
-            - Answer "yes" if the response clearly affirms or supports the proposition in the question.
-            - Answer "no" if the response clearly denies or opposes the proposition.
-            - Answer "unknown" if the response is ambiguous, mixed, conditional, or does not directly address the question.
+    #         Classification rules:
+    #         - Answer "yes" if the response clearly affirms or supports the proposition in the question.
+    #         - Answer "no" if the response clearly denies or opposes the proposition.
+    #         - Answer "unknown" if the response is ambiguous, mixed, conditional, or does not directly address the question.
 
-            Respond with exactly one label: yes, no, or unknown.
-            Classification rules:
-            - Answer "yes" if the response clearly affirms or supports the proposition in the question.
-            - Answer "no" if the response clearly denies or opposes the proposition.
-            - Answer "unknown" if the response is ambiguous, mixed, conditional, or does not directly address the question.
+    #         Respond with exactly one label: yes, no, or unknown.
+    #         Classification rules:
+    #         - Answer "yes" if the response clearly affirms or supports the proposition in the question.
+    #         - Answer "no" if the response clearly denies or opposes the proposition.
+    #         - Answer "unknown" if the response is ambiguous, mixed, conditional, or does not directly address the question.
 
-            Respond with exactly one label: yes, no, or unknown.
+    #         Respond with exactly one label: yes, no, or unknown.
 
-            Question: {question}
-            Answer: {response}
-        """
-        out = None
-        while out not in ("yes", "no"):  # Iterate until we get a valid binary answer
-            out = self.call_model(prompt)
-            out = out.replace("*", "")
+    #         Question: {question}
+    #         Answer: {response}
+    #     """
+    #     out = None
+    #     while out not in ("yes", "no"):  # Iterate until we get a valid binary answer
+    #         out = self.call_model(prompt)
+    #         out = out.replace("*", "")
             
-            if not isinstance(out, str):
-                logger.error("Binary answer is not a string, asking again..")
-                out = None
-                continue
+    #         if not isinstance(out, str):
+    #             logger.error("Binary answer is not a string, asking again..")
+    #             out = None
+    #             continue
 
-            out = out.strip().lower()
+    #         out = out.strip().lower()
 
-            if out not in ("yes", "no"):
-                logger.error(f"Invalid binary answer '{out}', asking again..")
-                out = None
-                continue
+    #         if out not in ("yes", "no"):
+    #             logger.error(f"Invalid binary answer '{out}', asking again..")
+    #             out = None
+    #             continue
 
-        return out
+    #     return out
                 

@@ -1,8 +1,10 @@
-import json
-import csv
+import pandas as pd
+import data
 import logging
 import torch
-from tqdm import tqdm
+import json
+import pdb
+import tqdm
 import os
 
 # =============================
@@ -39,7 +41,7 @@ GEMINI_2_0_FLASH = "gemini-2.0-flash"
 GEMINI_2_0_FLASH_LITE = "gemini-2.0-flash-lite"
 DEEPSEEK = 'deepseek-r1'
 DEEPSEEK_671B = 'deepseek-reasoner'
-MODEL_LIST = [LLAMA3, LLAMA3_70B, LLAMA4, GEMMA3, GEMMA3_27B, GPT4, GPT4_MINI, GEMINI_2_0_FLASH, GEMINI_2_0_FLASH_LITE, DEEPSEEK, DEEPSEEK_671B]
+#MODEL_LIST = [LLAMA3, LLAMA3_70B, LLAMA4, GEMMA3, GEMMA3_27B, GPT4, GPT4_MINI, GEMINI_2_0_FLASH, GEMINI_2_0_FLASH_LITE, DEEPSEEK, DEEPSEEK_671B]
 
 MODELS_LABELS = {
     LLAMA3 : 'Llama 3',
@@ -55,31 +57,41 @@ MODELS_LABELS = {
     DEEPSEEK_671B: 'DeepSeek R1 (671b)',
 }
 
+#Rainbow Map
+CATEGORY = "Category"
+SUBCATEGORY = "Subcategory"
+RAINBOW_MAP_DF = pd.read_csv("data/rainbow_map/rainbow_map.csv", delimiter=";", index_col="country_id")
+CRITERIA_WEIGHTS_DF = pd.read_csv("data/rainbow_map/criteria_weights.csv", delimiter=";", index_col=SUBCATEGORY)
+RAINBOW_MAP_CATEGORIES = ["Equality & non-discrimination", "Family", "Hate crime & hate speech", "Legal gender recognition", "Intersex bodily integrity", "Civil society space", "Asylum"]
+COUNTRIES_FILE = "data/countries.json"
+CRITERIA_NUM =76
+
+#Rainbow Meter
+QUESTION_FACT = "Fact"
 QUESTION_SUPPORT = "Support"
 QUESTION_OPPOSITION = "Opposition"
-QUESTION_FACT = "Fact"
-PROMPT_TYPES = [QUESTION_FACT, QUESTION_SUPPORT, QUESTION_OPPOSITION] 
-RESULT_FOLDER = "results/"
-SCENARIO_LANGUAGE_FOLDER = "language_scenario/"
-RAINBOW_METER_DATA_PATH = "data/rainbow_meter/"
-RAINBOW_MAP_DATA_PATH = "data/rainbow_map/"
-CRITERIA_FILE = "rainbow_map/criteria.json"
-COUNTRIES_FILE = "data/countries.json"
-RAINBOW_MAP_DATA_PATH = "data/rainbow_map/"
-CRITERIA_FILE = "rainbow_map/criteria.json"
-COUNTRIES_FILE = "data/countries.json"
-GRAPHS_FOLDER = f'graphs/'
+QUESTION_TYPES = [QUESTION_FACT, QUESTION_SUPPORT, QUESTION_OPPOSITION]
+YES = "yes"
+NO = "no"
+UNDEFINED = "undefined"
+
+#Create Project Folder Structure
+RESULT_PATH = "results"
+os.makedirs(RESULT_PATH, exist_ok=True)
+SCENARIO_LANGUAGE_PATH = "language_scenario"
+os.makedirs(f"{RESULT_PATH}/{SCENARIO_LANGUAGE_PATH}", exist_ok=True)
 
 
-        
-def csv_to_json(path_json, path_csv):
-    csv_file = pd.DataFrame(pd.read_csv(path_csv, sep = ",", header = 0, index_col = False))
-    csv_file = pd.DataFrame(pd.read_csv(path_csv, sep = ",", header = 0, index_col = False))
-    csv_file.to_json(path_json, indent = 4, orient = "records", double_precision = 10, force_ascii = True, date_unit = "ms", default_handler = None)
     
-def json_to_csv(path_json, path_csv):
-    df = pd.read_json(path_json)
-    df.to_csv(path_csv)
+# def csv_to_json(path_json, path_csv):
+#     csv_file = pd.DataFrame(pd.read_csv(path_csv, sep = ",", header = 0, index_col = False))
+#     csv_file = pd.DataFrame(pd.read_csv(path_csv, sep = ",", header = 0, index_col = False))
+#     csv_file.to_json(path_json, indent = 4, orient = "records", double_precision = 10, force_ascii = True, date_unit = "ms", default_handler = None)
     
+# def json_to_csv(path_json, path_csv):
+#     df = pd.read_json(path_json)
+#     df.to_csv(path_csv)
     
-csv_to_json("data/rainbow_meter/rainbow_meter_en_.json", "data/rainbow_meter/rainbow_meter_en.csv")
+
+
+#csv_to_json("data/rainbow_meter/rainbow_meter_en_.json", "data/rainbow_meter/rainbow_meter_en.csv")
