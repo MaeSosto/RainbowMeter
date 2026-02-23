@@ -1,5 +1,6 @@
 from lib.constants import *
 from lib.country import *
+from lib.evaluations import *
 
 NUM_ANSWERS = 5 #Num answer we want for each criterion-stance
 
@@ -12,13 +13,15 @@ PROMPTS = [
 ]
 
 class Rainbow_Meter:
-    def __init__(self, model, country, prompt_num, criteria_filled = 0):
+    def __init__(self, model, country, prompt_num):
         self.prompt_num = prompt_num
         self.model = model
-        self.country = Country(country)
+        self.country = country
         self.criteria_file = self.country.criteria_file
         logger.info(f"🔄 {MODELS_LABELS[self.model.model_name]} - {self.country.id} - {self.country.language}")
+
         
+    def get_answers(self, criteria_filled = 0):
         rainbow_meter_row = {
             CATEGORY: [],
             SUBCATEGORY: [],
@@ -64,8 +67,8 @@ class Rainbow_Meter:
                 rainbow_meter_row[question_type].append(self.combine_binary_answers(responses))
                 
             #Export Rainbow Meter
-            rainbow_meter_df = pd.DataFrame(rainbow_meter_row)
-            self.export_rainbow_meter(rainbow_meter_df)
+            self.rainbow_meter_df = pd.DataFrame(rainbow_meter_row)
+            self.export_rainbow_meter(self.rainbow_meter_df)
 
     #Return yes/no/unsure/undefined based on the answer
     def check_binary_answer(self, response):
@@ -98,13 +101,13 @@ class Rainbow_Meter:
     
     #Export and save the Rainbow Meter
     def export_rainbow_meter(self, rainbow_meter_df):
-            result_path = f"{RESULT_PATH}/{SCENARIO_LANGUAGE_PATH}/{self.model.model_name}/"
-            os.makedirs(result_path, exist_ok=True)
-            rainbow_meter_df.to_csv(f"{result_path}{self.country.language}_rainbow_meter_{self.prompt_num}.csv", index=False)
+        result_path = f"{RESULT_PATH}/{RAINBOW_METER_PATH}/{SCENARIO_LANGUAGE_PATH}/{self.model.model_name}/{self.country.language}_rainbow_meter_{self.prompt_num}.csv"
+        os.makedirs(result_path, exist_ok=True)
+        rainbow_meter_df.to_csv(result_path, sep=";", index=False)
 
 #Return True if the results exists, otherwise False
 def rainbow_meter_exist(model_name, language, prompt_num):
-    result_path = f"{RESULT_PATH}/{SCENARIO_LANGUAGE_PATH}/{model_name}/{language}_rainbow_meter_{prompt_num}.csv"
+    result_path = f"{RESULT_PATH}/{RAINBOW_METER_PATH}/{SCENARIO_LANGUAGE_PATH}/{model_name}/{language}_rainbow_meter_{prompt_num}.csv"
     if os.path.exists(result_path):
         num_rows = len(pd.read_csv(result_path))
         return True, num_rows

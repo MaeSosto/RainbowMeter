@@ -78,8 +78,12 @@ UNDEFINED = "undefined"
 #Create Project Folder Structure
 RESULT_PATH = "results"
 os.makedirs(RESULT_PATH, exist_ok=True)
+RAINBOW_METER_PATH = "rainbow_meter"
+os.makedirs(f"{RESULT_PATH}/{RAINBOW_METER_PATH}", exist_ok=True)
 SCENARIO_LANGUAGE_PATH = "language_scenario"
-os.makedirs(f"{RESULT_PATH}/{SCENARIO_LANGUAGE_PATH}", exist_ok=True)
+os.makedirs(f"{RESULT_PATH}/{RAINBOW_METER_PATH}/{SCENARIO_LANGUAGE_PATH}", exist_ok=True)
+EVALUATIONS_PATH = "evaluations"
+os.makedirs(f"{RESULT_PATH}/{EVALUATIONS_PATH}", exist_ok=True)
 
 
     
