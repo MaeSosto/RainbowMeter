@@ -63,14 +63,15 @@ SUBCATEGORY = "Subcategory"
 RAINBOW_MAP_DF = pd.read_csv("data/rainbow_map/rainbow_map.csv", delimiter=";", index_col="country_id")
 CRITERIA_WEIGHTS_DF = pd.read_csv("data/rainbow_map/criteria_weights.csv", delimiter=";", index_col=SUBCATEGORY)
 RAINBOW_MAP_CATEGORIES = ["Equality & non-discrimination", "Family", "Hate crime & hate speech", "Legal gender recognition", "Intersex bodily integrity", "Civil society space", "Asylum"]
-COUNTRIES_FILE = "data/countries.json"
+with open("data/countries.json") as f:
+    COUNTRIES_FILE = json.load(f)
 CRITERIA_NUM =76
 
 #Rainbow Meter
-QUESTION_FACT = "Fact"
-QUESTION_SUPPORT = "Support"
-QUESTION_OPPOSITION = "Opposition"
-QUESTION_TYPES = [QUESTION_FACT, QUESTION_SUPPORT, QUESTION_OPPOSITION]
+FACT = "Fact"
+SUPPORT = "Support"
+OPPOSITION = "Opposition"
+QUESTION_TYPES = [FACT, SUPPORT, OPPOSITION]
 YES = "yes"
 NO = "no"
 UNDEFINED = "undefined"
@@ -80,10 +81,17 @@ RESULT_PATH = "results"
 os.makedirs(RESULT_PATH, exist_ok=True)
 RAINBOW_METER_PATH = "rainbow_meter"
 os.makedirs(f"{RESULT_PATH}/{RAINBOW_METER_PATH}", exist_ok=True)
-SCENARIO_LANGUAGE_PATH = "language_scenario"
-os.makedirs(f"{RESULT_PATH}/{RAINBOW_METER_PATH}/{SCENARIO_LANGUAGE_PATH}", exist_ok=True)
 EVALUATIONS_PATH = "evaluations"
 os.makedirs(f"{RESULT_PATH}/{EVALUATIONS_PATH}", exist_ok=True)
+
+SCENARIO_LANGUAGE = "language_scenario"
+SCENARIO_NATIONALITY = "nationality_scenario"
+SCENARIO_LAN_NAT = "language_nationality_scenario"
+SCENARIOS = [SCENARIO_LANGUAGE, SCENARIO_NATIONALITY, SCENARIO_LAN_NAT]
+for s in SCENARIOS:
+    os.makedirs(f"{RESULT_PATH}/{RAINBOW_METER_PATH}/{s}", exist_ok=True)
+    os.makedirs(f"{RESULT_PATH}/{EVALUATIONS_PATH}/{s}", exist_ok=True)
+    
 
 
     

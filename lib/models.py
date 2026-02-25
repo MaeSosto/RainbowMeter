@@ -9,7 +9,7 @@ URL_DEEPSEEK = "https://api.deepseek.com"
 
 class Model:
     def __init__(self, model_name):
-        self.model_name = model_name
+        self.name = model_name
         
         self.func_initialize_model = {
             LLAMA3: self._initialize_Ollama, 
@@ -40,8 +40,8 @@ class Model:
         }
         
     def initialize_model(self):
-        if self.model_name in self.func_initialize_model: 
-            err = self.func_initialize_model[self.model_name]()
+        if self.name in self.func_initialize_model: 
+            err = self.func_initialize_model[self.name]()
             return err
         return False
 
@@ -51,7 +51,7 @@ class Model:
             logger.error(f"⚠️ GENAI_API_KEY is missing")
             return True
         genai.configure(api_key=api_key) 
-        self.client = genai.GenerativeModel(self.model_name)
+        self.client = genai.GenerativeModel(self.name)
         return False
 
     def _initialize_GPT(self): 
@@ -63,15 +63,16 @@ class Model:
         return False
 
     def _initialize_Ollama(self):
-        try:
-            response = requests.get(f"{URL_OLLAMA_LOCAL}/tags")
-            if not(response.status_code == 200):
-                logger.error(f"⚠️ Ollama server is not running")
-                return True
-            return False
-        except requests.RequestException:
-            logger.error(f"⚠️ Ollama server is not running")
-            return True
+        # try:
+        #     response = requests.get(f"{URL_OLLAMA_LOCAL}/tags")
+        #     if not(response.status_code == 200):
+        #         logger.error(f"⚠️ Ollama server is not running")
+        #         return True
+        #     return False
+        # except requests.RequestException:
+        #     logger.error(f"⚠️ Ollama server is not running")
+        #     return True
+        return False
 
     def _initialize_DeepSeeek(self): 
         api_key = os.getenv('DEEPSEEK_API_KEY')
@@ -84,7 +85,7 @@ class Model:
     def _request_ollama(self):
         try:
             response = requests.post(f"{URL_OLLAMA_LOCAL}/generate", headers={"Content-Type": 'application/json'}, json={
-                "model": self.model_name,
+                "model": self.name,
                 "prompt": self.prompt,
                 "messages": [{"role": "user", "content": self.prompt}],
                 # "options": {"temperature": 0},
@@ -112,7 +113,7 @@ class Model:
         logger.setLevel(logging.ERROR)
         try:
             completion = self.client.chat.completions.create(
-                model=self.model_name, store=True,
+                model=self.name, store=True,
                 messages=[{"role": "user", "content": self.prompt}],
                 temperature=0
             )
@@ -125,7 +126,7 @@ class Model:
     def call_model(self, prompt):
         self.prompt = prompt
         try: 
-            response = self.send_request[self.model_name]()
+            response = self.send_request[self.name]()
             return response
         except Exception as X:
             logger.error(X)

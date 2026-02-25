@@ -49,63 +49,63 @@ def get_results(endpoint_url, query):
 
 
 results = get_results(endpoint_url, query)
-langs_code = set()
+count_languages = []
 countries_langs = OrderedDict()
 
 cnt = 0
 cnt_countries = 0
 for result in results["results"]["bindings"]:
-    try:
-       
+    try:       
         country = result["countryLabel"]["value"]
-
-        country = "Czechia" if country == "Czech Republic" else country
-        country = "Netherlands" if country == "Kingdom of the Netherlands" else country
-        country = "Bosnia & Herzegovina" if country == "Bosnia and Herzegovina" else country
-        #citizenship = "Turkish" if country == "Turkey" else result["citizenshipLabel"]["value"]
-        #citizenship = "Ukrainian" if country == "Ukraine" else result["citizenshipLabel"]["value"]
-        lang_code = result["languageCode"]["value"]
+        
+        if country == "country of the Kingdom of the Netherlands":
+            continue
+        
+        if country == "Czech Republic":
+            country = "Czechia"
+        elif country == "Kingdom of the Netherlands":
+            country = "Netherlands"
+        elif country == "Bosnia and Herzegovina":
+            country = "Bosnia & Herzegovina"
+        
+        citizenship = result["citizenshipLabel"]["value"]
+        if country == "Ukraine":
+            citizenship = "Ukraininan"
+            
         language = result["languageLabel"]["value"]
         
-        #translator = GoogleTranslator(source="en", target=lang_code)
-        langs_code.add(lang_code)
-
-        # if language == "Hebrew":
-        #     print(country, citizenship, lang_code, language)
+        count_languages.append(result["languageCode"]["value"])
 
         if country not in countries_langs:
             countries_langs[country] = {
-                "COUNTRY_ID": result["countryCode"]["value"],
-                "citizenships": set(),
-                "languages": set(),
-                "languages_code": set(),
+                "country_id": result["countryCode"]["value"],
+                "citizenships": citizenship,
+                "languages": [language],
+                "languages_code": [result["languageCode"]["value"]],
             }
             cnt_countries += 1
-
-        # if citizenship[-1] == "s":
-        #     citizenship = citizenship[:-1]
-
-        # if citizenship[-4:] != "land":
-        #     countries_langs[country]["citizenships"].add(citizenship)
-
-        countries_langs[country]["languages"].add(language)
-
-        countries_langs[country]["languages_code"].add(lang_code)
+        else:
+            if result["citizenshipLabel"]["value"] and countries_langs[country]["citizenships"] and result["languageLabel"]["value"] in countries_langs[country]["languages"] and result["languageCode"]["value"] in countries_langs[country]["languages_code"]:
+                continue
+            else:
+                #countries_langs[country]["citizenships"].append(citizenship)
+                countries_langs[country]["languages"].append(language)
+                countries_langs[country]["languages_code"].append(result["languageCode"]["value"])
 
         cnt += 1
 
     except Exception as e:
         print("#" * 10)
-        print("language code not found", language, lang_code)
+        print("language code not found", result["languageLabel"]["value"], result["languageCode"]["value"])
         continue
 
 print("Total languages found: ", cnt)
-print("Total unique languages found: ", len(langs_code))
+print("Total unique languages found: ", len(count_languages))
 
 for country in countries_langs:
-    countries_langs[country]["citizenships"] = list(
-        countries_langs[country]["citizenships"]
-    )
+    # countries_langs[country]["citizenships"] = list(
+    #     countries_langs[country]["citizenships"]
+    # )
     countries_langs[country]["languages"] = list(countries_langs[country]["languages"])
     countries_langs[country]["languages_code"] = list(
         countries_langs[country]["languages_code"]
@@ -118,5 +118,5 @@ for country in countries_langs:
 print(countries_langs)
 print("Total countries: ", len(countries_langs))
 
-with open("data/countries_langs.json", "w") as f:
+with open("data/countries.json", "w", encoding="utf-8") as f:
     json.dump(countries_langs, f, indent=4)
