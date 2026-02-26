@@ -4,17 +4,29 @@ from lib.country import *
 from lib.rainbow_meter import *
 import scipy.stats as stats
 import numpy as np
+from os import listdir
+from os.path import isfile, join
 
 
 class Evaluations:
-    def __init__(self, model, prompt_num, scenario):
+    def __init__(self, model, scenario, prompt_num):
         self.weights_list = convert_array(CRITERIA_WEIGHTS_DF["Weight"].tolist())
         self.prompt_num = prompt_num
         self.scenario = scenario
         self.model = model
             
-    def get_evaluations(self):
-        #results = []
+    def calculate_wilcoxon(self):
+        
+        #Scenario Language --> paragono i risultati rainbow meter di scenario language per ogni lingua (e associated country con quella lingua) e i risultati della rainbow map di quello stesso country  
+        #Scenario Nationality --> paragono i risultati rainbow meter di scenario nationality per ogni country e i risultati della rainbow map di quello stesso country
+        #Scenario Nationality --> paragono i risultati rainbow meter di scenario language + nationality per ogni country e i risultati della rainbow map di quello stesso country
+    
+
+        #Get the languages of the rainbow meters retreived in the language scenario  
+        path_rainbow_meters = f"{RESULT_PATH}/{RAINBOW_METER_PATH}/{self.scenario}/{self.model.name}/" 
+        rm_lanaguages = list(set([f.split("_")[0] for f in listdir(path_rainbow_meters) if isfile(join(path_rainbow_meters, f))]))
+
+
         #Get the array score of every country, considering only the language now, and compare it to the scores obtained on the rainbow map
         results = {
             "Country": [],
@@ -23,8 +35,8 @@ class Evaluations:
             "pvalue": [] 
             }
         
-        #country_list = [Country(c) for c in COUNTRIES_FILE if "en" in COUNTRIES_FILE[c][LANGUAGES_CODE]]
-        country_list = get_countries_that_speaks()
+        # #country_list = [Country(c) for c in COUNTRIES_FILE if "en" in COUNTRIES_FILE[c][LANGUAGES_CODE]]
+        # country_list = get_countries_that_speaks()
         
         for country in COUNTRIES_FILE:
             print(country.name)
@@ -71,7 +83,7 @@ class Evaluations:
         if os.path.exists(result_path):
             pd_rm = pd.read_csv(result_path, delimiter=";", index_col="Subcategory")
             num_rows = len(pd_rm)
-            if num_rows == CRITERIA_NUM:  
+            if num_rows == TOT_CRITERIA_NUM:  
                 return True, pd_rm
         return False, 0
 
