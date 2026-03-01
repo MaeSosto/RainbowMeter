@@ -78,7 +78,7 @@ for result in results["results"]["bindings"]:
 
         if country not in countries_langs:
             countries_langs[country] = {
-                "country_id": result["countryCode"]["value"].lower(),
+                "country_id": result["countryCode"]["value"],
                 "citizenships": citizenship,
                 "languages": [language],
                 "languages_code": [result["languageCode"]["value"]],

@@ -1,6 +1,5 @@
 from lib.constants import *
 from lib.country import *
-from lib.evaluations import *
 
 MAX_NUM_ANSWERS = 5 #Num answer we want for each criterion-stance
 COHERENCE = "Coherence"
@@ -38,7 +37,7 @@ class Rainbow_Meter:
                     }
                 
                 #Retrieve the Rainbow Meter of a specific language (if exist)
-                rm_language_exist, complete_rm_language = self.get_rainbow_meter_language()
+                rm_language_exist, complete_rm_language = get_rainbow_meter_language(self.language_code)
                 if not rm_language_exist: #If the Rainbow Meter questionnaire in doesn't exist in that language than we cannot compare the results
                     continue
                 self.num_answers = 0
@@ -174,15 +173,11 @@ class Rainbow_Meter:
             tmp =  PROMPTS[self.prompt_num]
         return tmp
 
-    def get_rainbow_meter_language(self):
-        result_path = f"data/{RAINBOW_METER_PATH}/rainbow_meter_{self.language_code}.csv"
-        if os.path.exists(result_path): #If exist
-            return True, pd.read_csv(result_path, sep=";", index_col=SUBCATEGORY) 
-        return False, None
-
-def rainbow_map_language_exist(language_code):
-    file_path = f"data/{RAINBOW_METER_PATH}/rainbow_meter_{language_code}.csv"
-    return os.path.exists(file_path)
+def get_rainbow_meter_language(language_code):
+    result_path = f"data/{RAINBOW_METER_PATH}/rainbow_meter_{language_code}.csv"
+    if os.path.exists(result_path): #If exist
+        return True, pd.read_csv(result_path, sep=";", index_col=SUBCATEGORY) 
+    return False, None
 
 def prompt_validity_score(undefined_count):
     num_tot_answ = 15

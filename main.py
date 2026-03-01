@@ -23,8 +23,8 @@ if not error: #If there are no errors in initializing the model
     rainbow_meter.get_answers()
     
     #Evaluations
-    # logger.info("🧮 Evaluations")
-    # eval = Evaluations(model, scenario, PROMPT_NUM)
+    logger.info("🧮 Evaluations")
+    eval = Evaluations(model, scenario, PROMPT_NUM)
     # eval.calculate_wilcoxon()
     
 
