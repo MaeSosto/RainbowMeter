@@ -25,8 +25,8 @@ class Evaluations:
             "Real": [],
             "Error": []
         }
-        for cat in RAINBOW_MAP_CATEGORIES:
-            results[cat] = []
+        # for cat in RAINBOW_MAP_CATEGORIES:
+        #     results[cat] = []
         
         for country_name in COUNTRIES_FILE: 
         
@@ -35,7 +35,6 @@ class Evaluations:
                 self.language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num]
                 self.country_id = COUNTRIES_FILE[country_name][ID]
                 self.citizenship = COUNTRIES_FILE[country_name][CITIZENSHIP]
-                
                 
                 #Retrieve the Rainbow Meter of a specific language (if exist)
                 rm_exist, rm_path = self.rm_scenario_exist()
@@ -47,30 +46,54 @@ class Evaluations:
                         continue
                 else: #RM doesn't exist
                     continue
-                                
-                country_real_scores = []
-                country_predicted_scores = []
-                for cat in RAINBOW_MAP_CATEGORIES:
-                    self.cat = cat
-                    self.subcat = [subcategory for subcategory, row in CRITERIA_WEIGHTS_DF[CRITERIA_WEIGHTS_DF[CATEGORY] == cat].iterrows()]
-                    self.weights_list = [CRITERIA_WEIGHTS_DF.loc[sub]["Weight"] for sub in self.subcat]
-                    
-                    tmp = self.get_rainbow_map_category_score().astype(float)
-                    tmp_ = sum(tmp) 
-                    country_real_scores = np.append(country_real_scores, tmp)
-                    results_cat = self.get_rainbow_meter_category_score()
-                    country_predicted_scores = np.append(country_predicted_scores, results_cat)
-                    results[cat].append(float(sum(results_cat)))
+                
+                #Get the criteria weights
+                self.weights_list = CRITERIA_WEIGHTS_DF["Weight"].values
+                #Get the Rainbow Map real Scores of that country
+                rainbow_map_scores = RAINBOW_MAP_DF.loc[self.country_id].drop("country_name").drop("Rank").values
+                #Get the rainbow Meter scores of that country
+                rainbow_meter_scores = self.existent_rm_df[FACT].values
+                
+                rainbow_map_scores, w1 = self.family_workaround(rainbow_map_scores)
+                rainbow_meter_scores, w2 = self.family_workaround(rainbow_meter_scores)
                 
                 results["Country"].append(country_name)
-                results["Real"].append(float(sum(country_real_scores)))
-                results["Predicted"].append(float(sum(country_predicted_scores)))
-                results["Error"].append(float(np.linalg.norm(country_real_scores - country_predicted_scores, 1)))    
+                results["Real"].append(float(sum(np.multiply(rainbow_map_scores, w1))))
+                results["Predicted"].append(float(sum(np.multiply(rainbow_meter_scores, w2))))
+                results["Error"].append(float(np.linalg.norm(rainbow_map_scores - rainbow_meter_scores, 1)))    
                 
                 #Export Results
                 results_df = pd.DataFrame(results)
                 self.export_plain_result(results_df)
 
+    def family_cat_mod(weights_list, rainbow_map_scores):
+        family_weight_list = weights_list[24:29]
+        family_rm_scores = rainbow_map_scores[24:29]
+        for idx in range(len(family_weight_list)):
+            max_num = -1
+            weight_max = -1
+            for idx, sco in enumerate(reversed(family_rm_scores)):
+                if sco >= max_num:
+                    max_num = np.int64(sco)
+                    weight_max = np.float64(family_rm_scores[3-idx])
+        # rainbow_map_scores = np.insert(existent_rm[4:], 0, max_num)
+        # weights_list = np.insert(self.weights_list[4:], 0, weight_max)
+        #weights_list = weights_list[:24] + weights_list[29:]
+    
+    def family_workaround(self, vector):
+        #Workaround for the marriage criteria
+        family_weight_list = self.weights_list[25:29]
+        family_rm_scores = vector[25:29]
+        max_num = -1
+        for idx, sco in enumerate(reversed(family_rm_scores)):
+            if sco >= max_num:
+                max_num = sco
+                weight_max = family_weight_list[3-idx]
+        
+        tmp1 = np.insert(vector[29:], 0, max_num)
+        tmp2 = np.insert(self.weights_list[29:], 0, weight_max)
+        return np.concatenate([vector[:25], tmp1]), np.concatenate([self.weights_list[:25], tmp2])
+                
     #Export and save plain results            
     def export_plain_result(self, plain_results):
         result_path = f"{RESULT_PATH}/{EVALUATIONS_PATH}/{self.scenario}/{self.model.name}/"
