@@ -10,8 +10,8 @@ from lib.evaluations import *
 PROMPT_NUM = 0
 
 #Scenario
-scenario = SCENARIO_LANGUAGE
-#scenario = SCENARIO_NATIONALITY
+#scenario = SCENARIO_LANGUAGE
+scenario = SCENARIO_NATIONALITY
 
 #Setup the model
 model_name = LLAMA3

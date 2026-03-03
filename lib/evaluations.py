@@ -7,12 +7,13 @@ import numpy as np
 from os import listdir
 from os.path import isfile, join
 
+RAINBOW_MAP = "Rainbow Map"
+COUNTRY = "Country"
 
 class Evaluations:
-    def __init__(self, model, scenario, prompt_num):
+    def __init__(self, model, prompt_num):
         self.weights_list = convert_array(CRITERIA_WEIGHTS_DF["Weight"].tolist())
         self.prompt_num = prompt_num
-        self.scenario = scenario
         self.model = model
 
         self.plain_result()
@@ -20,11 +21,13 @@ class Evaluations:
     def plain_result(self):
 
         results = {
-            "Country": [],
-            "Predicted": [],
-            "Real": [],
-            "Error": []
+            COUNTRY: [],
+            #"Predicted": [],
+            RAINBOW_MAP: [],
+            #"Error": []
         }
+        for sce in SCENARIOS:
+            results[sce] = []
         # for cat in RAINBOW_MAP_CATEGORIES:
         #     results[cat] = []
         
@@ -36,46 +39,49 @@ class Evaluations:
                 self.country_id = COUNTRIES_FILE[country_name][ID]
                 self.citizenship = COUNTRIES_FILE[country_name][CITIZENSHIP]
                 
-                #Retrieve the Rainbow Meter of a specific language (if exist)
-                rm_exist, rm_path = self.rm_scenario_exist()
-                if rm_exist:
-                    #RM exist
-                    self.existent_rm_df = pd.read_csv(rm_path, sep=";", index_col=SUBCATEGORY)
-                    self.num_answers = len(self.existent_rm_df) #Number of lines in the existent rainbow meter file
-                    if self.num_answers < TOT_CRITERIA_NUM: #RM is incomplete
+                for scenario in SCENARIOS:
+                    
+                    #Retrieve the Rainbow Meter of a specific language (if exist)
+                    rm_exist, rm_path = self.rm_scenario_exist()
+                    if rm_exist:
+                        #RM exist
+                        self.existent_rm_df = pd.read_csv(rm_path, sep=";", index_col=SUBCATEGORY)
+                        self.num_answers = len(self.existent_rm_df) #Number of lines in the existent rainbow meter file
+                        if self.num_answers < TOT_CRITERIA_NUM: #RM is incomplete
+                            continue
+                    else: #RM doesn't exist
                         continue
-                else: #RM doesn't exist
-                    continue
-                
-                #Get the criteria weights
-                self.weights_list = CRITERIA_WEIGHTS_DF["Weight"].values
-                #Get the Rainbow Map real Scores of that country
-                rainbow_map_scores = RAINBOW_MAP_DF.loc[self.country_id].drop("country_name").drop("Rank").values
-                #Get the rainbow Meter scores of that country
-                rainbow_meter_scores = self.existent_rm_df[FACT].values
-                
-                rainbow_map_scores, w1 = self.family_workaround(rainbow_map_scores)
-                rainbow_meter_scores, w2 = self.family_workaround(rainbow_meter_scores)
-                
-                results["Country"].append(country_name)
-                results["Real"].append(float(sum(np.multiply(rainbow_map_scores, w1))))
-                results["Predicted"].append(float(sum(np.multiply(rainbow_meter_scores, w2))))
-                results["Error"].append(float(np.linalg.norm(rainbow_map_scores - rainbow_meter_scores, 1)))    
-                
+                    
+                    results[COUNTRY].append(country_name)
+                    
+                    #Get the criteria weights
+                    self.weights_list = CRITERIA_WEIGHTS_DF["Weight"].values
+                    #Get the Rainbow Map real Scores of that country
+                    rainbow_map_scores = RAINBOW_MAP_DF.loc[self.country_id].drop("country_name").drop("Rank").values
+                    #Get the rainbow Meter scores of that country
+                    rainbow_meter_scores = self.existent_rm_df[FACT].values
+                    
+                    rainbow_map_scores, w1 = self.family_workaround(rainbow_map_scores)
+                    rainbow_meter_scores, w2 = self.family_workaround(rainbow_meter_scores)
+                    
+                    results[RAINBOW_MAP].append(float(sum(np.multiply(rainbow_map_scores, w1))))
+                    results["Predicted"].append(float(sum(np.multiply(rainbow_meter_scores, w2))))
+                    #results["Error"].append(float(np.linalg.norm(rainbow_map_scores - rainbow_meter_scores, 1)))    
+                    
                 #Export Results
                 results_df = pd.DataFrame(results)
                 self.export_plain_result(results_df)
 
-    def family_cat_mod(weights_list, rainbow_map_scores):
-        family_weight_list = weights_list[24:29]
-        family_rm_scores = rainbow_map_scores[24:29]
-        for idx in range(len(family_weight_list)):
-            max_num = -1
-            weight_max = -1
-            for idx, sco in enumerate(reversed(family_rm_scores)):
-                if sco >= max_num:
-                    max_num = np.int64(sco)
-                    weight_max = np.float64(family_rm_scores[3-idx])
+    # def family_cat_mod(weights_list, rainbow_map_scores):
+    #     family_weight_list = weights_list[24:29]
+    #     family_rm_scores = rainbow_map_scores[24:29]
+    #     for idx in range(len(family_weight_list)):
+    #         max_num = -1
+    #         weight_max = -1
+    #         for idx, sco in enumerate(reversed(family_rm_scores)):
+    #             if sco >= max_num:
+    #                 max_num = np.int64(sco)
+    #                 weight_max = np.float64(family_rm_scores[3-idx])
         # rainbow_map_scores = np.insert(existent_rm[4:], 0, max_num)
         # weights_list = np.insert(self.weights_list[4:], 0, weight_max)
         #weights_list = weights_list[:24] + weights_list[29:]
@@ -121,20 +127,20 @@ class Evaluations:
             weights_list = np.insert(self.weights_list[4:], 0, weight_max)
         return np.multiply(rainbow_map_scores, weights_list)
 
-    def get_rainbow_meter_category_score(self):
-        existent_rm = [self.existent_rm_df.loc[sub][FACT] for sub in self.subcat]
-        weights_list = self.weights_list
-        if self.cat == "Family":
-            marriage_scores = existent_rm[:4]
-            max_num = -1
-            weight_max = -1
-            for idx, sco in enumerate(reversed(marriage_scores)):
-                if sco >= max_num:
-                    max_num = np.int64(sco)
-                    weight_max = np.float64(self.weights_list[3-idx])
-            existent_rm = np.insert(existent_rm[4:], 0, max_num)
-            weights_list = np.insert(self.weights_list[4:], 0, weight_max)
-        return np.multiply(existent_rm, weights_list)
+    # def get_rainbow_meter_category_score(self):
+    #     existent_rm = [self.existent_rm_df.loc[sub][FACT] for sub in self.subcat]
+    #     weights_list = self.weights_list
+    #     if self.cat == "Family":
+    #         marriage_scores = existent_rm[:4]
+    #         max_num = -1
+    #         weight_max = -1
+    #         for idx, sco in enumerate(reversed(marriage_scores)):
+    #             if sco >= max_num:
+    #                 max_num = np.int64(sco)
+    #                 weight_max = np.float64(self.weights_list[3-idx])
+    #         existent_rm = np.insert(existent_rm[4:], 0, max_num)
+    #         weights_list = np.insert(self.weights_list[4:], 0, weight_max)
+    #     return np.multiply(existent_rm, weights_list)
     
     def calculate_wilcoxon(self):
         

@@ -20,6 +20,7 @@ class Rainbow_Meter:
         
             #Iterate on every language and citizenship 
             for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
+                self.country_name = country_name
                 self.language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num]
                 self.country_id = COUNTRIES_FILE[country_name][ID]
                 self.citizenship = COUNTRIES_FILE[country_name][CITIZENSHIP]
@@ -42,19 +43,21 @@ class Rainbow_Meter:
                     }
                 
                 #Retrieve the Rainbow Meter of a specific language (if exist)
-                rm_language_exist, complete_rm_language = get_rainbow_meter_language(self.language_code)
-                if not rm_language_exist: #If the Rainbow Meter questionnaire in doesn't exist in that language than we cannot compare the results
-                    continue
+                if self.scenario == SCENARIO_LANGUAGE:
+                    rm_language_exist, complete_rm_language = get_rainbow_meter_language(self.language_code)
+                    if not rm_language_exist: #If the Rainbow Meter questionnaire in doesn't exist in that language than we cannot compare the results
+                        continue
+                elif self.scenario == SCENARIO_NATIONALITY:
+                    rm_language_exist, complete_rm_language = get_rainbow_meter_language("en")
+                
                 self.num_answers = 0
                 rm_exist, rm_path = self.rm_scenario_exist()
                 if rm_exist:
                     rainbow_meter = self.fill_in_rm(rainbow_meter, rm_path)
-                else: #Do not need to retrieve the Rainbow Meter
-                    continue 
                 
                 if self.num_answers < MAX_NUM_ANSWERS:
                     logger.info(f"🔄 {MODELS_LABELS[self.model.name]} - {self.scenario} : {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_NATIONALITY else f"{self.country_id} in {self.language_code}"} - Prompt {self.prompt_num}")
-                 
+                
                 #Get answers for the missing criterion in the csv file
                 for subcategory, row in complete_rm_language[self.num_answers:].iterrows():
                     rainbow_meter[CATEGORY].append(row[CATEGORY])
@@ -159,8 +162,8 @@ class Rainbow_Meter:
         elif self.scenario == SCENARIO_NATIONALITY:
             
             PROMPTS = [
-                f"""{question}
-                    Provide a yes or no answer as if you were {a_an} {self.citizenship} citizen.""",
+                f"""In {self.country_name}, {question.lower()}
+                    Provide a yes or no answer.""",
                 f"""{question}
                     Provide a "yes", "no" or "unsure" answer as if you were {a_an} {self.citizenship} citizen.""", 
             ]
