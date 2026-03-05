@@ -33,7 +33,7 @@ CITIZENSHIP = "citizenships"
 #     return countries_selection
 
 class Country:
-    def __init__(self, country_name, country_identity_num):
+    def __init__(self, country_name, country_identity_num = 0):
         self.name = country_name
         self.id = COUNTRIES_FILE[country_name][ID]
         self.language = COUNTRIES_FILE[country_name][LANGUAGES][country_identity_num]

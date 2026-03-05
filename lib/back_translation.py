@@ -9,7 +9,6 @@ HF_TOKEN = os.getenv('HF_TOKEN')
 API_URL = "https://router.huggingface.co/hf-inference/models/sentence-transformers/all-MiniLM-L6-v2"
 
 NUM_SAMPLES_QUESTIONS = 3
-instruction = "without any additional text or note"
 
 def similarity_test(original, translated):
     payload = {
@@ -22,50 +21,70 @@ def similarity_test(original, translated):
     return response.json()[0]
 
 def test_model(model, question_list, language):
-    
     similarity = []
     #print(questions_list)
     for question in question_list:
-        prompt = f"""Translate the following sentence in {language}
-        {instruction}:{question}"""
+    
         try: 
-            transation = model.call_model(prompt)
-            prompt = f"""Translate the following sentence in english {instruction}: {transation}"""
-            back_transated = model.call_model(prompt)
-            similarity.append(similarity_test(question, back_transated))
+            transation = translate(model, question, language)
+            back_transated = translate(model, transation)
+            similarity.append(similarity_test(question, back_transated) )
         except Exception as X:
-            logger.error(X)
+            breakpoint
+            logger.error(f"test_model: {X}")
             return None
     return sum(similarity)/ len(similarity)
 
-def translate(model, text, language):
-    prompt = f"""Translate the following sentence in {language}
-{instruction}: {text}"""
+def translate(model, text, language = "English"):
+    # prompt = f"""Translate the following sentence in {language} {instruction}: 
+    # {text}"""
+    prompt = f"""Translate the text between <text> and </text> into {language}.
+        Return ONLY the translation.
+
+        <text>
+        {text}
+        </text>"""
     try: 
         transation = model.call_model(prompt)
-        return transation
+        return transation.strip().split("\n")[0]
     except Exception as X:
-        logger.error(X)
+        logger.error(f"translate: {X}")
         return None
         
-def translate_rainbow_meter(model, language, language_code):
-    result_path = f"data/{RAINBOW_METER_PATH}/{SCENARIO_LANGUAGE}/"
-    rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{language_code}.csv"
-    translated_rm ={
+def translate_rainbow_meter(model, scenario, country, rm_path):
+        
+    rainbow_meter ={
         CATEGORY: [],
         SUBCATEGORY: []
     }
     for type in QUESTION_TYPES:
-        translated_rm[type]= []
+        rainbow_meter[type]= []
 
     for subcategory, row in RAINBOW_METER_EN.iterrows():
-        translated_rm[SUBCATEGORY].append(subcategory)
-        translated_rm[CATEGORY].append(row[CATEGORY])
+        rainbow_meter[SUBCATEGORY].append(subcategory)
+        rainbow_meter[CATEGORY].append(row[CATEGORY])
         for type in QUESTION_TYPES:
-            translated_rm[type].append(translate(model, row[type], language))
-        
+            if scenario == SCENARIO_LANGUAGE:
+                #Translate question from English in the country language
+                try:
+                    question = translate(model, row[type].lower(), country.language)  
+                except Exception as X:
+                    logger.error(f"translate_rainbow_meter: {X}")
+            elif scenario == SCENARIO_NATIONALITY:
+                #Insert the country country in the question
+                question = f"In {country.name}, {row[type].lower()}"
+            else:
+                #Insert the country in the questionand translate it from English in the country language
+                try: 
+                    question = translate(model, f"In {country.name}, {row[type].lower()}", country.language)
+                except Exception as X:
+                    logger.error(f"translate_rainbow_meter: {X}")
+            
+            rainbow_meter[type].append(question)
+            
+        result_path = f"data/{RAINBOW_METER_PATH}/{scenario}"
         os.makedirs(result_path, exist_ok=True)
-        df = pd.DataFrame(translated_rm)
+        df = pd.DataFrame(rainbow_meter)
         df.to_csv(rm_path, sep=";", index=False)
 # sentences = ["I'm very happy", "I'm filled with happiness"]
 # print(similarity_test(sentences))
@@ -81,14 +100,16 @@ def test_model_languages(model):
         questions_list = questions_list + random.sample(list(RAINBOW_METER_EN[type].values), NUM_SAMPLES_QUESTIONS)
         
     results = {
-        "model": model_name
+        "model": []
     }
     for language in languages_list:
         results[language] = []
     
-    for language in tqdm.tqdm(languages_list, total=len(languages_list), desc=f"Testing {model.name} in {language}"):
+    results["model"].append(model.name)
+    for language in tqdm.tqdm(languages_list, total=len(languages_list), desc=f"Testing {model.name}"):
         #logger.info(f"{model} - {language}")
-        results[language].append(test_model(model, questions_list, language))
+        if len(results[language]) == 0 : #Language evaluated already
+            results[language].append(test_model(model, questions_list, language))
         
     result_path = f"{RESULT_PATH}/back_translation/"
     os.makedirs(result_path, exist_ok=True)
@@ -101,23 +122,26 @@ model_name = LLAMA3
 model = Model(model_name)
 error = model.initialize_model()
 if not error:
-    logger.info(f"Testing languages with {model}")
-    test_model_languages(model_name)
+    #logger.info(f"Testing languages with {model.name}")
+    test_model_languages(model)
 
 
 #check if the model support the language
     
-# for country_name in COUNTRIES_FILE: 
-#     id = COUNTRIES_FILE[country_name][ID]
-#     language = COUNTRIES_FILE[country_name][LANGUAGES][0]
-#     language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][0]
-#     citizenship = COUNTRIES_FILE[country_name][CITIZENSHIP]
+    # for country_name in tqdm.tqdm(COUNTRIES_FILE, desc="Generating Rainbow Meter Questions", total=len(COUNTRIES_FILE)): 
+    #     country = Country(country_name)
 
-#     result_path = f"{RAINBOW_METER_PATH}/"
-#     rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{language_code}.csv"
-    
-#     if not os.path.exists(rm_path):
-#         translate_rainbow_meter(model, language, language_code)
+    #     for scenario in SCENARIOS:
+    #         result_path = f"data/{RAINBOW_METER_PATH}/{scenario}"
+    #         if scenario == SCENARIO_LANGUAGE:
+    #             rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country.language_code}.csv"
+    #         elif scenario == SCENARIO_NATIONALITY:
+    #             rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country.id}.csv"
+    #         else:
+    #             rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country.language_code}_{country.id}.csv"
+            
+    #         if not os.path.exists(rm_path):
+    #             translate_rainbow_meter(model, scenario, country, rm_path)
 
 
 
