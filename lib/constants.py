@@ -84,6 +84,8 @@ os.makedirs(f"{RESULT_PATH}/{RAINBOW_METER_PATH}", exist_ok=True)
 EVALUATIONS_PATH = "evaluations"
 os.makedirs(f"{RESULT_PATH}/{EVALUATIONS_PATH}", exist_ok=True)
 
+RAINBOW_METER_EN = pd.read_csv(f"data/{RAINBOW_METER_PATH}/rainbow_meter_en.csv", sep=";", index_col=SUBCATEGORY)
+
 SCENARIO_LANGUAGE = "language_scenario"
 SCENARIO_NATIONALITY = "nationality_scenario"
 SCENARIO_LAN_NAT = "language_nationality_scenario"

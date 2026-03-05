@@ -1,4 +1,4 @@
-from lib.constants import *
+from constants import *
 import requests
 from openai import OpenAI
 import google.generativeai as genai

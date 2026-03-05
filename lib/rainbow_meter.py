@@ -44,11 +44,11 @@ class Rainbow_Meter:
                 
                 #Retrieve the Rainbow Meter of a specific language (if exist)
                 if self.scenario == SCENARIO_LANGUAGE:
-                    rm_language_exist, complete_rm_language = get_rainbow_meter_language(self.language_code)
+                    rm_language_exist, complete_rm_language = get_rainbow_meter_language(self.language_code, self.scenario)
                     if not rm_language_exist: #If the Rainbow Meter questionnaire in doesn't exist in that language than we cannot compare the results
                         continue
                 elif self.scenario == SCENARIO_NATIONALITY:
-                    rm_language_exist, complete_rm_language = get_rainbow_meter_language("en")
+                    rm_language_exist, complete_rm_language = get_rainbow_meter_language("en", self.scenario)
                 
                 self.num_answers = 0
                 rm_exist, rm_path = self.rm_scenario_exist()
@@ -189,8 +189,8 @@ def compute_scores(answers):
     
     return coherence, validity, final_score
     
-def get_rainbow_meter_language(language_code):
-    result_path = f"data/{RAINBOW_METER_PATH}/rainbow_meter_{language_code}.csv"
+def get_rainbow_meter_language(language_code, scenario):
+    result_path = f"data/{RAINBOW_METER_PATH}/{scenario}/rainbow_meter_{language_code}.csv"
     if os.path.exists(result_path): #If exist
         return True, pd.read_csv(result_path, sep=";", index_col=SUBCATEGORY) 
     return False, None
