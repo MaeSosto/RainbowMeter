@@ -30,33 +30,6 @@ else:
 torch.set_default_device(device)
 logger.info(f"Using device: {device}")
 
-LLAMA3 = 'llama3'
-LLAMA4 = 'llama4'
-LLAMA3_70B = 'llama3:70b'
-GEMMA3 = 'gemma3'
-GEMMA3_27B = 'gemma3:27b'
-GPT4_MINI = 'gpt-4o-mini'
-GPT4 = 'gpt-4o'
-GEMINI_2_0_FLASH = "gemini-2.0-flash"
-GEMINI_2_0_FLASH_LITE = "gemini-2.0-flash-lite"
-DEEPSEEK = 'deepseek-r1'
-DEEPSEEK_671B = 'deepseek-reasoner'
-#MODEL_LIST = [LLAMA3, LLAMA3_70B, LLAMA4, GEMMA3, GEMMA3_27B, GPT4, GPT4_MINI, GEMINI_2_0_FLASH, GEMINI_2_0_FLASH_LITE, DEEPSEEK, DEEPSEEK_671B]
-
-MODELS_LABELS = {
-    LLAMA3 : 'Llama 3',
-    LLAMA3_70B : 'Llama 3(70b)',
-    LLAMA4 : 'Llama 4',
-    GEMMA3 : 'Gemma 3',
-    GEMMA3_27B : 'Gemma 3(27b)',
-    GEMINI_2_0_FLASH : "Gemini 2.0 Flash",
-    GEMINI_2_0_FLASH_LITE : "Gemini 2.0 Flash Lite",
-    GPT4_MINI : 'GPT4o Mini',
-    GPT4 : 'GPT4o',
-    DEEPSEEK: 'DeepSeek R1',
-    DEEPSEEK_671B: 'DeepSeek R1 (671b)',
-}
-
 #Rainbow Map
 CATEGORY = "Category"
 SUBCATEGORY = "Subcategory"

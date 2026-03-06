@@ -56,7 +56,7 @@ class Rainbow_Meter:
                     rainbow_meter = self.fill_in_rm(rainbow_meter, rm_path)
                 
                 if self.num_answers < MAX_NUM_ANSWERS:
-                    logger.info(f"🔄 {MODELS_LABELS[self.model.name]} - {self.scenario} : {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_NATIONALITY else f"{self.country_id} in {self.language_code}"} - Prompt {self.prompt_num}")
+                    logger.info(f"🔄 {self.model.name} - {self.scenario} : {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_NATIONALITY else f"{self.country_id} in {self.language_code}"} - Prompt {self.prompt_num}")
                 
                 #Get answers for the missing criterion in the csv file
                 for subcategory, row in complete_rm_language[self.num_answers:].iterrows():

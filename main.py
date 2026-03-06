@@ -14,7 +14,7 @@ PROMPT_NUM = 0
 scenario = SCENARIO_NATIONALITY
 
 #Setup the model
-model_name = LLAMA3
+model_name = QWEN3_4
 model = Model(model_name)
 error = model.initialize_model()
 if not error: #If there are no errors in initializing the model
