@@ -9,7 +9,7 @@ import random
 HF_TOKEN = os.getenv('HF_TOKEN')
 API_URL = "https://router.huggingface.co/hf-inference/models/sentence-transformers/all-MiniLM-L6-v2"
 
-NUM_SAMPLES_QUESTIONS = 1
+NUM_SAMPLES_QUESTIONS = 3
 
 #Given two sentences, it return the similarity score (between 0 and 1)
 def similarity_test(original, translated):
@@ -35,7 +35,7 @@ def test_model(model, question_list, language):
             logger.error(f"test_model: {X}")
             return None
         try:
-            while translation == "" or translation == None: 
+            while back_transated == "" or back_transated == None: 
                 back_transated = translate(model, translation)
         except Exception as X:
             logger.error(f"test_model: {X}")
@@ -53,13 +53,50 @@ def translate(model, text, language = "English"):
     try: 
         while translation == None or translation == "":
             translation = model.call_model(prompt)
-        return translation.strip().split("\n")[0]
+            translation = clean_translation(translation)
+        return translation
     except Exception as X:
         logger.error(f"translate: {X}")
         return None
+
+def clean_translation(text):
+    if text is None:
+        return ""
+
+    text = text.strip()
+
+    # remove everything starting with "Note:"
+    text = re.split(r'\bNote:\b', text, flags=re.IGNORECASE)[0]
+
+    # remove markdown emphasis
+    text = re.sub(r"[*_`]+", "", text)
+
+    # remove leading labels like "Translation:", "Në shqip:", etc.
+    text = re.sub(r"^[A-Za-zÀ-ÖØ-öø-ÿ\s]+:\s*", "", text)
+
+    # # remove long parenthetical commentary
+    # text = re.sub(r"$begin:math:text$\[\^\)\]\{20\,\}$end:math:text$", "", text)
+
+    # split into lines
+    lines = [l.strip() for l in text.split("\n") if l.strip()]
+
+    if not lines:
+        return ""
+
+    # remove obvious explanation lines
+    filtered = []
+    for l in lines:
+        if re.search(r"(translation|explanation|comment)", l, re.I):
+            continue
+        filtered.append(l)
+
+    if not filtered:
+        filtered = lines
+
+    # choose the longest line (usually the translation)
+    return max(filtered, key=len)
         
 def translate_rainbow_meter(model, scenario, country, rm_path):
-        
     rainbow_meter ={
         CATEGORY: [],
         SUBCATEGORY: []
@@ -96,24 +133,50 @@ def translate_rainbow_meter(model, scenario, country, rm_path):
 # sentences = ["I'm very happy", "I'm filled with happiness"]
 # print(similarity_test(sentences))
 
-
 def test_model_languages(model_list):
+
     result_path = f"{RESULT_PATH}/back_translation/"
     os.makedirs(result_path, exist_ok=True)
     csv_path = f"{result_path}bt_scores.csv"
 
-    languages_list = [COUNTRIES_FILE[country_name][LANGUAGES][0] for country_name in COUNTRIES_FILE]
+    questions_path = "data/translation_test/questions.json"
+    os.makedirs("data/translation_test", exist_ok=True)
 
+    languages_list = list(dict.fromkeys(
+        COUNTRIES_FILE[country_name][LANGUAGES][0]
+        for country_name in COUNTRIES_FILE
+    ))
+
+    # -----------------------------
+    # Load or create question list
+    # -----------------------------
+    if os.path.exists(questions_path):
+        with open(questions_path, "r", encoding="utf-8") as f:
+            questions_list = json.load(f)
+    else:
+        questions_list = []
+        for type in QUESTION_TYPES:
+            questions_list += random.sample(
+                list(RAINBOW_METER_EN[type].values),
+                NUM_SAMPLES_QUESTIONS
+            )
+
+        with open(questions_path, "w", encoding="utf-8") as f:
+            json.dump(questions_list, f, ensure_ascii=False, indent=2)
+
+    # -----------------------------
     # Load or create dataframe
+    # -----------------------------
+    columns = ["model"] + languages_list + ["avg_score"]
+
     if os.path.exists(csv_path):
         df = pd.read_csv(csv_path, sep=";")
     else:
-        df = pd.DataFrame(columns=["model"] + languages_list)
+        df = pd.DataFrame(columns=columns)
 
-    # Get random questions
-    questions_list = []
-    for type in QUESTION_TYPES:
-        questions_list += random.sample(list(RAINBOW_METER_EN[type].values), NUM_SAMPLES_QUESTIONS)
+    # Ensure avg_score exists (in case file existed before)
+    if "avg_score" not in df.columns:
+        df["avg_score"] = None
 
     for model_name in model_list:
 
@@ -139,11 +202,64 @@ def test_model_languages(model_list):
                 continue
 
             score = test_model(model, questions_list, language)
-
             df.loc[row_idx, language] = score
 
-            # Save immediately after each language
+            # -----------------------------
+            # Recompute average score
+            # -----------------------------
+            lang_scores = pd.to_numeric(df.loc[row_idx, languages_list], errors="coerce")
+            df.loc[row_idx, "avg_score"] = lang_scores.mean()
+
+            # Save immediately
             df.to_csv(csv_path, sep=";", index=False)
+            
+# def test_model_languages(model_list):
+#     result_path = f"{RESULT_PATH}/back_translation/"
+#     os.makedirs(result_path, exist_ok=True)
+#     csv_path = f"{result_path}bt_scores.csv"
+
+#     languages_list = [COUNTRIES_FILE[country_name][LANGUAGES][0] for country_name in COUNTRIES_FILE]
+
+#     # Load or create dataframe
+#     if os.path.exists(csv_path):
+#         df = pd.read_csv(csv_path, sep=";")
+#     else:
+#         df = pd.DataFrame(columns=["model"] + languages_list)
+
+#     # Get random questions
+#     questions_list = []
+#     for type in QUESTION_TYPES:
+#         questions_list += random.sample(list(RAINBOW_METER_EN[type].values), NUM_SAMPLES_QUESTIONS)
+
+#     for model_name in model_list:
+
+#         model_label = MODELS_LABELS[model_name]
+
+#         # Ensure model row exists
+#         if model_label not in df["model"].values:
+#             new_row = {col: None for col in df.columns}
+#             new_row["model"] = model_label
+#             df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+
+#         row_idx = df.index[df["model"] == model_label][0]
+
+#         model = Model(model_name)
+#         error = model.initialize_model()
+#         if error:
+#             continue
+
+#         for language in tqdm.tqdm(languages_list, desc=f"Testing {model_label}"):
+
+#             # Skip already computed languages
+#             if pd.notna(df.loc[row_idx, language]):
+#                 continue
+
+#             score = test_model(model, questions_list, language)
+
+#             df.loc[row_idx, language] = score
+#             #df = df.round(2)
+#             # Save immediately after each language
+#             df.to_csv(csv_path, sep=";", index=False)
 
 #translate the default prompt from English to all the other languages and populate the file prompt.json
 def translate_default_prompt():
@@ -173,7 +289,7 @@ def translate_default_prompt():
     with open("data/prompt.json", "w", encoding="utf-8") as f:
         json.dump(row_results, f, indent=4, ensure_ascii=False)
     
-model_list = [QWEN3_4, GEMMA3_4, GEMMA3_12, GEMMA3_27]
+model_list = [QWEN3_4, QWEN3_30, GEMMA3_4, GEMMA3_12, GEMMA3_27, MINISTRAL3_3, MINISTRAL3_8, MINISTRAL3_14]
 
 test_model_languages(model_list)
 #translate_prompt()

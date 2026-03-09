@@ -8,19 +8,21 @@ URL_OLLAMA_LOCAL = "http://localhost:11434/api"
 URL_LMSTUDIO_LOCAL = "http://localhost:1234"
 URL_DEEPSEEK = "https://api.deepseek.com"
 
-QWEN3_4 = "qwen/qwen3-4b-2507"
+#QWEN3_4 = "qwen/qwen3-4b-2507"
+QWEN3_4 = "qwen3:4b"
 QWEN3_30 = "qwen/qwen3-30b-a3b-2507"
 
 GEMMA3_4 = 'google/gemma-3-4b'
 GEMMA3_12 = 'google/gemma-3-12b'
 GEMMA3_27 = 'google/gemma-3-27b'
 
-# MINISTRAL3_3 = 'ministral-3:3b'
-# MINISTRAL3_8 = 'ministral-3:8b'
-# MINISTRAL3_14 = 'ministral-3:14b'
-# DEEPSEEKR1_1_5 = 'deepseek-r1:1.5b'
-# DEEPSEEKR1_8 = 'deepseek-r1:8b'
-# DEEPSEEKR1_32 = 'deepseek-r1:32b'
+MINISTRAL3_3 = 'mistralai/ministral-3-3b'
+MINISTRAL3_8 = 'mistralai/ministral-3-8b'
+MINISTRAL3_14 = 'mistralai/ministral-3-14b'
+
+DEEPSEEKR1_1_5 = 'deepseek-r1:1.5b'
+DEEPSEEKR1_8 = 'deepseek-r1:8b'
+DEEPSEEKR1_32 = 'deepseek-r1:32b'
 
 # LLAMA3 = 'llama3'
 # LLAMA4 = 'llama4'
@@ -39,6 +41,14 @@ MODELS_LABELS = {
     GEMMA3_4: "Gemma 3 4B", 
     GEMMA3_12 : "Gemma 3 12B",
     GEMMA3_27 : "Gemma 3 27B",
+    
+    MINISTRAL3_3: "Ministral 3 3B",
+    MINISTRAL3_8: "Ministral 3 8B",
+    MINISTRAL3_14: "Ministral 3 14B",
+    
+    DEEPSEEKR1_1_5: "DeepSeek R1 1.5B",
+    DEEPSEEKR1_8: "DeepSeek R1 8B",
+    DEEPSEEKR1_32: "DeepSeek R1 32B"
     
     # LLAMA3: 'Llama 3',
     # LLAMA3_70B : 'Llama 3(70b)',
@@ -59,7 +69,8 @@ class Model:
             # LLAMA3: self._initialize_Ollama, 
             # LLAMA3_70B: self._initialize_Ollama,
             # LLAMA4: self._initialize_Ollama,
-            QWEN3_4: self._initialize_lmstudio,
+            #QWEN3_4: self._initialize_lmstudio,
+            QWEN3_4: self._initialize_Ollama,
             QWEN3_30: self._initialize_lmstudio,
             # QWEN35_0_8: self._initialize_Ollama,
             # QWEN35_9: self._initialize_Ollama,
@@ -67,12 +78,12 @@ class Model:
             GEMMA3_4: self._initialize_lmstudio,
             GEMMA3_12: self._initialize_lmstudio,
             GEMMA3_27: self._initialize_lmstudio,
-            # MINISTRAL3_3: self._initialize_Ollama,
-            # MINISTRAL3_8: self._initialize_Ollama,
-            # MINISTRAL3_14: self._initialize_Ollama,
-            # DEEPSEEKR1_1_5: self._initialize_Ollama,
-            # DEEPSEEKR1_8: self._initialize_Ollama,
-            # DEEPSEEKR1_32: self._initialize_Ollama,
+            MINISTRAL3_3: self._initialize_lmstudio,
+            MINISTRAL3_8: self._initialize_lmstudio,
+            MINISTRAL3_14: self._initialize_lmstudio,
+            DEEPSEEKR1_1_5: self._initialize_Ollama,
+            DEEPSEEKR1_8: self._initialize_Ollama,
+            DEEPSEEKR1_32: self._initialize_Ollama,
             # GEMINI_2_0_FLASH: self._initialize_Gemini, 
             # GEMINI_2_0_FLASH_LITE: self._initialize_Gemini,
             # GPT4: self._initialize_GPT, 
@@ -84,7 +95,8 @@ class Model:
             # LLAMA3: self._request_ollama, 
             # LLAMA3_70B: self._request_ollama,
             # LLAMA4: self._request_ollama,
-            QWEN3_4: self._request_lmstudio,
+            #QWEN3_4: self._request_lmstudio,
+            QWEN3_4: self._request_ollama,
             QWEN3_30: self._request_lmstudio,
             # QWEN35_0_8: self._request_ollama,
             # QWEN35_9: self._request_ollama,
@@ -92,12 +104,12 @@ class Model:
             GEMMA3_4: self._request_lmstudio,
             GEMMA3_12: self._request_lmstudio,
             GEMMA3_27: self._request_lmstudio,
-            # MINISTRAL3_3: self._request_ollama,
-            # MINISTRAL3_8: self._request_ollama,
-            # MINISTRAL3_14: self._request_ollama,
-            # DEEPSEEKR1_1_5: self._request_ollama,
-            # DEEPSEEKR1_8: self._request_ollama,
-            # DEEPSEEKR1_32: self._request_ollama,
+            MINISTRAL3_3: self._request_lmstudio,
+            MINISTRAL3_8: self._request_lmstudio,
+            MINISTRAL3_14: self._request_lmstudio,
+            DEEPSEEKR1_1_5: self._request_ollama,
+            DEEPSEEKR1_8: self._request_ollama,
+            DEEPSEEKR1_32: self._request_ollama,
             # GPT4: self._request_open_ai, 
             # GPT4_MINI: self._request_open_ai,
             # GPT5: self._request_open_ai, 
