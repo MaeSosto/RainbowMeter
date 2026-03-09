@@ -26,34 +26,34 @@ def similarity_test(original, translated):
 def test_model(model, question_list, language):
     similarity = []
     for question in question_list:
-    
+        translation = ""
+        back_transated = ""
         try: 
-            transation = translate(model, question, language)
-            back_transated = translate(model, transation)
-            similarity.append(similarity_test(question, back_transated) )
+            while translation == "" or translation == None:
+                translation = translate(model, question, language)
         except Exception as X:
-            breakpoint
             logger.error(f"test_model: {X}")
             return None
+        try:
+            while translation == "" or translation == None: 
+                back_transated = translate(model, translation)
+        except Exception as X:
+            logger.error(f"test_model: {X}")
+            return None
+        similarity.append(similarity_test(question, back_transated) )
     return sum(similarity)/ len(similarity)
 
 #Translate the given text in the specified language using the given model
 def translate(model, text, language = "English"):
     # prompt = f"""Translate the following sentence in {language} {instruction}: 
     # {text}"""
-    prompt = f"""Translate the text between <text> and </text> into {language}.
-        Return ONLY the translation.
-
-        <text>
-        {text}
-        </text>"""
+    prompt = f"""Translate the text between <text> and </text> into {language}. Return ONLY the translation.
+        <text>{text}</text>"""
+    translation = ""
     try: 
-        transation = model.call_model(prompt)
-        if transation == None:
-            return ""
-        #     logger.error(f"translate: {X}")
-        #     return None
-        return transation.strip().split("\n")[0]
+        while translation == None or translation == "":
+            translation = model.call_model(prompt)
+        return translation.strip().split("\n")[0]
     except Exception as X:
         logger.error(f"translate: {X}")
         return None
@@ -173,7 +173,7 @@ def translate_default_prompt():
     with open("data/prompt.json", "w", encoding="utf-8") as f:
         json.dump(row_results, f, indent=4, ensure_ascii=False)
     
-model_list = [QWEN3_4, QWEN3_30, GEMMA3_4, GEMMA3_12, GEMMA3_27]
+model_list = [QWEN3_4, GEMMA3_4, GEMMA3_12, GEMMA3_27]
 
 test_model_languages(model_list)
 #translate_prompt()
