@@ -68,8 +68,16 @@ for s in SCENARIOS:
     
 RAINBOW_METER_EN = pd.read_csv(f"data/{RAINBOW_METER_PATH}/{SCENARIO_LANGUAGE}/rainbow_meter_en.csv", sep=";", index_col=SUBCATEGORY)
 
+def control_env():
+    err = False
+    for var in ["HF_TOKEN"]:
+        if not os.getenv(var):
+            logger.error(f"⚠️ Local var {var} not found!")
+            err = True
+    return err
 
-    
+control_env()
+
 # def csv_to_json(path_json, path_csv):
 #     csv_file = pd.DataFrame(pd.read_csv(path_csv, sep = ",", header = 0, index_col = False))
 #     csv_file = pd.DataFrame(pd.read_csv(path_csv, sep = ",", header = 0, index_col = False))

@@ -6,10 +6,9 @@ import requests
 import random
 
 
-HF_TOKEN = os.getenv('HF_TOKEN')
 API_URL = "https://router.huggingface.co/hf-inference/models/sentence-transformers/all-MiniLM-L6-v2"
-
 NUM_SAMPLES_QUESTIONS = 3
+
 #Given two sentences, it return the similarity score (between 0 and 1)
 def similarity_test(original, translated):
     payload = {
@@ -19,7 +18,9 @@ def similarity_test(original, translated):
         }
     }
     try:
-        response = requests.post(API_URL, headers={"Authorization": f"Bearer {HF_TOKEN}"}, json=payload)
+        response = requests.post(API_URL, headers = {
+                "Authorization": f"Bearer {os.getenv('HF_TOKEN')}"
+            }, json=payload)
         if not(response.status_code == 200):
             logger.error(f"⚠️ Similarity Test")
             return None
@@ -196,6 +197,13 @@ def test_model_languages(model_list):
 
         row_idx = df.index[df["model"] == model_label][0]
 
+        # --------- Skip model if all languages + avg_score are already filled ---------
+        lang_values = df.loc[row_idx, languages_list]
+        avg_value = df.loc[row_idx, "avg_score"]
+        if lang_values.notna().all() and pd.notna(avg_value):
+            print(f"Skipping {model_label}: all languages already completed")
+            continue
+
         model = Model(model_name)
         error = model.initialize_model()
         if error:
@@ -210,9 +218,7 @@ def test_model_languages(model_list):
             score = test_model(model, questions_list, language)
             df.loc[row_idx, language] = score
 
-            # -----------------------------
             # Recompute average score
-            # -----------------------------
             lang_scores = pd.to_numeric(df.loc[row_idx, languages_list], errors="coerce")
             df.loc[row_idx, "avg_score"] = lang_scores.mean()
 
@@ -295,7 +301,7 @@ def translate_default_prompt():
     with open("data/prompt.json", "w", encoding="utf-8") as f:
         json.dump(row_results, f, indent=4, ensure_ascii=False)
     
-model_list = [QWEN3_4]
+model_list = [MINISTRAL3_8, MINISTRAL3_14, DEEPSEEKR1_1_5, DEEPSEEKR1_8, DEEPSEEKR1_32]
 
 test_model_languages(model_list)
 #translate_prompt()

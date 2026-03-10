@@ -8,9 +8,10 @@ URL_OLLAMA_LOCAL = "http://localhost:11434/api"
 URL_LMSTUDIO_LOCAL = "http://localhost:1234"
 URL_DEEPSEEK = "https://api.deepseek.com"
 
-#QWEN3_4 = "qwen/qwen3-4b-2507"
-QWEN3_4 = "qwen3:4b"
-QWEN3_30 = "qwen/qwen3-30b-a3b-2507"
+QWEN3_4 = "qwen/qwen3-4b-2507" #LMS
+#QWEN3_4 = "qwen3:4b" #Ollama
+QWEN3_30 = "qwen/qwen3-30b-a3b-2507" #LMS
+QWEN35_9 = "qwen3.5:9b" 
 
 GEMMA3_4 = 'google/gemma-3-4b'
 GEMMA3_12 = 'google/gemma-3-12b'
@@ -37,6 +38,7 @@ DEEPSEEKR1_32 = 'deepseek-r1:32b'
 MODELS_LABELS = {
     QWEN3_4: "Qwen3 4B",
     QWEN3_30: "Qwen3 30B",
+    QWEN35_9: "Qwen 3.5 9B",
     
     GEMMA3_4: "Gemma 3 4B", 
     GEMMA3_12 : "Gemma 3 12B",
@@ -69,9 +71,10 @@ class Model:
             # LLAMA3: self._initialize_Ollama, 
             # LLAMA3_70B: self._initialize_Ollama,
             # LLAMA4: self._initialize_Ollama,
-            #QWEN3_4: self._initialize_lmstudio,
-            QWEN3_4: self._initialize_Ollama,
+            QWEN3_4: self._initialize_lmstudio,
+            #QWEN3_4: self._initialize_Ollama,
             QWEN3_30: self._initialize_lmstudio,
+            QWEN35_9: self._initialize_lmstudio,
             # QWEN35_0_8: self._initialize_Ollama,
             # QWEN35_9: self._initialize_Ollama,
             # QWEN35_35: self._initialize_Ollama,
@@ -95,9 +98,10 @@ class Model:
             # LLAMA3: self._request_ollama, 
             # LLAMA3_70B: self._request_ollama,
             # LLAMA4: self._request_ollama,
-            #QWEN3_4: self._request_lmstudio,
-            QWEN3_4: self._request_ollama,
+            QWEN3_4: self._request_lmstudio,
+            #QWEN3_4: self._request_ollama,
             QWEN3_30: self._request_lmstudio,
+            QWEN35_9: self._request_lmstudio,
             # QWEN35_0_8: self._request_ollama,
             # QWEN35_9: self._request_ollama,
             # QWEN35_35: self._request_ollama,
@@ -179,7 +183,8 @@ class Model:
                     "model": self.name,
                     "prompt": self.prompt,
                     "messages": [{"role": "user", "content": self.prompt}],
-                    "stream": False
+                    "stream": False,
+                    "max_new_tokens": 500
                 }
             )
 
@@ -210,23 +215,20 @@ class Model:
                 headers={"Content-Type": "application/json"},
                 json={
                     "model": self.name,
-                    "messages": [
-                        {"role": "user", "content": self.prompt}
-                    ],
-                    # "temperature": 0,
-                    "stream": False
-                }
+                    "messages": [{"role": "user", "content": self.prompt}],
+                    "stream": False,
+                    "max_new_tokens": 500
+                },
+                timeout=60  # in seconds
             )
 
-            data = response.json()
-
-            reply = data["choices"][0]["message"]["content"]
-
-            if reply is None or reply == "":
+            if response is None or response == "":
                 logger.error(f"_request_lmstudio: empty response")
                 return None
 
-            return reply
+            data = response.json()
+            response = data["choices"][0]["message"]["content"]
+            return response
 
         except Exception as e:
             logger.error(f"_request_lmstudio error: {str(e)}")
