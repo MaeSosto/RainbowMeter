@@ -172,22 +172,37 @@ class Model:
     
     def _request_ollama(self):
         try:
-            response = requests.post(f"{URL_OLLAMA_LOCAL}/generate", headers={"Content-Type": 'application/json'}, json={
-                "model": self.name,
-                "prompt": self.prompt,
-                "messages": [{"role": "user", "content": self.prompt}],
-                # "options": {"temperature": 0},
-                "stream": False
-            })
-            response = response.json()['response']
-            if response == None or response == "":
-                logger.error(f"_request_ollama: {response["content"]}")
+            r = requests.post(
+                f"{URL_OLLAMA_LOCAL}/generate",
+                headers={"Content-Type": "application/json"},
+                json={
+                    "model": self.name,
+                    "prompt": self.prompt,
+                    "messages": [{"role": "user", "content": self.prompt}],
+                    "stream": False
+                }
+            )
+
+            if r.status_code != 200:
+                # data = r.json()
+                # response = data["content"]["error"]
+                logger.error(f"⚠️ Ollama ERROR: {response}")
                 return None
+
+            
+            data = r.json()
+            response = data["response"]
+
+            if response is None or response == "":
+                logger.error("_request_ollama: empty response")
+                return None
+
             return response
-        
+
         except Exception as X:
-            logger.error(f"_request_ollama: {response['text']}")
+            logger.error(f"_request_ollama: {X}")
             return None
+        
     def _request_lmstudio(self):
         try:
             response = requests.post(
@@ -241,8 +256,8 @@ class Model:
     def call_model(self, prompt):
         self.prompt = prompt
         try: 
-            response = self.send_request[self.name]()
-            return response
+            res = self.send_request[self.name]()
+            return res
         except Exception as X:
             logger.error(X)
             return None

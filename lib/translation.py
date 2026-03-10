@@ -10,7 +10,6 @@ HF_TOKEN = os.getenv('HF_TOKEN')
 API_URL = "https://router.huggingface.co/hf-inference/models/sentence-transformers/all-MiniLM-L6-v2"
 
 NUM_SAMPLES_QUESTIONS = 3
-
 #Given two sentences, it return the similarity score (between 0 and 1)
 def similarity_test(original, translated):
     payload = {
@@ -19,9 +18,16 @@ def similarity_test(original, translated):
             "sentences":[translated]
         }
     }
-    response = requests.post(API_URL, headers={"Authorization": f"Bearer {HF_TOKEN}"}, json=payload)
-    return response.json()[0]
-
+    try:
+        response = requests.post(API_URL, headers={"Authorization": f"Bearer {HF_TOKEN}"}, json=payload)
+        if not(response.status_code == 200):
+            logger.error(f"⚠️ Similarity Test")
+            return None
+        response = response.json()[0]
+        return response
+    except Exception as X:
+        logger.error(f"similarity_test: {X}")
+        return None
 #Given a model, a question list and a language, it calculates the average similarity scores between the original questions from the question list and their translated version in the provided language
 def test_model(model, question_list, language):
     similarity = []
@@ -289,7 +295,7 @@ def translate_default_prompt():
     with open("data/prompt.json", "w", encoding="utf-8") as f:
         json.dump(row_results, f, indent=4, ensure_ascii=False)
     
-model_list = [QWEN3_4, QWEN3_30, GEMMA3_4, GEMMA3_12, GEMMA3_27, MINISTRAL3_3, MINISTRAL3_8, MINISTRAL3_14]
+model_list = [QWEN3_4]
 
 test_model_languages(model_list)
 #translate_prompt()
