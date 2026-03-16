@@ -24,6 +24,7 @@ MINISTRAL3_14 = 'mistralai/ministral-3-14b'
 DEEPSEEKR1_1_5 = 'deepseek-r1:1.5b'
 DEEPSEEKR1_8 = 'deepseek-r1:8b'
 DEEPSEEKR1_32 = 'deepseek-r1:32b'
+DEEPSEEKR1_32_DISTILL = 'deepseek/deepseek-r1-distill-qwen-32b'
 
 # LLAMA3 = 'llama3'
 # LLAMA4 = 'llama4'
@@ -50,8 +51,8 @@ MODELS_LABELS = {
     
     DEEPSEEKR1_1_5: "DeepSeek R1 1.5B",
     DEEPSEEKR1_8: "DeepSeek R1 8B",
-    DEEPSEEKR1_32: "DeepSeek R1 32B"
-    
+    DEEPSEEKR1_32: "DeepSeek R1 32B",
+    DEEPSEEKR1_32_DISTILL: "DeepSeek R1 DIST 32B"
     # LLAMA3: 'Llama 3',
     # LLAMA3_70B : 'Llama 3(70b)',
     # LLAMA4 : 'Llama 4',
@@ -87,6 +88,7 @@ class Model:
             DEEPSEEKR1_1_5: self._initialize_Ollama,
             DEEPSEEKR1_8: self._initialize_Ollama,
             DEEPSEEKR1_32: self._initialize_Ollama,
+            DEEPSEEKR1_32_DISTILL: self._initialize_lmstudio,
             # GEMINI_2_0_FLASH: self._initialize_Gemini, 
             # GEMINI_2_0_FLASH_LITE: self._initialize_Gemini,
             # GPT4: self._initialize_GPT, 
@@ -114,6 +116,7 @@ class Model:
             DEEPSEEKR1_1_5: self._request_ollama,
             DEEPSEEKR1_8: self._request_ollama,
             DEEPSEEKR1_32: self._request_ollama,
+            DEEPSEEKR1_32_DISTILL: self._request_lmstudio,
             # GPT4: self._request_open_ai, 
             # GPT4_MINI: self._request_open_ai,
             # GPT5: self._request_open_ai, 

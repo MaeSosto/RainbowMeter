@@ -70,8 +70,10 @@ RAINBOW_METER_EN = pd.read_csv(f"data/{RAINBOW_METER_PATH}/{SCENARIO_LANGUAGE}/r
 
 def control_env():
     err = False
+    var = ""
     for var in ["HF_TOKEN"]:
-        if not os.getenv(var):
+        var = os.getenv(var)
+        if var == "":
             logger.error(f"⚠️ Local var {var} not found!")
             err = True
     return err

@@ -301,7 +301,7 @@ def translate_default_prompt():
     with open("data/prompt.json", "w", encoding="utf-8") as f:
         json.dump(row_results, f, indent=4, ensure_ascii=False)
     
-model_list = [MINISTRAL3_8, MINISTRAL3_14, DEEPSEEKR1_1_5, DEEPSEEKR1_8, DEEPSEEKR1_32]
+model_list = [DEEPSEEKR1_32]
 
 test_model_languages(model_list)
 #translate_prompt()

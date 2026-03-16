@@ -29,7 +29,7 @@ echo "📦 Upgrading pip..."
 # ollama serve > /dev/null &
 
 echo "🔧 Installing base libraries..."
-pip install torch pandas tqdm scipy transformers deep-translator SPARQLWrapper unidecode surprisal transformers python-dotenv data> /dev/null
+pip install torch pandas tqdm scipy transformers deep-translator SPARQLWrapper unidecode surprisal transformers python-dotenv data > /dev/null
 
 # echo "🧠 Installing sentiment analysis tools..."
 # pip install afinn vadersentiment > /dev/null
