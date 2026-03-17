@@ -30,8 +30,8 @@ DEEPSEEKR1_32_DISTILL = 'deepseek/deepseek-r1-distill-qwen-32b'
 # LLAMA4 = 'llama4'
 # LLAMA3_70B = 'llama3:70b'
 # GPT4_MINI = 'gpt-4o-mini'
-# GPT4 = 'gpt-4o'
-# GPT5 = 'gpt-5'
+GPT4 = 'gpt-4o'
+GPT5 = 'gpt-5'
 # GEMINI_2_0_FLASH = "gemini-2.0-flash"
 # GEMINI_2_0_FLASH_LITE = "gemini-2.0-flash-lite"
 # DEEPSEEK_671B = 'deepseek-reasoner'
@@ -52,7 +52,7 @@ MODELS_LABELS = {
     DEEPSEEKR1_1_5: "DeepSeek R1 1.5B",
     DEEPSEEKR1_8: "DeepSeek R1 8B",
     DEEPSEEKR1_32: "DeepSeek R1 32B",
-    DEEPSEEKR1_32_DISTILL: "DeepSeek R1 DIST 32B"
+    DEEPSEEKR1_32_DISTILL: "DeepSeek R1 DIST 32B",
     # LLAMA3: 'Llama 3',
     # LLAMA3_70B : 'Llama 3(70b)',
     # LLAMA4 : 'Llama 4',
@@ -61,7 +61,8 @@ MODELS_LABELS = {
     # GEMINI_2_0_FLASH_LITE : "Gemini 2.0 Flash Lite",
 
 
-    # DEEPSEEK_671B: 'DeepSeek R1 (671b)',
+    GPT4 : 'GPT 4o',
+    GPT5 : 'GPT 5'
 }
 
 class Model:
@@ -91,9 +92,9 @@ class Model:
             DEEPSEEKR1_32_DISTILL: self._initialize_lmstudio,
             # GEMINI_2_0_FLASH: self._initialize_Gemini, 
             # GEMINI_2_0_FLASH_LITE: self._initialize_Gemini,
-            # GPT4: self._initialize_GPT, 
+            GPT4: self._initialize_GPT, 
             # GPT4_MINI: self._initialize_GPT,
-            # GPT5: self._initialize_GPT, 
+            GPT5: self._initialize_GPT, 
         }
         
         self.send_request = {
@@ -117,9 +118,9 @@ class Model:
             DEEPSEEKR1_8: self._request_ollama,
             DEEPSEEKR1_32: self._request_ollama,
             DEEPSEEKR1_32_DISTILL: self._request_lmstudio,
-            # GPT4: self._request_open_ai, 
+            GPT4: self._request_open_ai, 
             # GPT4_MINI: self._request_open_ai,
-            # GPT5: self._request_open_ai, 
+            GPT5: self._request_open_ai, 
             # GEMINI_2_0_FLASH: self._request_gemini, 
             # GEMINI_2_0_FLASH_LITE: self._request_gemini,
         }

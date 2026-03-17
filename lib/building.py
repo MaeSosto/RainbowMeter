@@ -275,7 +275,7 @@ def test_model_languages(model_list):
 
 #translate the default prompt from English to all the other languages and populate the file prompt.json
 def translate_default_prompt():
-    model_name = GEMMA3_4
+    model_name = GEMMA3_27
     
     languages_list = [COUNTRIES_FILE[country_name][LANGUAGES][0] for country_name in COUNTRIES_FILE]
     model = Model(model_name)
@@ -301,26 +301,27 @@ def translate_default_prompt():
     with open("data/prompt.json", "w", encoding="utf-8") as f:
         json.dump(row_results, f, indent=4, ensure_ascii=False)
     
-model_list = [DEEPSEEKR1_32]
 
+#Check models ability to support the langauges
+model_list = [GPT4, GPT5]
 test_model_languages(model_list)
-#translate_prompt()
 
-    #check if the model support the language
+#translate_default_prompt()
+
+# model = GEMMA3_27
+# for country_name in tqdm.tqdm(COUNTRIES_FILE, desc="Generating Rainbow Meter Questions", total=len(COUNTRIES_FILE)): 
+#     country = Country(country_name)
+
+#     for scenario in SCENARIOS:
+#         result_path = f"data/{RAINBOW_METER_PATH}/{scenario}"
+#         if scenario == SCENARIO_LANGUAGE:
+#             rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country.language_code}.csv"
+#         elif scenario == SCENARIO_NATIONALITY:
+#             rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country.id}.csv"
+#         else:
+#             rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country.language_code}_{country.id}.csv"
         
-        # for country_name in tqdm.tqdm(COUNTRIES_FILE, desc="Generating Rainbow Meter Questions", total=len(COUNTRIES_FILE)): 
-        #     country = Country(country_name)
-
-        #     for scenario in SCENARIOS:
-        #         result_path = f"data/{RAINBOW_METER_PATH}/{scenario}"
-        #         if scenario == SCENARIO_LANGUAGE:
-        #             rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country.language_code}.csv"
-        #         elif scenario == SCENARIO_NATIONALITY:
-        #             rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country.id}.csv"
-        #         else:
-        #             rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country.language_code}_{country.id}.csv"
-                
-        #         if not os.path.exists(rm_path):
-        #             translate_rainbow_meter(model, scenario, country, rm_path)
+#         if not os.path.exists(rm_path):
+#             translate_rainbow_meter(model, scenario, country, rm_path)
 
 
