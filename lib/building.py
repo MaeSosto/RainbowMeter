@@ -4,7 +4,9 @@ from country import *
 import json
 import requests
 import random
+import deepl
 
+logging.getLogger('deepl').setLevel(logging.WARNING)
 
 API_URL = "https://router.huggingface.co/hf-inference/models/sentence-transformers/all-MiniLM-L6-v2"
 NUM_SAMPLES_QUESTIONS = 3
@@ -29,6 +31,18 @@ def similarity_test(original, translated):
     except Exception as X:
         logger.error(f"similarity_test: {X}")
         return None
+    
+def deepl_translation(model, question, langauge_code = "EN-US"):
+    try:
+        result = model.client.translate_text(question, target_lang=langauge_code.upper())
+        #if not(result.status_code == 200):
+        #    logger.error(f"⚠️ deepl_translation")
+        return result.text
+    except Exception as X:
+        return ""
+        #logger.error(f"deepl_translation: {X}")
+        #return None
+
 #Given a model, a question list and a language, it calculates the average similarity scores between the original questions from the question list and their translated version in the provided language
 def test_model(model, question_list, language):
     similarity = []
@@ -37,17 +51,31 @@ def test_model(model, question_list, language):
         back_transated = ""
         try: 
             while translation == "" or translation == None:
-                translation = translate(model, question, language)
+                if model.name == DEEPL:
+                    translation = deepl_translation(model, question, language[LANGUAGES_CODE])
+                    if translation == "":
+                        break
+                else:
+                    translation = translate(model, question, language[LANGUAGES])
         except Exception as X:
             logger.error(f"test_model: {X}")
             return None
         try:
-            while back_transated == "" or back_transated == None: 
-                back_transated = translate(model, translation)
+            while back_transated == "" or back_transated == None:
+                if model.name == DEEPL:
+                    back_transated = deepl_translation(model, translation)
+                    if back_transated == "":
+                        break
+                else: 
+                    back_transated = translate(model, translation)
         except Exception as X:
             logger.error(f"test_model: {X}")
             return None
-        similarity.append(similarity_test(question, back_transated) )
+        if model.name == DEEPL and translation == "" and "" == back_transated:
+            similarity_score = 0
+        else:
+            similarity_score = similarity_test(question, back_transated) 
+        similarity.append(similarity_score)
     return sum(similarity)/ len(similarity)
 
 #Translate the given text in the specified language using the given model
@@ -149,11 +177,13 @@ def test_model_languages(model_list):
     questions_path = "data/translation_test/questions.json"
     os.makedirs("data/translation_test", exist_ok=True)
 
-    languages_list = list(dict.fromkeys(
-        COUNTRIES_FILE[country_name][LANGUAGES][0]
+    languages_list = [
+        {
+            LANGUAGES: COUNTRIES_FILE[country_name][LANGUAGES][0],
+            LANGUAGES_CODE: COUNTRIES_FILE[country_name][LANGUAGES_CODE][0],
+        }
         for country_name in COUNTRIES_FILE
-    ))
-
+    ]
     # -----------------------------
     # Load or create question list
     # -----------------------------
@@ -174,7 +204,7 @@ def test_model_languages(model_list):
     # -----------------------------
     # Load or create dataframe
     # -----------------------------
-    columns = ["model"] + languages_list + ["avg_score"]
+    columns = ["model"] + [lang[LANGUAGES] for lang in languages_list] + ["avg_score"]
 
     if os.path.exists(csv_path):
         df = pd.read_csv(csv_path, sep=";")
@@ -198,7 +228,7 @@ def test_model_languages(model_list):
         row_idx = df.index[df["model"] == model_label][0]
 
         # --------- Skip model if all languages + avg_score are already filled ---------
-        lang_values = df.loc[row_idx, languages_list]
+        lang_values = df.loc[row_idx, [lang[LANGUAGES] for lang in languages_list]]
         avg_value = df.loc[row_idx, "avg_score"]
         if lang_values.notna().all() and pd.notna(avg_value):
             print(f"Skipping {model_label}: all languages already completed")
@@ -212,14 +242,16 @@ def test_model_languages(model_list):
         for language in tqdm.tqdm(languages_list, desc=f"Testing {model_label}"):
 
             # Skip already computed languages
-            if pd.notna(df.loc[row_idx, language]):
+            if pd.notna(df.loc[row_idx, language[LANGUAGES]]):
                 continue
-
-            score = test_model(model, questions_list, language)
-            df.loc[row_idx, language] = score
+            if language['languages_code'] == 'en':
+                score = 1
+            else:
+                score = test_model(model, questions_list, language)
+            df.loc[row_idx, language[LANGUAGES]] = score
 
             # Recompute average score
-            lang_scores = pd.to_numeric(df.loc[row_idx, languages_list], errors="coerce")
+            lang_scores = pd.to_numeric(df.loc[row_idx, [lang[LANGUAGES] for lang in languages_list]], errors="coerce")
             df.loc[row_idx, "avg_score"] = lang_scores.mean()
 
             # Save immediately
@@ -303,7 +335,7 @@ def translate_default_prompt():
     
 
 #Check models ability to support the langauges
-model_list = [GPT4, GPT5]
+model_list = [DEEPL]
 test_model_languages(model_list)
 
 #translate_default_prompt()

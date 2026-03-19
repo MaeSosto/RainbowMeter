@@ -1,7 +1,7 @@
 # Create data
 from lib.constants import *
 from lib.country import *
-from lib.rainbow_meter import *
+from lib.evaluations import *
 import scipy.stats as stats
 import numpy as np
 from os import listdir

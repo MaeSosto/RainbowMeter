@@ -3,6 +3,7 @@ import requests
 from openai import OpenAI
 import google.generativeai as genai
 import re
+import deepl
 
 URL_OLLAMA_LOCAL = "http://localhost:11434/api"
 URL_LMSTUDIO_LOCAL = "http://localhost:1234"
@@ -36,6 +37,8 @@ GPT5 = 'gpt-5'
 # GEMINI_2_0_FLASH_LITE = "gemini-2.0-flash-lite"
 # DEEPSEEK_671B = 'deepseek-reasoner'
 
+DEEPL = "DeepL"
+
 MODELS_LABELS = {
     QWEN3_4: "Qwen3 4B",
     QWEN3_30: "Qwen3 30B",
@@ -53,6 +56,7 @@ MODELS_LABELS = {
     DEEPSEEKR1_8: "DeepSeek R1 8B",
     DEEPSEEKR1_32: "DeepSeek R1 32B",
     DEEPSEEKR1_32_DISTILL: "DeepSeek R1 DIST 32B",
+    DEEPL: "DeepL",
     # LLAMA3: 'Llama 3',
     # LLAMA3_70B : 'Llama 3(70b)',
     # LLAMA4 : 'Llama 4',
@@ -95,6 +99,7 @@ class Model:
             GPT4: self._initialize_GPT, 
             # GPT4_MINI: self._initialize_GPT,
             GPT5: self._initialize_GPT, 
+            DEEPL: self._initialize_deepl
         }
         
         self.send_request = {
@@ -130,6 +135,14 @@ class Model:
             err = self.func_initialize_model[self.name]()
             return err
         return False
+
+    def _initialize_deepl(self):
+        try: 
+            self.client = deepl.DeepLClient(os.getenv('DEEPL_API_KEY'))
+            return False
+        except Exception as X:
+            logger.error(f"_initialize_deepl: {X}")
+            return True
 
     def _initialize_Gemini(self): 
         api_key = os.getenv('GENAI_API_KEY')
