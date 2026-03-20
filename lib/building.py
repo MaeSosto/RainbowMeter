@@ -307,9 +307,16 @@ def test_model_languages(model_list):
 
 #translate the default prompt from English to all the other languages and populate the file prompt.json
 def translate_default_prompt():
-    model_name = GEMMA3_27
+    model_name = DEEPL
     
-    languages_list = [COUNTRIES_FILE[country_name][LANGUAGES][0] for country_name in COUNTRIES_FILE]
+    # languages_list = [COUNTRIES_FILE[country_name][LANGUAGES][0] for country_name in COUNTRIES_FILE]
+    languages_list = [
+        {
+            LANGUAGES: COUNTRIES_FILE[country_name][LANGUAGES][0],
+            LANGUAGES_CODE: COUNTRIES_FILE[country_name][LANGUAGES_CODE][0],
+        }
+        for country_name in COUNTRIES_FILE
+    ]
     model = Model(model_name)
     error = model.initialize_model()
     if error:
@@ -324,18 +331,23 @@ def translate_default_prompt():
         }
     
     for language in tqdm.tqdm(languages_list, desc=f"Translating prompt"):
-        if language not in row_results and language != "English":
-            row_results[language] = {}
+        if language[LANGUAGES] not in row_results and language[LANGUAGES] != "English":
+            row_results[language[LANGUAGES]] = {}
             for key, val in row_results["English"].items():
-                tra = translate(model, val, language)
-                row_results[language][key] = tra.lower().replace(".", "").replace("*", "").replace('"', "").replace('\\"', "").strip() if key == YES or key == NO else tra 
+                if model.name == DEEPL:
+                    translation = deepl_translation(model, val, language[LANGUAGES_CODE])
+                    if translation == "":
+                        breakpoint
+                else: 
+                    translation = translate(model, val, language[LANGUAGES])
+                row_results[language[LANGUAGES]][key] = translation.lower().replace(".", "").replace("*", "").replace('"', "").replace('\\"', "").strip() if key == YES or key == NO else translation 
     
     with open("data/prompt.json", "w", encoding="utf-8") as f:
         json.dump(row_results, f, indent=4, ensure_ascii=False)
     
 
 #Check models ability to support the langauges
-model_list = [DEEPL]
+model_list = [QWEN3_4]
 test_model_languages(model_list)
 
 #translate_default_prompt()

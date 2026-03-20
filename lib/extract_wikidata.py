@@ -5,9 +5,9 @@ from collections import OrderedDict
 from deep_translator import GoogleTranslator
 from SPARQLWrapper import JSON, SPARQLWrapper
 
-endpoint_url = "https://query.wikidata.org/sparql"
+ENDPOINT_URL = "https://query.wikidata.org/sparql"
 
-query = """
+QUERY = """
 SELECT ?country ?countryLabel ?language ?languageLabel ?languageCode ?citizenshipLabel ?countryCode WHERE {
   VALUES ?country {
     # Council of Europe member states
@@ -36,19 +36,19 @@ ORDER BY ASC(?countryLabel)
 """
 
 
-def get_results(endpoint_url, query):
+def run_query():
     user_agent = "WDQS-example Python/%s.%s" % (
         sys.version_info[0],
         sys.version_info[1],
     )
     # TODO adjust user agent; see https://w.wiki/CX6
-    sparql = SPARQLWrapper(endpoint_url, agent=user_agent)
-    sparql.setQuery(query)
+    sparql = SPARQLWrapper(ENDPOINT_URL, agent=user_agent)
+    sparql.setQuery(QUERY)
     sparql.setReturnFormat(JSON)
     return sparql.query().convert()
 
 
-results = get_results(endpoint_url, query)
+results = run_query()
 count_languages = []
 countries_langs = OrderedDict()
 
@@ -60,19 +60,21 @@ for result in results["results"]["bindings"]:
         
         if country == "country of the Kingdom of the Netherlands":
             continue
-        
-        if country == "Czech Republic":
+        elif country == "Czech Republic":
             country = "Czechia"
         elif country == "Kingdom of the Netherlands":
             country = "Netherlands"
         elif country == "Bosnia and Herzegovina":
-            country = "Bosnia & Herzegovina"
+            country = "Bosnia & Herzegovina"    
         
-        citizenship = result["citizenshipLabel"]["value"]
         if country == "Ukraine":
             citizenship = "Ukraininan"
+        else:
+            citizenship = result["citizenshipLabel"]["value"]
             
         language = result["languageLabel"]["value"]
+        if language == "Romansh" or language == "Mirandese": #Languages spoken by < 1% of the population
+            continue
         
         count_languages.append(result["languageCode"]["value"])
 
@@ -85,7 +87,7 @@ for result in results["results"]["bindings"]:
             }
             cnt_countries += 1
         else:
-            if result["citizenshipLabel"]["value"] and countries_langs[country]["citizenships"] and result["languageLabel"]["value"] in countries_langs[country]["languages"] and result["languageCode"]["value"] in countries_langs[country]["languages_code"]:
+            if citizenship and countries_langs[country]["citizenships"] and language in countries_langs[country]["languages"] and result["languageCode"]["value"] in countries_langs[country]["languages_code"]:
                 continue
             else:
                 #countries_langs[country]["citizenships"].append(citizenship)
@@ -94,13 +96,11 @@ for result in results["results"]["bindings"]:
 
         cnt += 1
 
-    except Exception as e:
-        print("#" * 10)
-        print("language code not found", result["languageLabel"]["value"], result["languageCode"]["value"])
+    except Exception as X:
+        #print("language code not found", result["languageLabel"]["value"], result["languageCode"]["value"])
+        print(f"Error; {X['args']}")
         continue
 
-print("Total languages found: ", cnt)
-print("Total unique languages found: ", len(count_languages))
 
 for country in countries_langs:
     # countries_langs[country]["citizenships"] = list(
@@ -111,11 +111,13 @@ for country in countries_langs:
         countries_langs[country]["languages_code"]
     )
 
-    if len(countries_langs[country]["citizenships"]) > 1:
-        print(country, countries_langs[country]["citizenships"])
+    # if len(countries_langs[country]["citizenships"]) > 1:
+    #     print(country, countries_langs[country]["citizenships"])
 
 
-print(countries_langs)
+#print(countries_langs)
+print("Total languages found: ", len(count_languages))
+print("Total unique languages found: ", len(set(count_languages)))
 print("Total countries: ", len(countries_langs))
 
 with open("data/countries.json", "w", encoding="utf-8") as f:

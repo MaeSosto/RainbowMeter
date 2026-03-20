@@ -331,7 +331,7 @@
     },
     "Moldova": {
         "country_id": "MD",
-        "citizenships": "Moldovan",
+        "citizenships": "Moldavian",
         "languages": [
             "Romanian"
         ],
@@ -399,11 +399,9 @@
         "country_id": "PT",
         "citizenships": "Portuguese",
         "languages": [
-            "Mirandese",
             "Portuguese"
         ],
         "languages_code": [
-            "mwl",
             "pt"
         ]
     },
@@ -491,13 +489,11 @@
         "country_id": "CH",
         "citizenships": "Swiss",
         "languages": [
-            "Romansh",
             "Italian",
             "German",
             "French"
         ],
         "languages_code": [
-            "rm",
             "it",
             "de",
             "fr"
@@ -511,6 +507,16 @@
         ],
         "languages_code": [
             "tr"
+        ]
+    },
+    "Ukraine": {
+        "country_id": "UA",
+        "citizenships": "Ukraininan",
+        "languages": [
+            "Ukrainian"
+        ],
+        "languages_code": [
+            "uk"
         ]
     },
     "United Kingdom": {
