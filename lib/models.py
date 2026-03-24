@@ -14,9 +14,9 @@ QWEN3_4 = "qwen/qwen3-4b-2507" #LMS
 QWEN3_30 = "qwen/qwen3-30b-a3b-2507" #LMS
 QWEN35_9 = "qwen3.5:9b" 
 
-GEMMA3_4 = 'google/gemma-3-4b'
-GEMMA3_12 = 'google/gemma-3-12b'
-GEMMA3_27 = 'google/gemma-3-27b'
+GEMMA3_4 = 'google/gemma-3-4b' #LMS
+GEMMA3_12 = 'google/gemma-3-12b' #LMS
+GEMMA3_27 = 'google/gemma-3-27b' 
 
 MINISTRAL3_3 = 'mistralai/ministral-3-3b'
 MINISTRAL3_8 = 'mistralai/ministral-3-8b'
