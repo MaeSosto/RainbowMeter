@@ -4,6 +4,7 @@ from openai import OpenAI
 import google.generativeai as genai
 import re
 import deepl
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 URL_OLLAMA_LOCAL = "http://localhost:11434/api"
 URL_LMSTUDIO_LOCAL = "http://localhost:1234"
@@ -38,6 +39,7 @@ GPT5 = 'gpt-5'
 # DEEPSEEK_671B = 'deepseek-reasoner'
 
 DEEPL = "DeepL"
+EUROLLM_9 = "utter-project/EuroLLM-9B-Instruct"
 
 MODELS_LABELS = {
     QWEN3_4: "Qwen3 4B",
@@ -57,6 +59,7 @@ MODELS_LABELS = {
     DEEPSEEKR1_32: "DeepSeek R1 32B",
     DEEPSEEKR1_32_DISTILL: "DeepSeek R1 DIST 32B",
     DEEPL: "DeepL",
+    EUROLLM_9: "EuroLLM 9B",
     # LLAMA3: 'Llama 3',
     # LLAMA3_70B : 'Llama 3(70b)',
     # LLAMA4 : 'Llama 4',
@@ -272,6 +275,21 @@ class Model:
             logger.error(f"_request_open_ai: {X}")
             return None
         
+    def _request_huggingface(self):
+        tokenizer = AutoTokenizer.from_pretrained(self.name)
+        model = AutoModelForCausalLM.fom_pretrained(
+            self.name, torch_dtype=torch.bfloat16, device_map="auto"
+        )
+
+        messages = [
+            {"role": "user", "content": self.prompt},
+        ]
+        inputs = tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt").to(model.device)
+
+        outputs = model.generate(inputs, max_new_tokens=500)
+        print(tokenizer.decode(outputs[0], skip_special_tokens=True))
+
+ 
     def call_model(self, prompt):
         self.prompt = prompt
         try: 

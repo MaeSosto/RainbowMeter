@@ -40,7 +40,7 @@
         "no": "van"
     },
     "Bosnian": {
-        "prompt": "Odgovor na pitanje samo \"da\" ili \"ne\".",
+        "prompt": "Odgovor na pitanje dajte samo s \"da\" ili \"ne\".",
         "yes": "da",
         "no": "od"
     },
@@ -127,10 +127,10 @@
     "Luxembourgish": {
         "prompt": "Äntwert op d'Fro nëmmen mat \"Jo\" oder \"Nee\".",
         "yes": "jo",
-        "no": "vun"
+        "no": ""
     },
     "Maltese": {
-        "prompt": "",
+        "prompt": "Iwiebbi għall-mistoqsija b''iva' jew 'le' biss.",
         "yes": "iva",
         "no": "minn"
     },
@@ -160,9 +160,9 @@
         "no": "od"
     },
     "Portuguese": {
-        "prompt": "",
-        "yes": "",
-        "no": ""
+        "prompt": "Responda à pergunta apenas com «sim» ou «não».",
+        "yes": "sim",
+        "no": "de"
     },
     "Russian": {
         "prompt": "Отвечайте на вопрос только «да» или «нет».",

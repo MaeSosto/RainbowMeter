@@ -66,7 +66,7 @@ for s in SCENARIOS:
     os.makedirs(f"{RESULT_PATH}/{RAINBOW_METER_PATH}/{s}", exist_ok=True)
     os.makedirs(f"{RESULT_PATH}/{EVALUATIONS_PATH}/{s}", exist_ok=True)
     
-RAINBOW_METER_EN = pd.read_csv(f"data/{RAINBOW_METER_PATH}/{SCENARIO_LANGUAGE}/rainbow_meter_en.csv", sep=";", index_col=SUBCATEGORY)
+RAINBOW_METER_EN = pd.read_csv(f"data/{RAINBOW_METER_PATH}/{SCENARIO_LANGUAGE}/rainbow_meter_en.csv", sep=",", index_col=SUBCATEGORY)
 
 def control_env():
     err = False

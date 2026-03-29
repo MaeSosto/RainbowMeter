@@ -209,11 +209,11 @@ def test_systems_translation_abilities(model_list):
                 score = 1
             else:
                 score = test_system_translation(model, questions_list, language)
-            df.loc[row_idx, language[LANGUAGES]] = score
+            df.loc[row_idx, language[LANGUAGES]] = round(score, 2)
 
             # Recompute average score
             lang_scores = pd.to_numeric(df.loc[row_idx, [lang[LANGUAGES] for lang in languages_list]], errors="coerce")
-            df.loc[row_idx, "avg_score"] = lang_scores.mean()
+            df.loc[row_idx, "avg_score"] = round(lang_scores.mean(), 2)
 
             # Save immediately
             df.to_csv(csv_path, sep=";", index=False)
@@ -310,7 +310,7 @@ def translate_default_prompt():
     
 
 #Check models ability to support the langauges
-model_list = [GPT5]
+model_list = [DEEPSEEKR1_8]
 test_systems_translation_abilities(model_list)
 
 #Translate the prompt instructions
