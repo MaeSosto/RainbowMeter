@@ -73,7 +73,7 @@ for result in results["results"]["bindings"]:
             citizenship = result["citizenshipLabel"]["value"]
             
         language = result["languageLabel"]["value"]
-        if language == "Romansh" or language == "Mirandese": #Languages spoken by < 1% of the population
+        if language == "Romansh" or language == "Mirandese" or language == "Abkhaz" or language == "Nynorsk" or language == "Norwegian": #Languages spoken by < 1% of the population
             continue
         
         count_languages.append(result["languageCode"]["value"])

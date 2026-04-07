@@ -65,32 +65,40 @@ def similarity_test(original, translated):
             logger.error(f"⚠️ Similarity Test")
             return None
         response = response.json()[0]
+        if response == None:
+            breakpoint
         return response
     except Exception as X:
         logger.error(f"similarity_test: {X}")
         return None
 
 #Translate the given text in the specified language using DeepL    
-def deepl_translation(model, question, langauge_code = "EN-US"):
+def deepl_translation(model, question, langauge_code = "EN-US", source_lang = "EN"):
     if langauge_code == "pt":
         langauge_code = "pt-pt"
     if question == "":
         return ""
     try:
-        result = model.client.translate_text(question, target_lang=langauge_code.upper())
+        result = model.client.translate_text(question, target_lang=langauge_code.upper(), source_lang=source_lang.upper())
         #if not(result.status_code == 200):
         #    logger.error(f"⚠️ deepl_translation")
-        return result.text
+        result = result.text
+        return result
     except Exception as X:
+        logger.error(f"deepl_translation: {X}")
+        logger.error(f" - cannot translate in {langauge_code}")
         return ""
-        #logger.error(f"deepl_translation: {X}")
 
 #Translate the given text in the specified language using the given model
 def model_translation(model, text, language = "English"):
     # prompt = f"""Translate the following sentence in {language} {instruction}: 
     # {text}"""
+    
+    # if model.model_name == EUROLLM_9:
+    #     prompt = f"""English: {text}. {language}: """
+    # else:
     prompt = f"""Translate the text between <text> and </text> into {language}. Return ONLY the translation.
-        <text>{text}</text>"""
+            <text>{text}</text>"""
     translation = ""
     try: 
         while translation == None or translation == "":
@@ -109,16 +117,18 @@ def test_system_translation(model, question_list, language):
         translation = ""
         back_transated = ""
         try: 
+            #From EN to the specified language 
             while translation == "" or translation == None:
-                if model.name == DEEPL:
+                if model.model_name == DEEPL:
                     translation = deepl_translation(model, question, language[LANGUAGES_CODE])
                     if translation == "":
                         break
                 else:
-                    translation = model_translation(model, question, language[LANGUAGES])
+                    translation = model_translation(model, question, language[LANGUAGES_CODE])
+            #From the specified language to EN
             while back_transated == "" or back_transated == None:
-                if model.name == DEEPL:
-                    back_transated = deepl_translation(model, translation)
+                if model.model_name == DEEPL:
+                    back_transated = deepl_translation(model, translation, "EN-US", language[LANGUAGES_CODE])
                     if back_transated == "":
                         break
                 else: 
@@ -126,7 +136,7 @@ def test_system_translation(model, question_list, language):
         except Exception as X:
             logger.error(f"test_model: {X}")
             return None
-        if model.name == DEEPL and translation == "" and "" == back_transated:
+        if model.model_name == DEEPL and translation == "" and "" == back_transated:
             similarity_score = 0
         else:
             similarity_score = similarity_test(question, back_transated) 
@@ -141,13 +151,20 @@ def test_systems_translation_abilities(model_list):
     questions_path = "data/translation_test/questions.json"
     os.makedirs("data/translation_test", exist_ok=True)
 
-    languages_list = [
-        {
-            LANGUAGES: COUNTRIES_FILE[country_name][LANGUAGES][0],
-            LANGUAGES_CODE: COUNTRIES_FILE[country_name][LANGUAGES_CODE][0],
-        }
-        for country_name in COUNTRIES_FILE
-    ]
+    languages_list = []
+    seen_languages = set()
+
+    for country_name in COUNTRIES_FILE:
+        for lang, code in zip(
+            COUNTRIES_FILE[country_name][LANGUAGES],
+            COUNTRIES_FILE[country_name][LANGUAGES_CODE],
+        ):
+            if lang not in seen_languages:
+                languages_list.append({
+                    LANGUAGES: lang,
+                    LANGUAGES_CODE: code,
+                })
+                seen_languages.add(lang)
 
     # Load or create question list
     if os.path.exists(questions_path):
@@ -288,17 +305,17 @@ def translate_default_prompt():
     row_results = {
         "English":{
             "prompt":'Answer to the question with "yes" or "no" only.',
-            YES: "yes", 
-            NO: "no"
-            }
+            YES: YES, 
+            NO: NO
         }
-    
+    }
+        
     for language in tqdm.tqdm(languages_list, desc=f"Translating prompt"):
         if language[LANGUAGES] not in row_results and language[LANGUAGES] != "English":
             row_results[language[LANGUAGES]] = {}
             for key, val in row_results["English"].items():
-                if model.name == DEEPL:
-                    translation = deepl_translation(model, val, language[LANGUAGES_CODE])
+                if model.model_name == DEEPL:
+                    translation = deepl_translation(model, val, language[LANGUAGES_CODE], "EN")
                     if translation == "":
                         breakpoint
                 else: 
@@ -310,7 +327,7 @@ def translate_default_prompt():
     
 
 #Check models ability to support the langauges
-model_list = [DEEPSEEKR1_8]
+model_list = [DEEPL]
 test_systems_translation_abilities(model_list)
 
 #Translate the prompt instructions

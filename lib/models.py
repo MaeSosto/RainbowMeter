@@ -39,7 +39,8 @@ GPT5 = 'gpt-5'
 # DEEPSEEK_671B = 'deepseek-reasoner'
 
 DEEPL = "DeepL"
-EUROLLM_9 = "utter-project/EuroLLM-9B-Instruct"
+EUROLLM_9 = "utter-project/EuroLLM-9B"
+COMMAND_R1 = "CohereLabs/c4ai-command-r-v01"
 
 MODELS_LABELS = {
     QWEN3_4: "Qwen3 4B",
@@ -60,6 +61,7 @@ MODELS_LABELS = {
     DEEPSEEKR1_32_DISTILL: "DeepSeek R1 DIST 32B",
     DEEPL: "DeepL",
     EUROLLM_9: "EuroLLM 9B",
+    COMMAND_R1: "Command R1",
     # LLAMA3: 'Llama 3',
     # LLAMA3_70B : 'Llama 3(70b)',
     # LLAMA4 : 'Llama 4',
@@ -67,14 +69,13 @@ MODELS_LABELS = {
     # GEMINI_2_0_FLASH : "Gemini 2.0 Flash",
     # GEMINI_2_0_FLASH_LITE : "Gemini 2.0 Flash Lite",
 
-
     GPT4 : 'GPT 4o',
     GPT5 : 'GPT 5'
 }
 
 class Model:
     def __init__(self, model_name):
-        self.name = model_name
+        self.model_name = model_name
         
         self.func_initialize_model = {
             # LLAMA3: self._initialize_Ollama, 
@@ -102,7 +103,9 @@ class Model:
             GPT4: self._initialize_GPT, 
             # GPT4_MINI: self._initialize_GPT,
             GPT5: self._initialize_GPT, 
-            DEEPL: self._initialize_deepl
+            DEEPL: self._initialize_deepl,
+            EUROLLM_9: self._initialize_hugging_face,
+            COMMAND_R1: self._initialize_hugging_face
         }
         
         self.send_request = {
@@ -129,13 +132,15 @@ class Model:
             GPT4: self._request_open_ai, 
             # GPT4_MINI: self._request_open_ai,
             GPT5: self._request_open_ai, 
+            EUROLLM_9: self._request_huggingface,
+            COMMAND_R1: self._request_huggingface,
             # GEMINI_2_0_FLASH: self._request_gemini, 
             # GEMINI_2_0_FLASH_LITE: self._request_gemini,
         }
         
     def initialize_model(self):
-        if self.name in self.func_initialize_model: 
-            err = self.func_initialize_model[self.name]()
+        if self.model_name in self.func_initialize_model: 
+            err = self.func_initialize_model[self.model_name]()
             return err
         return False
 
@@ -153,7 +158,7 @@ class Model:
             logger.error(f"⚠️ GENAI_API_KEY is missing")
             return True
         genai.configure(api_key=api_key) 
-        self.client = genai.GenerativeModel(self.name)
+        self.client = genai.GenerativeModel(self.model_name)
         return False
 
     def _initialize_GPT(self): 
@@ -194,13 +199,27 @@ class Model:
         self.client = OpenAI(api_key=api_key, base_url=URL_DEEPSEEK)
         return False
     
+    def _initialize_hugging_face(self):
+        try:
+            self.auto_tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+            self.auto_model = AutoModelForCausalLM.from_pretrained(self.model_name)
+            # tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+            #     model = AutoModelForCausalLM.from_pretrained(
+            #         self.model_name, torch_dtype=torch.bfloat16, device_map="auto"
+            #     ) 
+            
+            return False
+        except Exception as X:
+            logger.error(f"⚠️ Hugging Face model {self.model_name} cannot be initialized")
+        return True
+    
     def _request_ollama(self):
         try:
             r = requests.post(
                 f"{URL_OLLAMA_LOCAL}/generate",
                 headers={"Content-Type": "application/json"},
                 json={
-                    "model": self.name,
+                    "model": self.model_name,
                     "prompt": self.prompt,
                     "messages": [{"role": "user", "content": self.prompt}],
                     "stream": False,
@@ -234,7 +253,7 @@ class Model:
                 f"{URL_LMSTUDIO_LOCAL}/v1/chat/completions",
                 headers={"Content-Type": "application/json"},
                 json={
-                    "model": self.name,
+                    "model": self.model_name,
                     "messages": [{"role": "user", "content": self.prompt}],
                     "stream": False,
                     "max_new_tokens": 500
@@ -266,7 +285,7 @@ class Model:
         logger.setLevel(logging.ERROR)
         try:
             completion = self.client.chat.completions.create(
-                model=self.name, store=True,
+                model=self.model_name, store=True,
                 messages=[{"role": "user", "content": self.prompt}]
             )
             logger.setLevel(logging.INFO)
@@ -274,26 +293,56 @@ class Model:
         except Exception as X:
             logger.error(f"_request_open_ai: {X}")
             return None
-        
+
     def _request_huggingface(self):
-        tokenizer = AutoTokenizer.from_pretrained(self.name)
-        model = AutoModelForCausalLM.fom_pretrained(
-            self.name, torch_dtype=torch.bfloat16, device_map="auto"
-        )
+        logger.setLevel(logging.ERROR)
+        try:
+            #EuroLLM
+            # inputs = self.auto_tokenizer(self.prompt, return_tensors="pt")
+            # gen_tokens = self.auto_model.generate(**inputs, max_new_tokens=20)
+            # out = self.auto_tokenizer.decode(gen_tokens[0])
+            
+            
+            #Command R1=
+            inputs = self.auto_tokenizer.apply_chat_template(
+                [{"role": "user", "content": self.prompt}],
+                tokenize=True,
+                add_generation_prompt=True,
+                return_tensors="pt"
+            )
 
-        messages = [
-            {"role": "user", "content": self.prompt},
-        ]
-        inputs = tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt").to(model.device)
+            gen_tokens = self.auto_model.generate(
+                **inputs,   
+                max_new_tokens=500,
+                do_sample=True
+            )
 
-        outputs = model.generate(inputs, max_new_tokens=500)
-        print(tokenizer.decode(outputs[0], skip_special_tokens=True))
+            out = self.auto_tokenizer.decode(gen_tokens[0])
+            out_ = extract_model_answer(out)
+            
+            # if self.model_name == EUROLLM_9:
+            #     inputs = self.auto_tokenizer(self.prompt, return_tensors="pt")
+            #     outputs = self.auto_model.generate(**inputs, max_new_tokens=500)
+            #     out = self.auto_tokenizer.decode(outputs[0], skip_special_tokens=True)
+            # else:
+            #     input_ids = self.auto_tokenizer.apply_chat_template([{"role": "user", "content": self.prompt}], tokenize=True, add_generation_prompt=True, return_tensors="pt")
+            #     gen_tokens = self.auto_model.generate(
+            #             input_ids, 
+            #             max_new_tokens=500, 
+            #             temperature=0.3,
+            #             do_sample=True, 
+            #             )
+            #     out = self.auto_tokenizer.decode(gen_tokens[0])
 
- 
+            return out_
+        except Exception as X:
+            logger.error(f"_request_huggingface: {X}")
+            return None
+
     def call_model(self, prompt):
         self.prompt = prompt
         try: 
-            res = self.send_request[self.name]()
+            res = self.send_request[self.model_name]()
             return res
         except Exception as X:
             logger.error(X)
@@ -342,4 +391,19 @@ class Model:
     #             continue
 
     #     return out
-                
+    
+    
+def extract_model_answer(text):
+    # Split on the chatbot marker
+    parts = text.split("<|CHATBOT_TOKEN|>")
+    
+    if len(parts) < 2:
+        return text.strip()  # fallback if format is unexpected
+    
+    # Take everything after the chatbot token
+    answer = parts[-1]
+    
+    # Remove any ending special tokens
+    answer = re.sub(r"<\|.*?\|>", "", answer)
+    
+    return answer.strip()
