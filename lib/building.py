@@ -4,8 +4,6 @@ from country import *
 import json
 import requests
 import random
-import deepl
-
 logging.getLogger('deepl').setLevel(logging.WARNING)
 
 API_URL = "https://router.huggingface.co/hf-inference/models/sentence-transformers/all-MiniLM-L6-v2"
@@ -15,52 +13,42 @@ NUM_SAMPLES_QUESTIONS = 3
 def clean_translation(text):
     if text is None:
         return ""
-
     text = text.strip()
-
     # remove everything starting with "Note:"
     text = re.split(r'\bNote:\b', text, flags=re.IGNORECASE)[0]
-
     # remove markdown emphasis
     text = re.sub(r"[*_`]+", "", text)
-
     # remove leading labels like "Translation:", "Në shqip:", etc.
     text = re.sub(r"^[A-Za-zÀ-ÖØ-öø-ÿ\s]+:\s*", "", text)
-
     # # remove long parenthetical commentary
     # text = re.sub(r"$begin:math:text$\[\^\)\]\{20\,\}$end:math:text$", "", text)
-
     # split into lines
     lines = [l.strip() for l in text.split("\n") if l.strip()]
-
     if not lines:
         return ""
-
     # remove obvious explanation lines
     filtered = []
     for l in lines:
         if re.search(r"(translation|explanation|comment)", l, re.I):
             continue
         filtered.append(l)
-
     if not filtered:
         filtered = lines
-
     # choose the longest line (usually the translation)
     return max(filtered, key=len)
 
-#Given two sentences, it return the similarity score (between 0 and 1)
+# Calculate the similarity score using the embedding model "sentence-transformers/paraphrase-MiniLM-L6v2."
+# Given two sentences, it return the similarity score (between 0 and 1)
 def similarity_test(original, translated):
-    payload = {
+    try:
+        response = requests.post(API_URL, headers = {
+                "Authorization": f"Bearer {os.getenv('HF_TOKEN')}"
+            }, json={
         "inputs": {
             "source_sentence": original,
             "sentences":[translated]
         }
-    }
-    try:
-        response = requests.post(API_URL, headers = {
-                "Authorization": f"Bearer {os.getenv('HF_TOKEN')}"
-            }, json=payload)
+    })
         if not(response.status_code == 200):
             logger.error(f"⚠️ Similarity Test")
             return None
@@ -73,30 +61,20 @@ def similarity_test(original, translated):
         return None
 
 #Translate the given text in the specified language using DeepL    
-def deepl_translation(model, question, langauge_code = "EN-US", source_lang = "EN"):
-    if langauge_code == "pt":
-        langauge_code = "pt-pt"
-    if question == "":
+def deepl_translation(model, question, target_lang = "EN-US", source_lang = "EN"):
+    if target_lang == "pt":
+        target_lang = "pt-pt"
+    if question == "" or target_lang == "cnr":
         return ""
     try:
-        result = model.client.translate_text(question, target_lang=langauge_code.upper(), source_lang=source_lang.upper())
-        #if not(result.status_code == 200):
-        #    logger.error(f"⚠️ deepl_translation")
-        result = result.text
-        return result
+        result = model.client.translate_text(question, target_lang=target_lang.upper(), source_lang=source_lang.upper())
+        return result.text
     except Exception as X:
         logger.error(f"deepl_translation: {X}")
-        logger.error(f" - cannot translate in {langauge_code}")
         return ""
 
 #Translate the given text in the specified language using the given model
 def model_translation(model, text, language = "English"):
-    # prompt = f"""Translate the following sentence in {language} {instruction}: 
-    # {text}"""
-    
-    # if model.model_name == EUROLLM_9:
-    #     prompt = f"""English: {text}. {language}: """
-    # else:
     prompt = f"""Translate the text between <text> and </text> into {language}. Return ONLY the translation.
             <text>{text}</text>"""
     translation = ""
@@ -143,13 +121,12 @@ def test_system_translation(model, question_list, language):
         similarity.append(similarity_score)
     return sum(similarity)/ len(similarity)
 
+#Create the back_translation file, which contatins the average scores of back translation similarity test of every model in every language
 def test_systems_translation_abilities(model_list):
+    #Get the file
     result_path = f"{RESULT_PATH}/back_translation/"
     os.makedirs(result_path, exist_ok=True)
     csv_path = f"{result_path}bt_scores.csv"
-
-    questions_path = "data/translation_test/questions.json"
-    os.makedirs("data/translation_test", exist_ok=True)
 
     languages_list = []
     seen_languages = set()
@@ -167,6 +144,8 @@ def test_systems_translation_abilities(model_list):
                 seen_languages.add(lang)
 
     # Load or create question list
+    questions_path = "data/translation_test/questions.json"
+    #os.makedirs("data/translation_test", exist_ok=True)
     if os.path.exists(questions_path):
         with open(questions_path, "r", encoding="utf-8") as f:
             questions_list = json.load(f)
@@ -189,12 +168,7 @@ def test_systems_translation_abilities(model_list):
     else:
         df = pd.DataFrame(columns=columns)
 
-    # Ensure avg_score exists (in case file existed before)
-    if "avg_score" not in df.columns:
-        df["avg_score"] = None
-
     for model_name in model_list:
-
         model_label = MODELS_LABELS[model_name]
 
         # Ensure model row exists
@@ -228,30 +202,31 @@ def test_systems_translation_abilities(model_list):
                 score = test_system_translation(model, questions_list, language)
             df.loc[row_idx, language[LANGUAGES]] = round(score, 2)
 
-            # Recompute average score
-            lang_scores = pd.to_numeric(df.loc[row_idx, [lang[LANGUAGES] for lang in languages_list]], errors="coerce")
+            # Compute the average score, without considering Montenegrin
+            lang_scores = pd.to_numeric(df.loc[row_idx, [lang[LANGUAGES] for lang in languages_list if lang[LANGUAGES] != 'Montenegrin']], errors="coerce")
             df.loc[row_idx, "avg_score"] = round(lang_scores.mean(), 2)
-
-            # Save immediately
+            
             df.to_csv(csv_path, sep=";", index=False)
 
 #translate the English Rainbow Meter questions prompt from to all the other languages and populate the scenario folders nested in the data/rainbow_meter folder            
 def translate_rainbow_meter():
-    model = GEMMA3_27
+    result_path = f"data/{RAINBOW_METER_PATH}/{scenario}"
+    
+    model_name = DEEPL
+    model = Model(model_name)
+    error = model.initialize_model()
+    if error:
+        logger.error(f"translate_rainbow_meter")
+        return None
+        
     #Iterate on the countries
     for country_name in tqdm.tqdm(COUNTRIES_FILE, desc="Generating Rainbow Meter Questions", total=len(COUNTRIES_FILE)): 
         country = Country(country_name)
         
         #Iterate on the scenarios
         for scenario in SCENARIOS:
-            result_path = f"data/{RAINBOW_METER_PATH}/{scenario}"
-            if scenario == SCENARIO_LANGUAGE:
-                rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country.language_code}.csv"
-            elif scenario == SCENARIO_NATIONALITY:
-                rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country.id}.csv"
-            else:
-                rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country.language_code}_{country.id}.csv"
-                
+            os.makedirs(f"data/{RAINBOW_METER_PATH}/{scenario}", exist_ok=True)
+            
             rainbow_meter ={
                 CATEGORY: [],
                 SUBCATEGORY: []
@@ -259,29 +234,42 @@ def translate_rainbow_meter():
             for type in QUESTION_TYPES:
                 rainbow_meter[type]= []
 
+            #Iterate on the criteria
             for subcategory, row in RAINBOW_METER_EN.iterrows():
                 rainbow_meter[SUBCATEGORY].append(subcategory)
                 rainbow_meter[CATEGORY].append(row[CATEGORY])
                 for type in QUESTION_TYPES:
-                    if scenario == SCENARIO_LANGUAGE:
-                        #Translate question from English in the country language
+                    if scenario == SCENARIO_LANGUAGE: #SCENARIO LANGUAGE
+                        rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country.language_code}.csv"
+                        
                         try:
-                            question = model_translation(model, row[type].lower(), country.language)  
+                            #Translate question from English in the country language
+                            if model_name == DEEPL:
+                                question = deepl_translation(model, row[type].lower(), country.language_code)
+                            else:
+                                question = model_translation(model, row[type].lower(), country.language)  
                         except Exception as X:
                             logger.error(f"translate_rainbow_meter: {X}")
-                    elif scenario == SCENARIO_NATIONALITY:
+                            
+                    elif scenario == SCENARIO_NATIONALITY: #SCENARIO NATIONALITY
+                        rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country.id}.csv"
                         #Insert the country country in the question
                         question = f"In {country.name}, {row[type].lower()}"
-                    else:
+                        
+                    else: #SCENARIO LANGIAGE + NATIONALITY
+                        rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country.language_code}_{country.id}.csv"
+                        
                         #Insert the country in the questionand translate it from English in the country language
-                        try: 
-                            question = model_translation(model, f"In {country.name}, {row[type].lower()}", country.language)
+                        try:
+                            if model_name == DEEPL:
+                                question = deepl_translation(model, f"In {country.name}, {row[type].lower()}", country.language_code) 
+                            else:
+                                question = model_translation(model, f"In {country.name}, {row[type].lower()}", country.language)
                         except Exception as X:
                             logger.error(f"translate_rainbow_meter: {X}")
                     
                     rainbow_meter[type].append(question)
                     
-                os.makedirs(f"data/{RAINBOW_METER_PATH}/{scenario}", exist_ok=True)
                 df = pd.DataFrame(rainbow_meter)
                 df.to_csv(rm_path, sep=";", index=False)
 
@@ -289,7 +277,6 @@ def translate_rainbow_meter():
 def translate_default_prompt():
     model_name = DEEPL
     
-    # languages_list = [COUNTRIES_FILE[country_name][LANGUAGES][0] for country_name in COUNTRIES_FILE]
     languages_list = [
         {
             LANGUAGES: COUNTRIES_FILE[country_name][LANGUAGES][0],
@@ -316,8 +303,6 @@ def translate_default_prompt():
             for key, val in row_results["English"].items():
                 if model.model_name == DEEPL:
                     translation = deepl_translation(model, val, language[LANGUAGES_CODE], "EN")
-                    if translation == "":
-                        breakpoint
                 else: 
                     translation = model_translation(model, val, language[LANGUAGES])
                 row_results[language[LANGUAGES]][key] = translation.lower().replace(".", "").replace("*", "").replace('"', "").replace('\\"', "").strip() if key == YES or key == NO else translation 
@@ -326,9 +311,9 @@ def translate_default_prompt():
         json.dump(row_results, f, indent=4, ensure_ascii=False)
     
 
-#Check models ability to support the langauges
-model_list = [DEEPL]
-test_systems_translation_abilities(model_list)
+# #Check models ability to support the langauges bit back translation 
+# model_list = [DEEPL]
+# test_systems_translation_abilities(model_list)
 
 #Translate the prompt instructions
 #translate_default_prompt()

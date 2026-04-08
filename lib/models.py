@@ -11,33 +11,20 @@ URL_LMSTUDIO_LOCAL = "http://localhost:1234"
 URL_DEEPSEEK = "https://api.deepseek.com"
 
 QWEN3_4 = "qwen/qwen3-4b-2507" #LMS
-#QWEN3_4 = "qwen3:4b" #Ollama
 QWEN3_30 = "qwen/qwen3-30b-a3b-2507" #LMS
 QWEN35_9 = "qwen3.5:9b" 
-
 GEMMA3_4 = 'google/gemma-3-4b' #LMS
 GEMMA3_12 = 'google/gemma-3-12b' #LMS
 GEMMA3_27 = 'google/gemma-3-27b' 
-
 MINISTRAL3_3 = 'mistralai/ministral-3-3b'
 MINISTRAL3_8 = 'mistralai/ministral-3-8b'
 MINISTRAL3_14 = 'mistralai/ministral-3-14b'
-
 DEEPSEEKR1_1_5 = 'deepseek-r1:1.5b'
 DEEPSEEKR1_8 = 'deepseek-r1:8b'
 DEEPSEEKR1_32 = 'deepseek-r1:32b'
 DEEPSEEKR1_32_DISTILL = 'deepseek/deepseek-r1-distill-qwen-32b'
-
-# LLAMA3 = 'llama3'
-# LLAMA4 = 'llama4'
-# LLAMA3_70B = 'llama3:70b'
-# GPT4_MINI = 'gpt-4o-mini'
 GPT4 = 'gpt-4o'
 GPT5 = 'gpt-5'
-# GEMINI_2_0_FLASH = "gemini-2.0-flash"
-# GEMINI_2_0_FLASH_LITE = "gemini-2.0-flash-lite"
-# DEEPSEEK_671B = 'deepseek-reasoner'
-
 DEEPL = "DeepL"
 EUROLLM_9 = "utter-project/EuroLLM-9B"
 COMMAND_R1 = "CohereLabs/c4ai-command-r-v01"
@@ -46,15 +33,12 @@ MODELS_LABELS = {
     QWEN3_4: "Qwen3 4B",
     QWEN3_30: "Qwen3 30B",
     QWEN35_9: "Qwen 3.5 9B",
-    
     GEMMA3_4: "Gemma 3 4B", 
     GEMMA3_12 : "Gemma 3 12B",
     GEMMA3_27 : "Gemma 3 27B",
-    
     MINISTRAL3_3: "Ministral 3 3B",
     MINISTRAL3_8: "Ministral 3 8B",
     MINISTRAL3_14: "Ministral 3 14B",
-    
     DEEPSEEKR1_1_5: "DeepSeek R1 1.5B",
     DEEPSEEKR1_8: "DeepSeek R1 8B",
     DEEPSEEKR1_32: "DeepSeek R1 32B",
@@ -62,13 +46,6 @@ MODELS_LABELS = {
     DEEPL: "DeepL",
     EUROLLM_9: "EuroLLM 9B",
     COMMAND_R1: "Command R1",
-    # LLAMA3: 'Llama 3',
-    # LLAMA3_70B : 'Llama 3(70b)',
-    # LLAMA4 : 'Llama 4',
-
-    # GEMINI_2_0_FLASH : "Gemini 2.0 Flash",
-    # GEMINI_2_0_FLASH_LITE : "Gemini 2.0 Flash Lite",
-
     GPT4 : 'GPT 4o',
     GPT5 : 'GPT 5'
 }
@@ -78,16 +55,9 @@ class Model:
         self.model_name = model_name
         
         self.func_initialize_model = {
-            # LLAMA3: self._initialize_Ollama, 
-            # LLAMA3_70B: self._initialize_Ollama,
-            # LLAMA4: self._initialize_Ollama,
             QWEN3_4: self._initialize_lmstudio,
-            #QWEN3_4: self._initialize_Ollama,
             QWEN3_30: self._initialize_lmstudio,
             QWEN35_9: self._initialize_lmstudio,
-            # QWEN35_0_8: self._initialize_Ollama,
-            # QWEN35_9: self._initialize_Ollama,
-            # QWEN35_35: self._initialize_Ollama,
             GEMMA3_4: self._initialize_lmstudio,
             GEMMA3_12: self._initialize_lmstudio,
             GEMMA3_27: self._initialize_lmstudio,
@@ -98,10 +68,7 @@ class Model:
             DEEPSEEKR1_8: self._initialize_Ollama,
             DEEPSEEKR1_32: self._initialize_Ollama,
             DEEPSEEKR1_32_DISTILL: self._initialize_lmstudio,
-            # GEMINI_2_0_FLASH: self._initialize_Gemini, 
-            # GEMINI_2_0_FLASH_LITE: self._initialize_Gemini,
             GPT4: self._initialize_GPT, 
-            # GPT4_MINI: self._initialize_GPT,
             GPT5: self._initialize_GPT, 
             DEEPL: self._initialize_deepl,
             EUROLLM_9: self._initialize_hugging_face,
@@ -109,16 +76,9 @@ class Model:
         }
         
         self.send_request = {
-            # LLAMA3: self._request_ollama, 
-            # LLAMA3_70B: self._request_ollama,
-            # LLAMA4: self._request_ollama,
             QWEN3_4: self._request_lmstudio,
-            #QWEN3_4: self._request_ollama,
             QWEN3_30: self._request_lmstudio,
             QWEN35_9: self._request_lmstudio,
-            # QWEN35_0_8: self._request_ollama,
-            # QWEN35_9: self._request_ollama,
-            # QWEN35_35: self._request_ollama,
             GEMMA3_4: self._request_lmstudio,
             GEMMA3_12: self._request_lmstudio,
             GEMMA3_27: self._request_lmstudio,
@@ -130,12 +90,9 @@ class Model:
             DEEPSEEKR1_32: self._request_ollama,
             DEEPSEEKR1_32_DISTILL: self._request_lmstudio,
             GPT4: self._request_open_ai, 
-            # GPT4_MINI: self._request_open_ai,
             GPT5: self._request_open_ai, 
             EUROLLM_9: self._request_huggingface,
             COMMAND_R1: self._request_huggingface,
-            # GEMINI_2_0_FLASH: self._request_gemini, 
-            # GEMINI_2_0_FLASH_LITE: self._request_gemini,
         }
         
     def initialize_model(self):
@@ -203,11 +160,6 @@ class Model:
         try:
             self.auto_tokenizer = AutoTokenizer.from_pretrained(self.model_name)
             self.auto_model = AutoModelForCausalLM.from_pretrained(self.model_name)
-            # tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-            #     model = AutoModelForCausalLM.from_pretrained(
-            #         self.model_name, torch_dtype=torch.bfloat16, device_map="auto"
-            #     ) 
-            
             return False
         except Exception as X:
             logger.error(f"⚠️ Hugging Face model {self.model_name} cannot be initialized")
@@ -274,7 +226,6 @@ class Model:
             return None
     
     def _request_gemini(self):
-        #time.sleep(2.5)
         try:
             return self.client.generate_content(self.prompt).text
         except Exception as X:
@@ -303,7 +254,7 @@ class Model:
             # out = self.auto_tokenizer.decode(gen_tokens[0])
             
             
-            #Command R1=
+            #Command R1
             inputs = self.auto_tokenizer.apply_chat_template(
                 [{"role": "user", "content": self.prompt}],
                 tokenize=True,
@@ -319,21 +270,6 @@ class Model:
 
             out = self.auto_tokenizer.decode(gen_tokens[0])
             out_ = extract_model_answer(out)
-            
-            # if self.model_name == EUROLLM_9:
-            #     inputs = self.auto_tokenizer(self.prompt, return_tensors="pt")
-            #     outputs = self.auto_model.generate(**inputs, max_new_tokens=500)
-            #     out = self.auto_tokenizer.decode(outputs[0], skip_special_tokens=True)
-            # else:
-            #     input_ids = self.auto_tokenizer.apply_chat_template([{"role": "user", "content": self.prompt}], tokenize=True, add_generation_prompt=True, return_tensors="pt")
-            #     gen_tokens = self.auto_model.generate(
-            #             input_ids, 
-            #             max_new_tokens=500, 
-            #             temperature=0.3,
-            #             do_sample=True, 
-            #             )
-            #     out = self.auto_tokenizer.decode(gen_tokens[0])
-
             return out_
         except Exception as X:
             logger.error(f"_request_huggingface: {X}")
@@ -348,62 +284,13 @@ class Model:
             logger.error(X)
             return None
     
-    # def get_binary_answer(self, question, response):
-    #     prompt = f"""
-    #         You are performing a binary classification task.
-
-    #         Classify whether the answer expresses "yes" or "no" with respect to the question.
-    #         You are performing a binary classification task.
-
-    #         Classify whether the answer expresses "yes" or "no" with respect to the question.
-
-    #         Classification rules:
-    #         - Answer "yes" if the response clearly affirms or supports the proposition in the question.
-    #         - Answer "no" if the response clearly denies or opposes the proposition.
-    #         - Answer "unknown" if the response is ambiguous, mixed, conditional, or does not directly address the question.
-
-    #         Respond with exactly one label: yes, no, or unknown.
-    #         Classification rules:
-    #         - Answer "yes" if the response clearly affirms or supports the proposition in the question.
-    #         - Answer "no" if the response clearly denies or opposes the proposition.
-    #         - Answer "unknown" if the response is ambiguous, mixed, conditional, or does not directly address the question.
-
-    #         Respond with exactly one label: yes, no, or unknown.
-
-    #         Question: {question}
-    #         Answer: {response}
-    #     """
-    #     out = None
-    #     while out not in ("yes", "no"):  # Iterate until we get a valid binary answer
-    #         out = self.call_model(prompt)
-    #         out = out.replace("*", "")
-            
-    #         if not isinstance(out, str):
-    #             logger.error("Binary answer is not a string, asking again..")
-    #             out = None
-    #             continue
-
-    #         out = out.strip().lower()
-
-    #         if out not in ("yes", "no"):
-    #             logger.error(f"Invalid binary answer '{out}', asking again..")
-    #             out = None
-    #             continue
-
-    #     return out
-    
-    
 def extract_model_answer(text):
     # Split on the chatbot marker
     parts = text.split("<|CHATBOT_TOKEN|>")
-    
     if len(parts) < 2:
         return text.strip()  # fallback if format is unexpected
-    
     # Take everything after the chatbot token
     answer = parts[-1]
-    
     # Remove any ending special tokens
     answer = re.sub(r"<\|.*?\|>", "", answer)
-    
     return answer.strip()
