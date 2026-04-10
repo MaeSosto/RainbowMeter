@@ -102,7 +102,7 @@ def test_system_translation(model, question_list, language):
                     if translation == "":
                         break
                 else:
-                    translation = model_translation(model, question, language[LANGUAGES_CODE])
+                    translation = model_translation(model, question, language[LANGUAGES])
             #From the specified language to EN
             while back_transated == "" or back_transated == None:
                 if model.model_name == DEEPL:
@@ -124,7 +124,7 @@ def test_system_translation(model, question_list, language):
 #Create the back_translation file, which contatins the average scores of back translation similarity test of every model in every language
 def test_systems_translation_abilities(model_list):
     #Get the file
-    result_path = f"{RESULT_PATH}/back_translation/"
+    result_path = f"data/translation_test/"
     os.makedirs(result_path, exist_ok=True)
     csv_path = f"{result_path}bt_scores.csv"
 
@@ -144,8 +144,7 @@ def test_systems_translation_abilities(model_list):
                 seen_languages.add(lang)
 
     # Load or create question list
-    questions_path = "data/translation_test/questions.json"
-    #os.makedirs("data/translation_test", exist_ok=True)
+    questions_path = f"{result_path}/questions.json"
     if os.path.exists(questions_path):
         with open(questions_path, "r", encoding="utf-8") as f:
             questions_list = json.load(f)
@@ -312,8 +311,8 @@ def translate_default_prompt():
     
 
 # #Check models ability to support the langauges bit back translation 
-# model_list = [DEEPL]
-# test_systems_translation_abilities(model_list)
+model_list = [QWEN35_08]
+test_systems_translation_abilities(model_list)
 
 #Translate the prompt instructions
 #translate_default_prompt()
