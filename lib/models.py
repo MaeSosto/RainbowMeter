@@ -5,7 +5,6 @@ import google.generativeai as genai
 import re
 import deepl
 from transformers import AutoModelForCausalLM, AutoTokenizer, AutoProcessor, AutoModelForImageTextToText
-transformers.logging.set_verbosity_error()
 
 URL_OLLAMA_LOCAL = "http://localhost:11434/api"
 URL_LMSTUDIO_LOCAL = "http://localhost:1234"
@@ -16,6 +15,8 @@ QWEN3_30 = "qwen/qwen3-30b-a3b-2507" #LMS
 QWEN35_08 = "Qwen/Qwen3.5-0.8B" #HF
 QWEN35_2 = "Qwen/Qwen3.5-2B" #HF
 QWEN35_9 = "qwen3.5:9b" #Ollama
+QWEN35_27 = "qwen3.5:27b" #Ollama
+LlaMa31_8 = "llama3.1:8b" #Ollama
 GEMMA3_4 = 'google/gemma-3-4b' #LMS
 GEMMA3_12 = 'google/gemma-3-12b' #LMS
 GEMMA3_27 = 'google/gemma-3-27b' 
@@ -36,8 +37,10 @@ MODELS_LABELS = {
     QWEN3_4: "Qwen3 4B",
     QWEN3_30: "Qwen3 30B",
     QWEN35_08: "Qwen3.5 0.8B",
-    QWEN35_2: "Qwen3.5 2B"
+    QWEN35_2: "Qwen3.5 2B",
     QWEN35_9: "Qwen3.5 9B",
+    QWEN35_27: "Qwen3.5 27B",
+    LlaMa31_8: "LlaMa 3.1 8B",
     GEMMA3_4: "Gemma 3 4B", 
     GEMMA3_12 : "Gemma 3 12B",
     GEMMA3_27 : "Gemma 3 27B",
@@ -60,21 +63,23 @@ class Model:
         self.model_name = model_name
         
         self.func_initialize_model = {
-            QWEN3_4: self._initialize_lmstudio,
-            QWEN3_30: self._initialize_lmstudio,
+            QWEN3_4: self._initialize_LMSStudio,
+            QWEN3_30: self._initialize_LMSStudio,
             QWEN35_08: self._initialize_HuggingFace,
             QWEN35_2: self._initialize_HuggingFace,
-            QWEN35_9: self._initialize_lmstudio,
-            GEMMA3_4: self._initialize_lmstudio,
-            GEMMA3_12: self._initialize_lmstudio,
-            GEMMA3_27: self._initialize_lmstudio,
-            MINISTRAL3_3: self._initialize_lmstudio,
-            MINISTRAL3_8: self._initialize_lmstudio,
-            MINISTRAL3_14: self._initialize_lmstudio,
+            QWEN35_9: self._initialize_Ollama,
+            QWEN35_27: self._initialize_Ollama,
+            LlaMa31_8: self._initialize_Ollama,
+            GEMMA3_4: self._initialize_LMSStudio,
+            GEMMA3_12: self._initialize_LMSStudio,
+            GEMMA3_27: self._initialize_LMSStudio,
+            MINISTRAL3_3: self._initialize_LMSStudio,
+            MINISTRAL3_8: self._initialize_LMSStudio,
+            MINISTRAL3_14: self._initialize_LMSStudio,
             DEEPSEEKR1_1_5: self._initialize_Ollama,
             DEEPSEEKR1_8: self._initialize_Ollama,
             DEEPSEEKR1_32: self._initialize_Ollama,
-            DEEPSEEKR1_32_DISTILL: self._initialize_lmstudio,
+            DEEPSEEKR1_32_DISTILL: self._initialize_LMSStudio,
             GPT4: self._initialize_OpenAI, 
             GPT5: self._initialize_OpenAI, 
             DEEPL: self._initialize_deepl,
@@ -83,21 +88,23 @@ class Model:
         }
         
         self.send_request = {
-            QWEN3_4: self._request_lmstudio,
-            QWEN3_30: self._request_lmstudio,
+            QWEN3_4: self._request_LMSStudio,
+            QWEN3_30: self._request_LMSStudio,
             QWEN35_08: self._request_HuggingFace,
             QWEN35_2: self._request_HuggingFace,
-            QWEN35_9: self._request_lmstudio,
-            GEMMA3_4: self._request_lmstudio,
-            GEMMA3_12: self._request_lmstudio,
-            GEMMA3_27: self._request_lmstudio,
-            MINISTRAL3_3: self._request_lmstudio,
-            MINISTRAL3_8: self._request_lmstudio,
-            MINISTRAL3_14: self._request_lmstudio,
-            DEEPSEEKR1_1_5: self._request_ollama,
-            DEEPSEEKR1_8: self._request_ollama,
-            DEEPSEEKR1_32: self._request_ollama,
-            DEEPSEEKR1_32_DISTILL: self._request_lmstudio,
+            QWEN35_9: self._request_Ollama,
+            QWEN35_27: self._request_Ollama,
+            LlaMa31_8: self._request_Ollama,
+            GEMMA3_4: self._request_LMSStudio,
+            GEMMA3_12: self._request_LMSStudio,
+            GEMMA3_27: self._request_LMSStudio,
+            MINISTRAL3_3: self._request_LMSStudio,
+            MINISTRAL3_8: self._request_LMSStudio,
+            MINISTRAL3_14: self._request_LMSStudio,
+            DEEPSEEKR1_1_5: self._request_Ollama,
+            DEEPSEEKR1_8: self._request_Ollama,
+            DEEPSEEKR1_32: self._request_Ollama,
+            DEEPSEEKR1_32_DISTILL: self._request_LMSStudio,
             GPT4: self._request_OpenAi, 
             GPT5: self._request_OpenAi, 
             EUROLLM_9: self._request_HuggingFace,
@@ -146,7 +153,7 @@ class Model:
             logger.error(f"⚠️ Ollama server is not running")
             return True
     
-    def _initialize_lmstudio(self):
+    def _initialize_LMSStudio(self):
         try:
             response = requests.get(f"{URL_LMSTUDIO_LOCAL}/v1/models")
             if response.status_code != 200:
@@ -168,7 +175,7 @@ class Model:
     def _initialize_HuggingFace(self):
         logger.setLevel(logging.ERROR)
         try:
-            if self.model_name == QWEN35_08 or if self.model_name == QWEN35_2:
+            if self.model_name == QWEN35_08 or self.model_name == QWEN35_2:
                 self.auto_processor = AutoProcessor.from_pretrained(self.model_name)
                 self.auto_model = AutoModelForImageTextToText.from_pretrained(self.model_name)
             else:
@@ -179,7 +186,7 @@ class Model:
             logger.error(f"⚠️ Hugging Face model {self.model_name} cannot be initialized")
         return True
     
-    def _request_ollama(self):
+    def _request_Ollama(self):
         try:
             r = requests.post(
                 f"{URL_OLLAMA_LOCAL}/generate",
@@ -213,7 +220,7 @@ class Model:
             logger.error(f"_request_ollama: {X}")
             return None
         
-    def _request_lmstudio(self):
+    def _request_LMSStudio(self):
         try:
             response = requests.post(
                 f"{URL_LMSTUDIO_LOCAL}/v1/chat/completions",
@@ -272,7 +279,7 @@ class Model:
                 gen_tokens = self.auto_model.generate(**inputs, max_new_tokens=500)
                 out = self.auto_tokenizer.decode(gen_tokens[0])
             
-            elif self.model_name == QWEN35_08 or if self.model_name == QWEN35_2:
+            elif self.model_name == QWEN35_08 or self.model_name == QWEN35_2:
                 messages = [
                     {
                         "role": "user",
@@ -287,6 +294,7 @@ class Model:
                     tokenize=True,
                     return_dict=True,
                     return_tensors="pt",
+                    #pad_token_id=self.auto_processor.eos_token_id,
                 ).to(self.auto_model.device)
                 
                 outputs = self.auto_model.generate(**inputs, max_new_tokens=40)

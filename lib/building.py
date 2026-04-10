@@ -50,7 +50,7 @@ def similarity_test(original, translated):
         }
     })
         if not(response.status_code == 200):
-            logger.error(f"⚠️ Similarity Test")
+            logger.error(f"⚠️ Similarity Test: {response.reason}")
             return None
         response = response.json()[0]
         if response == None:
@@ -126,7 +126,7 @@ def test_systems_translation_abilities(model_list):
     #Get the file
     result_path = f"data/translation_test/"
     os.makedirs(result_path, exist_ok=True)
-    csv_path = f"{result_path}bt_scores.csv"
+    csv_path = f"{result_path}back_translation.csv"
 
     languages_list = []
     seen_languages = set()
@@ -311,7 +311,7 @@ def translate_default_prompt():
     
 
 # #Check models ability to support the langauges bit back translation 
-model_list = [QWEN35_08]
+model_list = [QWEN35_2]
 test_systems_translation_abilities(model_list)
 
 #Translate the prompt instructions

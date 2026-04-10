@@ -1,3 +1,5 @@
 model;Albanian;Catalan;Armenian;German;Azerbaijani;Belarusian;Russian;Dutch;French;Bosnian;Serbian;Croatian;Bulgarian;Modern Greek;Greek;Turkish;Czech;Danish;Estonian;Swedish;Finnish;Georgian;Hungarian;Icelandic;Irish;English;Italian;Latvian;Lithuanian;Luxembourgish;Maltese;Romanian;Montenegrin;Macedonian;Bokmål;Polish;Portuguese;Slovak;Slovene;Spanish;Ukrainian;avg_score
-DeepL;0.97;0.98;0.97;0.96;0.96;0.94;0.95;0.95;0.97;0.97;0.94;0.95;0.98;0.97;0.97;0.98;0.98;0.97;0.95;0.96;0.97;0.96;0.96;0.92;0.97;1;0.97;0.95;0.96;0.97;0.96;0.97;0.0;0.97;0.96;0.96;0.98;0.98;0.98;0.96;0.95;0.96
+DeepL;0.97;0.98;0.97;0.96;0.96;0.94;0.95;0.95;0.97;0.97;0.94;0.95;0.98;0.97;0.97;0.98;0.98;0.97;0.95;0.96;0.97;0.96;0.96;0.92;0.97;1.0;0.97;0.95;0.96;0.97;0.96;0.97;0.0;0.97;0.96;0.96;0.98;0.98;0.98;0.96;0.95;0.96
 Qwen3.5 0.8B;0.71;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;0.71
+Qwen3.5 2B;0.72;0.86;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;0.79
+LlaMa 3.1 8B;0.8;0.93;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;0.86
