@@ -13,8 +13,12 @@ URL_DEEPSEEK = "https://api.deepseek.com"
 QWEN3_4 = "qwen/qwen3-4b-2507" #LMS
 QWEN3_30 = "qwen/qwen3-30b-a3b-2507" #LMS
 QWEN35_08 = "Qwen/Qwen3.5-0.8B" #HF
-QWEN35_2 = "Qwen/Qwen3.5-2B" #HF
+QWEN35_2_HF = "Qwen/Qwen3.5-2B" #HF
+QWEN35_2_LMS = "qwen/qwen3.5-2b" #LMS
+QWEN35_2 = "qwen3.5:2b" #HF
+QWEN35_9_LMS = "qwen/qwen3.5-9b" #LMS
 QWEN35_9 = "qwen3.5:9b" #Ollama
+QWEN35_27_LMS = "qwen/qwen3.5-27b" #LMS
 QWEN35_27 = "qwen3.5:27b" #Ollama
 LlaMa31_8 = "llama3.1:8b" #Ollama
 GEMMA3_4 = 'google/gemma-3-4b' #LMS
@@ -37,8 +41,12 @@ MODELS_LABELS = {
     QWEN3_4: "Qwen3 4B",
     QWEN3_30: "Qwen3 30B",
     QWEN35_08: "Qwen3.5 0.8B",
+    QWEN35_2_LMS: "Qwen3.5 2B",
+    QWEN35_2_HF: "Qwen3.5 2B",
     QWEN35_2: "Qwen3.5 2B",
+    QWEN35_9_LMS: "Qwen3.5 9B",
     QWEN35_9: "Qwen3.5 9B",
+    QWEN35_27_LMS: "Qwen3.5 27B",
     QWEN35_27: "Qwen3.5 27B",
     LlaMa31_8: "LlaMa 3.1 8B",
     GEMMA3_4: "Gemma 3 4B", 
@@ -66,8 +74,12 @@ class Model:
             QWEN3_4: self._initialize_LMSStudio,
             QWEN3_30: self._initialize_LMSStudio,
             QWEN35_08: self._initialize_HuggingFace,
-            QWEN35_2: self._initialize_HuggingFace,
+            QWEN35_2_LMS: self._initialize_LMSStudio,
+            QWEN35_2_HF: self._initialize_HuggingFace,
+            QWEN35_2: self._initialize_Ollama,
+            QWEN35_9_LMS: self._initialize_LMSStudio,
             QWEN35_9: self._initialize_Ollama,
+            QWEN35_27_LMS: self._initialize_LMSStudio,
             QWEN35_27: self._initialize_Ollama,
             LlaMa31_8: self._initialize_Ollama,
             GEMMA3_4: self._initialize_LMSStudio,
@@ -91,8 +103,12 @@ class Model:
             QWEN3_4: self._request_LMSStudio,
             QWEN3_30: self._request_LMSStudio,
             QWEN35_08: self._request_HuggingFace,
-            QWEN35_2: self._request_HuggingFace,
+            QWEN35_2_HF: self._request_HuggingFace,
+            QWEN35_2_LMS: self._request_LMSStudio,
+            QWEN35_2: self._request_Ollama,
+            QWEN35_9_LMS: self._request_LMSStudio,
             QWEN35_9: self._request_Ollama,
+            QWEN35_27_LMS: self._request_LMSStudio,
             QWEN35_27: self._request_Ollama,
             LlaMa31_8: self._request_Ollama,
             GEMMA3_4: self._request_LMSStudio,

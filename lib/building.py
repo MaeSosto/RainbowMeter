@@ -311,7 +311,7 @@ def translate_default_prompt():
     
 
 # #Check models ability to support the langauges bit back translation 
-model_list = [QWEN35_2]
+model_list = [QWEN35_9_LMS]
 test_systems_translation_abilities(model_list)
 
 #Translate the prompt instructions
