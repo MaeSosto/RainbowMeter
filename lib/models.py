@@ -5,10 +5,15 @@ import google.generativeai as genai
 import re
 import deepl
 from transformers import AutoModelForCausalLM, AutoTokenizer, AutoProcessor, AutoModelForImageTextToText
+from dotenv import load_dotenv
+from anthropic import Anthropic
+
+load_dotenv()
 
 URL_OLLAMA_LOCAL = "http://localhost:11434/api"
 URL_LMSTUDIO_LOCAL = "http://localhost:1234"
 URL_DEEPSEEK = "https://api.deepseek.com"
+URL_DEEPSEEK_POST = "https://api.deepseek.com/v1/chat/completions"
 
 QWEN3_4 = "qwen/qwen3-4b-2507" #LMS
 QWEN3_30 = "qwen/qwen3-30b-a3b-2507" #LMS
@@ -16,10 +21,12 @@ QWEN35_08 = "Qwen/Qwen3.5-0.8B" #HF
 QWEN35_2_HF = "Qwen/Qwen3.5-2B" #HF
 QWEN35_2_LMS = "qwen/qwen3.5-2b" #LMS
 QWEN35_2 = "qwen3.5:2b" #HF
+QWEN35_9_HF = "Qwen/Qwen3.5-9B" #HF
 QWEN35_9_LMS = "qwen/qwen3.5-9b" #LMS
 QWEN35_9 = "qwen3.5:9b" #Ollama
 QWEN35_27_LMS = "qwen/qwen3.5-27b" #LMS
 QWEN35_27 = "qwen3.5:27b" #Ollama
+LlaMa32_3 ="llama3.2:3b" #Ollama
 LlaMa31_8 = "llama3.1:8b" #Ollama
 GEMMA3_4 = 'google/gemma-3-4b' #LMS
 GEMMA3_12 = 'google/gemma-3-12b' #LMS
@@ -27,15 +34,17 @@ GEMMA3_27 = 'google/gemma-3-27b'
 MINISTRAL3_3 = 'mistralai/ministral-3-3b'
 MINISTRAL3_8 = 'mistralai/ministral-3-8b'
 MINISTRAL3_14 = 'mistralai/ministral-3-14b'
-DEEPSEEKR1_1_5 = 'deepseek-r1:1.5b'
-DEEPSEEKR1_8 = 'deepseek-r1:8b'
-DEEPSEEKR1_32 = 'deepseek-r1:32b'
-DEEPSEEKR1_32_DISTILL = 'deepseek/deepseek-r1-distill-qwen-32b'
+# DEEPSEEKR1_1_5 = 'deepseek-r1:1.5b'
+# DEEPSEEKR1_8 = 'deepseek-r1:8b'
+# DEEPSEEKR1_32 = 'deepseek-r1:32b'
+# DEEPSEEKR1_32_DISTILL = 'deepseek/deepseek-r1-distill-qwen-32b'
+DEEPSEEKV32 = "deepseek-chat"
+SONNET46 = "claude-sonnet-4-6"
 GPT4 = 'gpt-4o'
 GPT5 = 'gpt-5'
 DEEPL = "DeepL"
-EUROLLM_9 = "utter-project/EuroLLM-9B"
-COMMAND_R1 = "CohereLabs/c4ai-command-r-v01"
+# EUROLLM_9 = "utter-project/EuroLLM-9B"
+# COMMAND_R1 = "CohereLabs/c4ai-command-r-v01"
 
 MODELS_LABELS = {
     QWEN3_4: "Qwen3 4B",
@@ -44,10 +53,12 @@ MODELS_LABELS = {
     QWEN35_2_LMS: "Qwen3.5 2B",
     QWEN35_2_HF: "Qwen3.5 2B",
     QWEN35_2: "Qwen3.5 2B",
+    QWEN35_9_HF: "Qwen3.5 9B",
     QWEN35_9_LMS: "Qwen3.5 9B",
     QWEN35_9: "Qwen3.5 9B",
     QWEN35_27_LMS: "Qwen3.5 27B",
     QWEN35_27: "Qwen3.5 27B",
+    LlaMa32_3: "LlaMa 3.2 3B",
     LlaMa31_8: "LlaMa 3.1 8B",
     GEMMA3_4: "Gemma 3 4B", 
     GEMMA3_12 : "Gemma 3 12B",
@@ -55,13 +66,15 @@ MODELS_LABELS = {
     MINISTRAL3_3: "Ministral 3 3B",
     MINISTRAL3_8: "Ministral 3 8B",
     MINISTRAL3_14: "Ministral 3 14B",
-    DEEPSEEKR1_1_5: "DeepSeek R1 1.5B",
-    DEEPSEEKR1_8: "DeepSeek R1 8B",
-    DEEPSEEKR1_32: "DeepSeek R1 32B",
-    DEEPSEEKR1_32_DISTILL: "DeepSeek R1 DIST 32B",
+    # DEEPSEEKR1_1_5: "DeepSeek R1 1.5B",
+    # DEEPSEEKR1_8: "DeepSeek R1 8B",
+    # DEEPSEEKR1_32: "DeepSeek R1 32B",
+    # DEEPSEEKR1_32_DISTILL: "DeepSeek R1 DIST 32B",
+    DEEPSEEKV32: "DeepSeek-V3.2",
+    SONNET46: "Sonnet 4.6",
     DEEPL: "DeepL",
-    EUROLLM_9: "EuroLLM 9B",
-    COMMAND_R1: "Command R1",
+    # EUROLLM_9: "EuroLLM 9B",
+    # COMMAND_R1: "Command R1",
     GPT4 : 'GPT 4o',
     GPT5 : 'GPT 5'
 }
@@ -77,10 +90,12 @@ class Model:
             QWEN35_2_LMS: self._initialize_LMSStudio,
             QWEN35_2_HF: self._initialize_HuggingFace,
             QWEN35_2: self._initialize_Ollama,
+            QWEN35_9_HF: self._initialize_HuggingFace,
             QWEN35_9_LMS: self._initialize_LMSStudio,
             QWEN35_9: self._initialize_Ollama,
             QWEN35_27_LMS: self._initialize_LMSStudio,
             QWEN35_27: self._initialize_Ollama,
+            LlaMa32_3: self._initialize_Ollama,
             LlaMa31_8: self._initialize_Ollama,
             GEMMA3_4: self._initialize_LMSStudio,
             GEMMA3_12: self._initialize_LMSStudio,
@@ -88,15 +103,17 @@ class Model:
             MINISTRAL3_3: self._initialize_LMSStudio,
             MINISTRAL3_8: self._initialize_LMSStudio,
             MINISTRAL3_14: self._initialize_LMSStudio,
-            DEEPSEEKR1_1_5: self._initialize_Ollama,
-            DEEPSEEKR1_8: self._initialize_Ollama,
-            DEEPSEEKR1_32: self._initialize_Ollama,
-            DEEPSEEKR1_32_DISTILL: self._initialize_LMSStudio,
-            GPT4: self._initialize_OpenAI, 
-            GPT5: self._initialize_OpenAI, 
+            # DEEPSEEKR1_1_5: self._initialize_Ollama,
+            # DEEPSEEKR1_8: self._initialize_Ollama,
+            # DEEPSEEKR1_32: self._initialize_Ollama,
+            # DEEPSEEKR1_32_DISTILL: self._initialize_LMSStudio,
+            DEEPSEEKV32: self.initialize_DeepSeek,
+            SONNET46: self.initialize_Antrophic,
+            GPT4: self.initialize_OpenAI, 
+            GPT5: self.initialize_OpenAI, 
             DEEPL: self._initialize_deepl,
-            EUROLLM_9: self._initialize_HuggingFace,
-            COMMAND_R1: self._initialize_HuggingFace
+            # EUROLLM_9: self._initialize_HuggingFace,
+            # COMMAND_R1: self._initialize_HuggingFace
         }
         
         self.send_request = {
@@ -106,10 +123,12 @@ class Model:
             QWEN35_2_HF: self._request_HuggingFace,
             QWEN35_2_LMS: self._request_LMSStudio,
             QWEN35_2: self._request_Ollama,
+            QWEN35_9_HF: self._request_HuggingFace,
             QWEN35_9_LMS: self._request_LMSStudio,
             QWEN35_9: self._request_Ollama,
             QWEN35_27_LMS: self._request_LMSStudio,
             QWEN35_27: self._request_Ollama,
+            LlaMa32_3: self._request_Ollama,
             LlaMa31_8: self._request_Ollama,
             GEMMA3_4: self._request_LMSStudio,
             GEMMA3_12: self._request_LMSStudio,
@@ -117,14 +136,16 @@ class Model:
             MINISTRAL3_3: self._request_LMSStudio,
             MINISTRAL3_8: self._request_LMSStudio,
             MINISTRAL3_14: self._request_LMSStudio,
-            DEEPSEEKR1_1_5: self._request_Ollama,
-            DEEPSEEKR1_8: self._request_Ollama,
-            DEEPSEEKR1_32: self._request_Ollama,
-            DEEPSEEKR1_32_DISTILL: self._request_LMSStudio,
-            GPT4: self._request_OpenAi, 
-            GPT5: self._request_OpenAi, 
-            EUROLLM_9: self._request_HuggingFace,
-            COMMAND_R1: self._request_HuggingFace,
+            # DEEPSEEKR1_1_5: self._request_Ollama,
+            # DEEPSEEKR1_8: self._request_Ollama,
+            # DEEPSEEKR1_32: self._request_Ollama,
+            # DEEPSEEKR1_32_DISTILL: self._request_LMSStudio,
+            DEEPSEEKV32: self.request_OpenAi,
+            SONNET46: self.request_Antrophic,
+            GPT4: self.request_OpenAi, 
+            GPT5: self.request_OpenAi, 
+            # EUROLLM_9: self._request_HuggingFace,
+            # COMMAND_R1: self._request_HuggingFace,
         }
         
     def initialize_model(self):
@@ -150,12 +171,28 @@ class Model:
         self.client = genai.GenerativeModel(self.model_name)
         return False
 
-    def _initialize_OpenAI(self): 
+    def initialize_OpenAI(self): 
         api_key = os.getenv('OPENAI_API_KEY')
         if api_key is None:
             logger.error(f"⚠️ OPENAI_API_KEY is missing")
             return True
         self.client = OpenAI(api_key=api_key)
+        return False
+    
+    def initialize_Antrophic(self):
+        api_key = os.getenv('CLAUDE_API_KEY')
+        if api_key is None:
+            logger.error(f"⚠️ CLAUDE_API_KEY is missing")
+            return True
+        self.client = Anthropic(api_key=api_key)
+        return False
+
+    def initialize_DeepSeek(self): 
+        api_key = os.getenv('DEEPSEEK_API_KEY')
+        if api_key is None:
+            logger.error(f"⚠️ DEEPSEEK_API_KEY is missing")
+            return True
+        self.client = OpenAI(api_key=api_key, base_url=URL_DEEPSEEK)
         return False
 
     def _initialize_Ollama(self):
@@ -180,20 +217,13 @@ class Model:
             logger.error("⚠️ LM Studio server is not running")
             return True
     
-    def _initialize_DeepSeeek(self): 
-        api_key = os.getenv('DEEPSEEK_API_KEY')
-        if api_key is None:
-            logger.error(f"⚠️ DEEPSEEK_API_KEY is missing")
-            return True
-        self.client = OpenAI(api_key=api_key, base_url=URL_DEEPSEEK)
-        return False
-    
     def _initialize_HuggingFace(self):
         logger.setLevel(logging.ERROR)
         try:
-            if self.model_name == QWEN35_08 or self.model_name == QWEN35_2:
+            if self.model_name == QWEN35_08 or self.model_name == QWEN35_2_HF:
                 self.auto_processor = AutoProcessor.from_pretrained(self.model_name)
                 self.auto_model = AutoModelForImageTextToText.from_pretrained(self.model_name)
+                #self.auto_model = self.auto_model.to(device)
             else:
                 self.auto_tokenizer = AutoTokenizer.from_pretrained(self.model_name)
                 self.auto_model = AutoModelForCausalLM.from_pretrained(self.model_name)
@@ -219,7 +249,7 @@ class Model:
             if r.status_code != 200:
                 # data = r.json()
                 # response = data["content"]["error"]
-                logger.error(f"⚠️ Ollama ERROR: {response}")
+                logger.error(f"⚠️ Ollama ERROR: {response.reason}")
                 return None
 
             
@@ -235,7 +265,8 @@ class Model:
         except Exception as X:
             logger.error(f"_request_ollama: {X}")
             return None
-        
+    import requests
+
     def _request_LMSStudio(self):
         try:
             response = requests.post(
@@ -269,7 +300,7 @@ class Model:
             logger.error(f"_request_gemini: {X}")
             return None
 
-    def _request_OpenAi(self):
+    def request_OpenAi(self):
         logger.setLevel(logging.ERROR)
         try:
             completion = self.client.chat.completions.create(
@@ -285,38 +316,61 @@ class Model:
         except Exception as X:
             logger.error(f"_request_open_ai: {X}")
             return None
-
+    
+    def request_Antrophic(self):
+        logger.setLevel(logging.ERROR)
+        try:
+            message = self.client.messages.create(
+                max_tokens=500,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": self.prompt,
+                    }
+                ],
+                model=self.model_name,
+            )
+            resp =  message.content[0].text
+            
+            logger.setLevel(logging.INFO)
+            return resp
+        except Exception as X:
+            logger.error(f"request_Antrophic: {X}")
+            return None
+        
     def _request_HuggingFace(self):
         logger.setLevel(logging.ERROR)
         try:
-            if self.model_name == EUROLLM_9:
-                #EuroLLM
-                inputs = self.auto_tokenizer(self.prompt, return_tensors="pt")
-                gen_tokens = self.auto_model.generate(**inputs, max_new_tokens=500)
-                out = self.auto_tokenizer.decode(gen_tokens[0])
+            # if self.model_name == EUROLLM_9:
+            #     #EuroLLM
+            #     inputs = self.auto_tokenizer(self.prompt, return_tensors="pt")
+            #     gen_tokens = self.auto_model.generate(**inputs, max_new_tokens=500)
+            #     out = self.auto_tokenizer.decode(gen_tokens[0])
             
-            elif self.model_name == QWEN35_08 or self.model_name == QWEN35_2:
-                messages = [
-                    {
-                        "role": "user",
-                        "content": [
-                            {"type": "text", "text": self.prompt}
-                        ]
-                    },
-                ]
-                inputs = self.auto_processor.apply_chat_template(
-                    messages,
-                    add_generation_prompt=True,
-                    tokenize=True,
-                    return_dict=True,
-                    return_tensors="pt",
-                    #pad_token_id=self.auto_processor.eos_token_id,
-                ).to(self.auto_model.device)
-                
-                outputs = self.auto_model.generate(**inputs, max_new_tokens=40)
-                out_ = self.auto_processor.decode(outputs[0][inputs["input_ids"].shape[-1]:])
-                out_ = extract_model_answer(out_)
-                return out_
+            # else:
+            #print("question")
+            messages = [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": self.prompt}
+                    ]
+                },
+            ]
+            inputs = self.auto_processor.apply_chat_template(
+                messages,
+                add_generation_prompt=True,
+                tokenize=True,
+                return_dict=True,
+                return_tensors="pt",
+                #pad_token_id=self.auto_processor.eos_token_id,
+            ).to(self.auto_model.device)
+            
+            outputs = self.auto_model.generate(**inputs, max_new_tokens=40)
+            out_ = self.auto_processor.decode(outputs[0][inputs["input_ids"].shape[-1]:])
+            out_ = extract_model_answer(out_)
+            #print("answer")
+            return out_
                 # inputs = self.auto_tokenizer(self.prompt, return_tensors="pt")
                 # outputs = self.auto_model.generate(**inputs, max_new_tokens=500)
 

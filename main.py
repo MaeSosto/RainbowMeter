@@ -1,6 +1,6 @@
 from lib.constants import *
 from lib.models import *
-from lib.rainbow_meter import *
+from lib.prompting import *
 from lib.evaluations import *
 
 

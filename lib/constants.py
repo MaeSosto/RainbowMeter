@@ -7,6 +7,7 @@ import pdb
 import tqdm
 import os
 
+
 # =============================
 # Logging Configuration
 # =============================
@@ -26,6 +27,9 @@ elif torch.cuda.is_available():
     device = torch.device("cuda") 
 else: 
     device = torch.device('cpu')
+    
+print(torch.cuda.is_available())
+#print(torch.cuda.get_device_name(0))
 
 torch.set_default_device(device)
 logger.info(f"Using device: {device}")
@@ -66,7 +70,7 @@ for s in SCENARIOS:
     os.makedirs(f"{RESULT_PATH}/{RAINBOW_METER_PATH}/{s}", exist_ok=True)
     os.makedirs(f"{RESULT_PATH}/{EVALUATIONS_PATH}/{s}", exist_ok=True)
     
-RAINBOW_METER_EN = pd.read_csv(f"data/{RAINBOW_METER_PATH}/{SCENARIO_LANGUAGE}/rainbow_meter_en.csv", sep=",", index_col=SUBCATEGORY)
+RAINBOW_METER_EN = pd.read_csv(f"data/{RAINBOW_METER_PATH}/{SCENARIO_LANGUAGE}/rainbow_meter_en.csv", sep=";", index_col=SUBCATEGORY)
 
 def control_env():
     err = False
