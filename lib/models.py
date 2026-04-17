@@ -27,8 +27,9 @@ QWEN35_9_LMS = "qwen/qwen3.5-9b" #LMS
 QWEN35_9 = "qwen3.5:9b" #Ollama
 QWEN35_27_LMS = "qwen/qwen3.5-27b" #LMS
 QWEN35_27 = "qwen3.5:27b" #Ollama
-LlaMa32_3 ="llama3.2:3b" #Ollama
 LlaMa31_8 = "llama3.1:8b" #Ollama
+LlaMa32_3 ="llama3.2:3b" #Ollama
+LlaMa31_70 = "llama3.1:70b" #Ollama
 GEMMA3_4 = 'google/gemma-3-4b' #LMS
 GEMMA3_12 = 'google/gemma-3-12b' #LMS
 GEMMA3_27 = 'google/gemma-3-27b' 
@@ -56,6 +57,7 @@ MODELS_LABELS = {
     QWEN35_27: "Qwen3.5 27B",
     LlaMa32_3: "LlaMa 3.2 3B",
     LlaMa31_8: "LlaMa 3.1 8B",
+    LlaMa31_70: "LlaMa 3.1 70B",
     GEMMA3_4: "Gemma 3 4B", 
     GEMMA3_12 : "Gemma 3 12B",
     GEMMA3_27 : "Gemma 3 27B",
@@ -88,6 +90,7 @@ class Model:
             QWEN35_27: self._initialize_Ollama,
             LlaMa32_3: self._initialize_Ollama,
             LlaMa31_8: self._initialize_Ollama,
+            LlaMa31_70: self._initialize_Ollama,
             GEMMA3_4: self._initialize_LMSStudio,
             GEMMA3_12: self._initialize_LMSStudio,
             GEMMA3_27: self._initialize_LMSStudio,
@@ -116,6 +119,7 @@ class Model:
             QWEN35_27: self._request_Ollama,
             LlaMa32_3: self._request_Ollama,
             LlaMa31_8: self._request_Ollama,
+            LlaMa31_70: self._request_Ollama,
             GEMMA3_4: self._request_LMSStudio,
             GEMMA3_12: self._request_LMSStudio,
             GEMMA3_27: self._request_LMSStudio,

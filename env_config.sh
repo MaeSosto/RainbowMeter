@@ -7,15 +7,6 @@ echo "🐍 Creating Python virtual environment..."
 python3 -m venv .venv > /dev/null
 source .venv/bin/activate > /dev/null
 
-echo "📦 Upgrading pip..."
-#pip install --upgrade pip > /dev/null
-
-# echo "📁 Cloning Hugging Face evaluation tools..."
-# cd .venv
-# git clone https://github.com/huggingface/evaluate.git > /dev/null
-# pip install evaluate > /dev/null
-# cd ..
-
 # echo "📦 Installing Ollama and starting the service..."
 # pip install ollama > /dev/null
 # Uncomment the models you want to pull
@@ -29,27 +20,10 @@ echo "📦 Upgrading pip..."
 # ollama serve > /dev/null &
 
 echo "🔧 Installing base libraries..."
-pip install torch tqdm pandas data tqdm scipy transformers deep-translator SPARQLWrapper unidecode surprisal transformers python-dotenv data deepl accelerate deepl anthropic > /dev/null
-
-# echo "🧠 Installing sentiment analysis tools..."
-# pip install afinn vadersentiment > /dev/null
-
-# echo "☁️ Setting up Google Cloud clients..."
-# pip install --upgrade google-api-python-client google-cloud google-cloud-language google-cloud-translate > /dev/null
+pip install torch tqdm pandas data tqdm scipy SPARQLWrapper unidecode surprisal python-dotenv data accelerate > /dev/null
 
 echo "🤖 Installing model APIs..."
-pip install openai > /dev/null
-
-for pkg in openai google-generativeai; do
-    echo "   → Installing $pkg..."
-    pip install "$pkg" || { echo "❌ Failed to install $pkg"; exit 1; }
-done
-
-# echo "🔧 Installing base libraries..."
-# for pkg in torch pandas tqdm unidecode surprisal transformers python-dotenv; do
-#     echo "   → Installing $pkg..."
-#     pip install "$pkg" || { echo "❌ Failed to install $pkg"; exit 1; }
-# done
+pip install transformers deep-translator openai deepl anthropic google-genai > /dev/null
 
 echo "📊 Installing graph & ML libraries..."
 for pkg in tf-keras seaborn scikit-learn scipy matplotlib wordcloud python-ternary; do
@@ -57,10 +31,7 @@ for pkg in tf-keras seaborn scikit-learn scipy matplotlib wordcloud python-terna
     pip install "$pkg" || { echo "❌ Failed to install $pkg"; exit 1; }
 done
 
-# echo "🔧 Installing ipykernel for Jupyter support..."
-# pip install ipykernel > /dev/null
-
-# echo "📊 Installing graph & ML libraries..."
-# pip install tf-keras seaborn scikit-learn scipy matplotlib wordcloud python-ternary > /dev/null
+#echo "📦 Upgrading pip..."
+#pip install --upgrade pip > /dev/null
 
 echo "✅ Environment setup complete!"

@@ -44,11 +44,19 @@ with open("data/countries.json") as f:
     COUNTRIES_FILE = json.load(f)
 TOT_CRITERIA_NUM = len(RAINBOW_MAP_DF)
 
+#Countries
+NAME = "name"
+ID = "country_id"
+LANGUAGES = "languages"
+LANGUAGES_CODE = "languages_code"
+CITIZENSHIP = "citizenships"
+
 #Rainbow Meter
 FACT = "Fact"
 SUPPORT = "Support"
 OPPOSITION = "Opposition"
 QUESTION_TYPES = [FACT, SUPPORT, OPPOSITION]
+STANCE = "Stance"
 YES = "yes"
 NO = "no"
 UNDEFINED = "undefined"

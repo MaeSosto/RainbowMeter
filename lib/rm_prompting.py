@@ -1,18 +1,15 @@
 from constants import *
-from country import *
 from models import *
-
+import numpy as np
 
 MAX_NUM_ANSWERS = 5 #Num answer we want for each criterion-stance
 COHERENCE = "Coherence"
 VALIDITY = "Validity"
-FINAL_SCORE = "Final Score"
-SCORES_VECTOR = [COHERENCE, VALIDITY, FINAL_SCORE]
+COH_VAL_SCORE = "Weight coherence by validity"
 
 class Rainbow_Meter:
     #Return True if the Rainbow map is complete, otherwise return False (and therefore needs to be calculated)
-    def __init__(self, model, scenario, prompt_num):
-        self.prompt_num = prompt_num
+    def __init__(self, model, scenario):
         self.model = model
         self.scenario = scenario
     
@@ -71,15 +68,13 @@ class Rainbow_Meter:
                         FACT: [], 
                         SUPPORT: [], 
                         OPPOSITION: [],
-                        f"{VALIDITY} {FACT}": [],
-                        f"{VALIDITY} {SUPPORT}": [],
-                        f"{VALIDITY} {OPPOSITION}": [],
-                        f"{COHERENCE} {FACT}": [],
-                        f"{COHERENCE} {SUPPORT}": [],
-                        f"{COHERENCE} {OPPOSITION}": [],
-                        f"{FINAL_SCORE} {FACT}": [],
-                        f"{FINAL_SCORE} {SUPPORT}": [],
-                        f"{FINAL_SCORE} {OPPOSITION}": []
+                        f"{STANCE}" : [],
+                        f"{FACT} {COHERENCE}" : [],
+                        f"{FACT} {VALIDITY}" : [],
+                        f"{FACT} {COH_VAL_SCORE}" : [],
+                        f"{STANCE} {COHERENCE}" : [],
+                        f"{STANCE} {VALIDITY}" : [],
+                        f"{STANCE} {COH_VAL_SCORE}"  : [],
                     }
                 
                 #Retrieve the Rainbow Meter of a specific language (if exist)
@@ -107,26 +102,28 @@ class Rainbow_Meter:
                     rainbow_meter[CATEGORY].append(row[CATEGORY])
                     rainbow_meter[SUBCATEGORY].append(subcategory)
                     
-                    #Iterate on the prompt types
                     for question_type in QUESTION_TYPES:
-                        default_prompt = self.get_default_prompt()
-                        criterion = row[question_type]
-                        full_prompt = f"""{criterion}
-                        {default_prompt["prompt"]}"""
-                        
-                        
+                        full_prompt, possible_binary_answers = self.get_prompt(row[question_type])
+
+                        # Generate answers
                         question_responses = []
-                        while len(question_responses) < MAX_NUM_ANSWERS:
+                        for _ in range(MAX_NUM_ANSWERS):
                             resp = self.model.call_model(full_prompt)
-                            resp = self.check_binary_answer(resp, [default_prompt[YES], default_prompt[NO]])
+                            resp = self.get_binary_answer(resp, possible_binary_answers)
                             question_responses.append(resp)
-                        #logger.info(f"{subcategory} - {question_type}: {question_responses}")
-                        coherence, validity, final_score = compute_scores(question_responses)
-                        rainbow_meter[question_type].append(self.combine_binary_answers(question_responses))
-                        rainbow_meter[f"{COHERENCE} {question_type}"].append(round(coherence, 2))
-                        rainbow_meter[f"{VALIDITY} {question_type}"].append(round(validity, 2))
-                        rainbow_meter[f"{FINAL_SCORE} {question_type}"].append(round(final_score, 2)) 
-                        
+
+                        rainbow_meter[question_type].append(round(self.combine_binary_answers(question_responses),2))
+
+                        if question_type == OPPOSITION:
+                            rainbow_meter[f"{STANCE}"].append(round(np.mean([rainbow_meter[SUPPORT][-1], np.abs(rainbow_meter[OPPOSITION][-1] - 1)]), 2))
+                            
+                        if question_type in {FACT, OPPOSITION}:
+                            coherence, validity, final_score = model_scores(question_responses)
+                            prefix = FACT if question_type == FACT else STANCE
+                            rainbow_meter[f"{prefix} {COHERENCE}"].append(round(coherence, 2))
+                            rainbow_meter[f"{prefix} {VALIDITY}"].append(round(validity, 2))
+                            rainbow_meter[f"{prefix} {COH_VAL_SCORE}"].append(round(final_score, 2))
+                            
                     #Export Rainbow Meter
                     rainbow_meter_df = pd.DataFrame(rainbow_meter)
                     self.export_rm_result(rainbow_meter_df)
@@ -144,24 +141,22 @@ class Rainbow_Meter:
                 rainbow_meter[FACT].append(row[FACT])
                 rainbow_meter[SUPPORT].append(row[SUPPORT])
                 rainbow_meter[OPPOSITION].append(row[OPPOSITION])
-                rainbow_meter[f"{VALIDITY} {FACT}"].append(row[f"{VALIDITY} {FACT}"])
-                rainbow_meter[f"{VALIDITY} {SUPPORT}"].append(row[f"{VALIDITY} {SUPPORT}"])
-                rainbow_meter[f"{VALIDITY} {OPPOSITION}"].append(row[f"{VALIDITY} {OPPOSITION}"])
-                rainbow_meter[f"{COHERENCE} {FACT}"].append(row[f"{COHERENCE} {FACT}"])
-                rainbow_meter[f"{COHERENCE} {SUPPORT}"].append(row[f"{COHERENCE} {SUPPORT}"])
-                rainbow_meter[f"{COHERENCE} {OPPOSITION}"].append(row[f"{COHERENCE} {OPPOSITION}"])
-                rainbow_meter[f"{FINAL_SCORE} {FACT}"].append(row[f"{FINAL_SCORE} {FACT}"])
-                rainbow_meter[f"{FINAL_SCORE} {SUPPORT}"].append(row[f"{FINAL_SCORE} {SUPPORT}"])
-                rainbow_meter[f"{FINAL_SCORE} {OPPOSITION}"].append(row[f"{FINAL_SCORE} {OPPOSITION}"])
+                rainbow_meter[f"{STANCE}"].append(row[f"{STANCE}"])
+                rainbow_meter[f"{FACT} {COHERENCE}"].append(row[f"{FACT} {COHERENCE}"])
+                rainbow_meter[f"{FACT} {VALIDITY}"].append(row[f"{FACT} {VALIDITY}"])
+                rainbow_meter[f"{FACT} {COH_VAL_SCORE}"].append(row[f"{FACT} {COH_VAL_SCORE}"])
+                rainbow_meter[f"{STANCE} {COHERENCE}"].append(row[f"{STANCE} {COHERENCE}"])
+                rainbow_meter[f"{STANCE} {VALIDITY}"].append(row[f"{STANCE} {VALIDITY}"])
+                rainbow_meter[f"{STANCE} {COH_VAL_SCORE}"].append(row[f"{STANCE} {COH_VAL_SCORE}"])
         return rainbow_meter
 
 
                 
     #Return yes/no/unsure/undefined based on the answer
-    def check_binary_answer(self, response, answ_options):
+    def get_binary_answer(self, response, answ_options):
         response = response.lower().replace(".", "").replace("*", "").replace('"', '').strip()
         first_word = response.split()[0].strip(",;:!?.")
-        if self.prompt_num == 0 and response and first_word in answ_options: #Response is valid
+        if response and first_word in answ_options: #Response is valid
             if first_word == answ_options[0]:
                 return YES
             return NO
@@ -180,59 +175,20 @@ class Rainbow_Meter:
         except KeyError as e:
             raise ValueError(f"Unexpected label found: {e}")
 
-        return sum(values) / len(values)
+        return np.mean(values)
     
             
-    def get_default_prompt(self):
-        if self.scenario == SCENARIO_NATIONALITY: #The only case where the questions are in english as default
-            language = "English" 
-        else:
-            language = self.language
-        
+    def get_prompt(self, criterion):
         with open("data/prompt.json", "r", encoding="utf-8") as f:
             data = json.load(f)
 
-        if language not in data:
-            raise ValueError(f"Language '{language}' not found in JSON.")
-
+        #The only case where the questions are in english as default
+        language = "English" if self.scenario == SCENARIO_NATIONALITY else self.language
         lang_data = data[language]
+        
+        return f"{criterion}\n{lang_data.get("prompt")}", [lang_data.get(YES), lang_data.get(NO)]
 
-        return {
-            "prompt": lang_data.get("prompt"),
-            "yes": lang_data.get("yes"),
-            "no": lang_data.get("no")
-        }
-        # if self.scenario == SCENARIO_LANGUAGE:
-        #     scenario_path = f"rainbow_meter_{self.language_code}.csv"
-        # elif self.scenario == SCENARIO_NATIONALITY:
-        #     scenario_path = f"rainbow_meter_{self.country_id}.csv"
-        # else:
-        #     scenario_path = f"rainbow_meter_{self.language_code}_{self.country_id}.csv"
-        # if os.path.exists(result_path+ scenario_path): #If exist
-        #     return True, pd.read_csv(result_path+scenario_path, sep=";", index_col=SUBCATEGORY) 
-        # return False, None
-    
-        # a_an = "an" if self.citizenship[0] in ["A", "E", "I", "O", "U"] else "a" 
-        # if self.scenario == SCENARIO_LANGUAGE:
-        #     PROMPTS = [
-        #         f"""{question}
-        #             Provide a yes or no answer.""",
-        #         f"""{question}
-        #             Provide a "yes", "no" or "unsure" answer.""", 
-        #     ]
-        # elif self.scenario == SCENARIO_NATIONALITY:
-            
-        #     PROMPTS = [
-        #         f"""In {self.country_name}, {question.lower()}
-        #             Provide a yes or no answer.""",
-        #         f"""{question}
-        #             Provide a "yes", "no" or "unsure" answer as if you were {a_an} {self.citizenship} citizen.""", 
-        #     ]
-            
-        # tmp =  PROMPTS[self.prompt_num]
-        # return tmp
-
-def compute_scores(answers):
+def model_scores(answers):
     valid_mapping = {YES: 1, NO: 0}
     valid_answers = [valid_mapping[a] for a in answers if a in valid_mapping]
     n_valid = len(valid_answers)
@@ -252,13 +208,9 @@ def compute_scores(answers):
 
 
 
-#PROMPT TYPES
-#0 = Provide a yes or no answer.
-#1 = Provide a "yes", "no" or "unsure" answer.
-PROMPT_NUM = 0
 
 
-model_list = [GEMINI3_FLASH]
+model_list = [LlaMa32_3]
 
 #Iterate on Models
 for model_name in model_list: #tqdm.tqdm(model_list, desc="Answering Rainbow Meter Criteria", total=len(model_list)):
@@ -270,7 +222,7 @@ for model_name in model_list: #tqdm.tqdm(model_list, desc="Answering Rainbow Met
     
     #Iterate on the scenario
     for scenario in SCENARIOS:
-        rainbow_meter = Rainbow_Meter(model, scenario, PROMPT_NUM)
+        rainbow_meter = Rainbow_Meter(model, scenario)
         rainbow_meter.get_answers()
             
             # #Evaluations
@@ -279,4 +231,5 @@ for model_name in model_list: #tqdm.tqdm(model_list, desc="Answering Rainbow Met
             # # eval.calculate_wilcoxon()
         logger.info(f"✅ {scenario} Done")    
 
-logger.info("✅ All models done")
+if not error:
+    logger.info("✅ All models done")

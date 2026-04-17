@@ -1,6 +1,5 @@
 from constants import *
 from models import *
-from country import *
 import json
 import requests
 import random
@@ -186,7 +185,7 @@ def test_systems_translation_abilities(model_list):
             continue
 
         model = Model(model_name)
-        error = model.initialize_moduel()
+        error = model.initialize_model()
         if error:
             continue
 
@@ -220,8 +219,11 @@ def translate_rainbow_meter():
         
     #Iterate on the countries
     for country_name in tqdm.tqdm(COUNTRIES_FILE, desc="Generating Rainbow Meter Questions", total=len(COUNTRIES_FILE)): 
-        country = Country(country_name)
-        
+        country_id = COUNTRIES_FILE[country_name][ID]
+        country_language = COUNTRIES_FILE[country_name][LANGUAGES][0]
+        country_language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][0]
+        country_citizenship = COUNTRIES_FILE[country_name][CITIZENSHIP][0]
+
         #Iterate on the scenarios
         for scenario in SCENARIOS:
             os.makedirs(f"data/{RAINBOW_METER_PATH}/{scenario}", exist_ok=True)
@@ -239,31 +241,31 @@ def translate_rainbow_meter():
                 rainbow_meter[CATEGORY].append(row[CATEGORY])
                 for type in QUESTION_TYPES:
                     if scenario == SCENARIO_LANGUAGE: #SCENARIO LANGUAGE
-                        rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country.language_code}.csv"
+                        rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country_language_code}.csv"
                         
                         try:
                             #Translate question from English in the country language
                             if model_name == DEEPL:
-                                question = deepl_translation(model, row[type].lower(), country.language_code)
+                                question = deepl_translation(model, row[type].lower(), country_language_code)
                             else:
-                                question = model_translation(model, row[type].lower(), country.language)  
+                                question = model_translation(model, row[type].lower(), country_language)  
                         except Exception as X:
                             logger.error(f"translate_rainbow_meter: {X}")
                             
                     elif scenario == SCENARIO_NATIONALITY: #SCENARIO NATIONALITY
-                        rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country.id}.csv"
+                        rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country_id}.csv"
                         #Insert the country country in the question
-                        question = f"In {country.name}, {row[type].lower()}"
+                        question = f"In {country_name}, {row[type].lower()}"
                         
                     else: #SCENARIO LANGIAGE + NATIONALITY
-                        rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country.language_code}_{country.id}.csv"
+                        rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country_language_code}_{country_id}.csv"
                         
                         #Insert the country in the questionand translate it from English in the country language
                         try:
                             if model_name == DEEPL:
-                                question = deepl_translation(model, f"In {country.name}, {row[type].lower()}", country.language_code) 
+                                question = deepl_translation(model, f"In {country_name}, {row[type].lower()}", country_language_code) 
                             else:
-                                question = model_translation(model, f"In {country.name}, {row[type].lower()}", country.language)
+                                question = model_translation(model, f"In {country_name}, {row[type].lower()}", country_language)
                         except Exception as X:
                             logger.error(f"translate_rainbow_meter: {X}")
                     
@@ -311,7 +313,7 @@ def translate_default_prompt():
     
 
 # #Check models ability to support the langauges bit back translation 
-model_list = [SONNET46]
+model_list = [GEMINI3_FLASH]
 test_systems_translation_abilities(model_list)
 
 #Translate the prompt instructions

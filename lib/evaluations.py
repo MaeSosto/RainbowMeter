@@ -162,15 +162,11 @@ class Evaluations:
             "pvalue": [] 
             }
         
-        # #country_list = [Country(c) for c in COUNTRIES_FILE if "en" in COUNTRIES_FILE[c][LANGUAGES_CODE]]
-        # country_list = get_countries_that_speaks()
         
         for country in COUNTRIES_FILE:
             print(country.name)
             rainbow_map_country = convert_array(RAINBOW_MAP_DF.loc[country.id].drop("country_name").drop("Rank").values)
             rainbow_map_country = np.multiply(rainbow_map_country, self.weights_list)
-            #print(rainbow_map_country)
-            #criteria_file = country.criteria_file
             
             exist, rainbow_meter = self._get_rainbow_meter_results(country)
             if not exist:
@@ -178,8 +174,6 @@ class Evaluations:
             
             rainbow_meter_country = rainbow_meter[FACT].values
             rainbow_meter_country = np.multiply(rainbow_meter_country, self.weights_list)
-            #print(rainbow_meter_country)
-            
             wilcoxon_s, wilcoxon_pval = self.wilcoxon(rainbow_map_country, rainbow_meter_country)
             
             results["Country"].append(country.name)
