@@ -55,15 +55,15 @@ class Rainbow_Meter:
     
     def get_answers(self):
         #Iterate on every country
-        for country_name in COUNTRIES_FILE: 
+        for country_name, country_data in tqdm.tqdm(COUNTRIES_FILE.items(), total=len(COUNTRIES_FILE), desc=f"🔄 {self.model.model_name} - {self.scenario}"):
+            self.country_name = country_name
+            self.country_id = country_data[ID]
+            self.citizenship = country_data[CITIZENSHIP]
         
             #Iterate on every language and citizenship 
             for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
-                self.country_name = country_name
                 self.language = COUNTRIES_FILE[country_name][LANGUAGES][country_identity_num]
                 self.language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num]
-                self.country_id = COUNTRIES_FILE[country_name][ID]
-                self.citizenship = COUNTRIES_FILE[country_name][CITIZENSHIP]
                 
                 rainbow_meter = {
                         CATEGORY: [],
@@ -101,8 +101,9 @@ class Rainbow_Meter:
                 #Get answers for the missing criterion in the csv file
                 for subcategory, row in tqdm.tqdm(complete_rm_language[self.num_answers:].iterrows(), 
                                                 total=len(complete_rm_language[self.num_answers:]), 
-                                                desc=f"🔄 {self.model.model_name} - {self.scenario} : {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_NATIONALITY else f"{self.country_id} in {self.language_code}"}"
-                                        ):
+                                                desc=f"🔄 {self.model.model_name} - {self.scenario} : {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_NATIONALITY else f"{self.country_id} in {self.language_code}"}",
+                                                leave= False
+                    ):
                     rainbow_meter[CATEGORY].append(row[CATEGORY])
                     rainbow_meter[SUBCATEGORY].append(subcategory)
                     
@@ -257,10 +258,10 @@ def compute_scores(answers):
 PROMPT_NUM = 0
 
 
-model_list = [DEEPSEEKV32]
+model_list = [GEMINI3_FLASH]
 
 #Iterate on Models
-for model_name in tqdm.tqdm(model_list, desc="Answering Rainbow Meter Criteria", total=len(model_list)):
+for model_name in model_list: #tqdm.tqdm(model_list, desc="Answering Rainbow Meter Criteria", total=len(model_list)):
     model = Model(model_name)
     error = model.initialize_model()
     if error: #If there are no errors in initializing the model

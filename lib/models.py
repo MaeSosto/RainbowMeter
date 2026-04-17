@@ -1,7 +1,8 @@
 from constants import *
 import requests
 from openai import OpenAI
-import google.generativeai as genai
+#import google.generativeai as genai
+from google import genai
 import re
 import deepl
 from transformers import AutoModelForCausalLM, AutoTokenizer, AutoProcessor, AutoModelForImageTextToText
@@ -34,17 +35,12 @@ GEMMA3_27 = 'google/gemma-3-27b'
 MINISTRAL3_3 = 'mistralai/ministral-3-3b'
 MINISTRAL3_8 = 'mistralai/ministral-3-8b'
 MINISTRAL3_14 = 'mistralai/ministral-3-14b'
-# DEEPSEEKR1_1_5 = 'deepseek-r1:1.5b'
-# DEEPSEEKR1_8 = 'deepseek-r1:8b'
-# DEEPSEEKR1_32 = 'deepseek-r1:32b'
-# DEEPSEEKR1_32_DISTILL = 'deepseek/deepseek-r1-distill-qwen-32b'
 DEEPSEEKV32 = "deepseek-chat"
 SONNET46 = "claude-sonnet-4-6"
-GPT4 = 'gpt-4o'
-GPT5 = 'gpt-5'
-DEEPL = "DeepL"
-# EUROLLM_9 = "utter-project/EuroLLM-9B"
-# COMMAND_R1 = "CohereLabs/c4ai-command-r-v01"
+GPT54 = 'gpt-5.4'
+GPT54_MINI = 'gpt-5.4-mini'
+GEMINI3_FLASH = 'gemini-3-flash-preview'
+DEEPL = "DeepL" 
 
 MODELS_LABELS = {
     QWEN3_4: "Qwen3 4B",
@@ -66,17 +62,12 @@ MODELS_LABELS = {
     MINISTRAL3_3: "Ministral 3 3B",
     MINISTRAL3_8: "Ministral 3 8B",
     MINISTRAL3_14: "Ministral 3 14B",
-    # DEEPSEEKR1_1_5: "DeepSeek R1 1.5B",
-    # DEEPSEEKR1_8: "DeepSeek R1 8B",
-    # DEEPSEEKR1_32: "DeepSeek R1 32B",
-    # DEEPSEEKR1_32_DISTILL: "DeepSeek R1 DIST 32B",
     DEEPSEEKV32: "DeepSeek-V3.2",
     SONNET46: "Sonnet 4.6",
     DEEPL: "DeepL",
-    # EUROLLM_9: "EuroLLM 9B",
-    # COMMAND_R1: "Command R1",
-    GPT4 : 'GPT 4o',
-    GPT5 : 'GPT 5'
+    GPT54 : 'GPT 4o',
+    GPT54_MINI : 'GPT 5',
+    GEMINI3_FLASH: 'Gemini 3 Flash'
 }
 
 class Model:
@@ -103,17 +94,12 @@ class Model:
             MINISTRAL3_3: self._initialize_LMSStudio,
             MINISTRAL3_8: self._initialize_LMSStudio,
             MINISTRAL3_14: self._initialize_LMSStudio,
-            # DEEPSEEKR1_1_5: self._initialize_Ollama,
-            # DEEPSEEKR1_8: self._initialize_Ollama,
-            # DEEPSEEKR1_32: self._initialize_Ollama,
-            # DEEPSEEKR1_32_DISTILL: self._initialize_LMSStudio,
             DEEPSEEKV32: self.initialize_DeepSeek,
             SONNET46: self.initialize_Antrophic,
-            GPT4: self.initialize_OpenAI, 
-            GPT5: self.initialize_OpenAI, 
-            DEEPL: self._initialize_deepl,
-            # EUROLLM_9: self._initialize_HuggingFace,
-            # COMMAND_R1: self._initialize_HuggingFace
+            GPT54: self.initialize_OpenAI, 
+            GPT54_MINI: self.initialize_OpenAI,
+            GEMINI3_FLASH: self._initialize_GoogleGenAI,
+            DEEPL: self.initialize_Deepl
         }
         
         self.send_request = {
@@ -136,16 +122,11 @@ class Model:
             MINISTRAL3_3: self._request_LMSStudio,
             MINISTRAL3_8: self._request_LMSStudio,
             MINISTRAL3_14: self._request_LMSStudio,
-            # DEEPSEEKR1_1_5: self._request_Ollama,
-            # DEEPSEEKR1_8: self._request_Ollama,
-            # DEEPSEEKR1_32: self._request_Ollama,
-            # DEEPSEEKR1_32_DISTILL: self._request_LMSStudio,
             DEEPSEEKV32: self.request_OpenAi,
             SONNET46: self.request_Antrophic,
-            GPT4: self.request_OpenAi, 
-            GPT5: self.request_OpenAi, 
-            # EUROLLM_9: self._request_HuggingFace,
-            # COMMAND_R1: self._request_HuggingFace,
+            GPT54: self.request_OpenAi, 
+            GPT54_MINI: self.request_OpenAi,
+            GEMINI3_FLASH: self.request_GoogleGenAI
         }
         
     def initialize_model(self):
@@ -154,7 +135,7 @@ class Model:
             return err
         return False
 
-    def _initialize_deepl(self):
+    def initialize_Deepl(self):
         try: 
             self.client = deepl.DeepLClient(os.getenv('DEEPL_API_KEY'))
             return False
@@ -162,13 +143,16 @@ class Model:
             logger.error(f"_initialize_deepl: {X}")
             return True
 
-    def _initialize_Gemini(self): 
+    def _initialize_GoogleGenAI(self):
+        logger.setLevel(logging.ERROR) 
         api_key = os.getenv('GENAI_API_KEY')
         if api_key is None:
             logger.error(f"⚠️ GENAI_API_KEY is missing")
             return True
-        genai.configure(api_key=api_key) 
-        self.client = genai.GenerativeModel(self.model_name)
+        # genai.configure(api_key=api_key) 
+        # self.client = genai.GenerativeModel(self.model_name)
+        self.client = genai.Client(api_key=api_key)
+        logger.setLevel(logging.INFO)
         return False
 
     def initialize_OpenAI(self): 
@@ -293,11 +277,21 @@ class Model:
             logger.error(f"_request_lmstudio error: {str(e)}")
             return None
     
-    def _request_gemini(self):
+    def request_GoogleGenAI(self):
+        logger.setLevel(logging.ERROR)
         try:
-            return self.client.generate_content(self.prompt).text
+            response = self.client.models.generate_content(
+                    model=self.model_name,
+                    contents=self.prompt,
+                )
+            response = response.text 
+            if response is None or response == "":
+                logger.error(f"request_GoogleGenAI: empty response")
+                return None
+            logger.setLevel(logging.INFO)
+            return response
         except Exception as X:
-            logger.error(f"_request_gemini: {X}")
+            logger.error(f"_request_GoogleGenAI: {X}")
             return None
 
     def request_OpenAi(self):

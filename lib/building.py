@@ -186,7 +186,7 @@ def test_systems_translation_abilities(model_list):
             continue
 
         model = Model(model_name)
-        error = model.initialize_model()
+        error = model.initialize_moduel()
         if error:
             continue
 
