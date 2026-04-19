@@ -107,8 +107,10 @@ class Rainbow_Meter:
 
                         # Generate answers
                         question_responses = []
-                        for _ in range(MAX_NUM_ANSWERS):
+                        while len(question_responses) < MAX_NUM_ANSWERS:
                             resp = self.model.call_model(full_prompt)
+                            if resp == None or resp == "":
+                                continue
                             resp = self.get_binary_answer(resp, possible_binary_answers)
                             question_responses.append(resp)
 
@@ -210,7 +212,7 @@ def model_scores(answers):
 
 
 
-model_list = [LlaMa32_3]
+model_list = [GPT54_MINI]
 
 #Iterate on Models
 for model_name in model_list: #tqdm.tqdm(model_list, desc="Answering Rainbow Meter Criteria", total=len(model_list)):

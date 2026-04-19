@@ -16,8 +16,6 @@ URL_LMSTUDIO_LOCAL = "http://localhost:1234"
 URL_DEEPSEEK = "https://api.deepseek.com"
 URL_DEEPSEEK_POST = "https://api.deepseek.com/v1/chat/completions"
 
-QWEN3_4 = "qwen/qwen3-4b-2507" #LMS
-QWEN3_30 = "qwen/qwen3-30b-a3b-2507" #LMS
 QWEN35_08 = "Qwen/Qwen3.5-0.8B" #HF
 QWEN35_2_HF = "Qwen/Qwen3.5-2B" #HF
 QWEN35_2_LMS = "qwen/qwen3.5-2b" #LMS
@@ -27,15 +25,10 @@ QWEN35_9_LMS = "qwen/qwen3.5-9b" #LMS
 QWEN35_9 = "qwen3.5:9b" #Ollama
 QWEN35_27_LMS = "qwen/qwen3.5-27b" #LMS
 QWEN35_27 = "qwen3.5:27b" #Ollama
+
 LlaMa31_8 = "llama3.1:8b" #Ollama
 LlaMa32_3 ="llama3.2:3b" #Ollama
 LlaMa31_70 = "llama3.1:70b" #Ollama
-GEMMA3_4 = 'google/gemma-3-4b' #LMS
-GEMMA3_12 = 'google/gemma-3-12b' #LMS
-GEMMA3_27 = 'google/gemma-3-27b' 
-MINISTRAL3_3 = 'mistralai/ministral-3-3b'
-MINISTRAL3_8 = 'mistralai/ministral-3-8b'
-MINISTRAL3_14 = 'mistralai/ministral-3-14b'
 DEEPSEEKV32 = "deepseek-chat"
 SONNET46 = "claude-sonnet-4-6"
 GPT54 = 'gpt-5.4'
@@ -44,8 +37,6 @@ GEMINI3_FLASH = 'gemini-3-flash-preview'
 DEEPL = "DeepL" 
 
 MODELS_LABELS = {
-    QWEN3_4: "Qwen3 4B",
-    QWEN3_30: "Qwen3 30B",
     QWEN35_08: "Qwen3.5 0.8B",
     QWEN35_2_LMS: "Qwen3.5 2B",
     QWEN35_2_HF: "Qwen3.5 2B",
@@ -58,12 +49,6 @@ MODELS_LABELS = {
     LlaMa32_3: "LlaMa 3.2 3B",
     LlaMa31_8: "LlaMa 3.1 8B",
     LlaMa31_70: "LlaMa 3.1 70B",
-    GEMMA3_4: "Gemma 3 4B", 
-    GEMMA3_12 : "Gemma 3 12B",
-    GEMMA3_27 : "Gemma 3 27B",
-    MINISTRAL3_3: "Ministral 3 3B",
-    MINISTRAL3_8: "Ministral 3 8B",
-    MINISTRAL3_14: "Ministral 3 14B",
     DEEPSEEKV32: "DeepSeek-V3.2",
     SONNET46: "Sonnet 4.6",
     DEEPL: "DeepL",
@@ -77,8 +62,6 @@ class Model:
         self.model_name = model_name
         
         self.func_initialize_model = {
-            QWEN3_4: self._initialize_LMSStudio,
-            QWEN3_30: self._initialize_LMSStudio,
             QWEN35_08: self._initialize_HuggingFace,
             QWEN35_2_LMS: self._initialize_LMSStudio,
             QWEN35_2_HF: self._initialize_HuggingFace,
@@ -91,12 +74,6 @@ class Model:
             LlaMa32_3: self._initialize_Ollama,
             LlaMa31_8: self._initialize_Ollama,
             LlaMa31_70: self._initialize_Ollama,
-            GEMMA3_4: self._initialize_LMSStudio,
-            GEMMA3_12: self._initialize_LMSStudio,
-            GEMMA3_27: self._initialize_LMSStudio,
-            MINISTRAL3_3: self._initialize_LMSStudio,
-            MINISTRAL3_8: self._initialize_LMSStudio,
-            MINISTRAL3_14: self._initialize_LMSStudio,
             DEEPSEEKV32: self.initialize_DeepSeek,
             SONNET46: self.initialize_Antrophic,
             GPT54: self.initialize_OpenAI, 
@@ -106,8 +83,6 @@ class Model:
         }
         
         self.send_request = {
-            QWEN3_4: self._request_LMSStudio,
-            QWEN3_30: self._request_LMSStudio,
             QWEN35_08: self._request_HuggingFace,
             QWEN35_2_HF: self._request_HuggingFace,
             QWEN35_2_LMS: self._request_LMSStudio,
@@ -120,12 +95,6 @@ class Model:
             LlaMa32_3: self._request_Ollama,
             LlaMa31_8: self._request_Ollama,
             LlaMa31_70: self._request_Ollama,
-            GEMMA3_4: self._request_LMSStudio,
-            GEMMA3_12: self._request_LMSStudio,
-            GEMMA3_27: self._request_LMSStudio,
-            MINISTRAL3_3: self._request_LMSStudio,
-            MINISTRAL3_8: self._request_LMSStudio,
-            MINISTRAL3_14: self._request_LMSStudio,
             DEEPSEEKV32: self.request_OpenAi,
             SONNET46: self.request_Antrophic,
             GPT54: self.request_OpenAi, 
@@ -310,9 +279,13 @@ class Model:
                 }]
             )
             logger.setLevel(logging.INFO)
-            return completion.choices[0].message.content
+            response = completion.choices[0].message.content
+            if response is None or response == "":
+                    logger.error(f"request_OpenAi: empty response")
+                    return None
+            return response
         except Exception as X:
-            logger.error(f"_request_open_ai: {X}")
+            logger.error(f"request_OpenAi: {X}")
             return None
     
     def request_Antrophic(self):
@@ -328,10 +301,13 @@ class Model:
                 ],
                 model=self.model_name,
             )
-            resp =  message.content[0].text
+            response =  message.content[0].text
             
             logger.setLevel(logging.INFO)
-            return resp
+            if response is None or response == "":
+                logger.error(f"request_Antrophic: empty response")
+                return None
+            return response
         except Exception as X:
             logger.error(f"request_Antrophic: {X}")
             return None
