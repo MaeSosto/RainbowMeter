@@ -150,7 +150,7 @@ class Evaluations:
     
 
         #Get the languages of the rainbow meters retreived in the language scenario  
-        path_rainbow_meters = f"{RESULT_PATH}/{RAINBOW_METER_PATH}/{self.scenario}/{self.model.name}/" 
+        path_rainbow_meters = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model.name}/" 
         rm_lanaguages = list(set([f.split("_")[0] for f in listdir(path_rainbow_meters) if isfile(join(path_rainbow_meters, f))]))
 
 
@@ -189,7 +189,7 @@ class Evaluations:
         self.export_csv(country, results)
     
     def rm_scenario_exist(self):
-        result_path = f"{RESULT_PATH}/{RAINBOW_METER_PATH}/{self.scenario}/{self.model.name}/"
+        result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model.name}/"
         
         if self.scenario == SCENARIO_LANGUAGE:
             scenario_path = f"{self.language_code}_rainbow_meter_{self.prompt_num}.csv"
@@ -208,7 +208,7 @@ class Evaluations:
         return stats.wilcoxon(group1, group2).statistic, stats.wilcoxon(group1, group2).pvalue
 
     def _get_rainbow_meter_results(self, country):
-        result_path = f"{RESULT_PATH}/{RAINBOW_METER_PATH}/{self.scenario}/{self.model_name}/{country.language}_rainbow_meter_{self.prompt_num}.csv"
+        result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model_name}/{country.language}_rainbow_meter_{self.prompt_num}.csv"
         if os.path.exists(result_path):
             pd_rm = pd.read_csv(result_path, delimiter=";", index_col="Subcategory")
             num_rows = len(pd_rm)

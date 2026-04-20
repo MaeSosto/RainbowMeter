@@ -1,0 +1,77 @@
+,Category,Subcategory,Fact,Support,Opposition,Stance,Fact Coherence,Fact Validity,Fact Weight coherence by validity,Stance Coherence,Stance Validity,Stance Weight coherence by validity
+0,Equality & non-discrimination,Constitution (sexual orientation),1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+1,Equality & non-discrimination,Employment (sexual orientation),0.4,1.0,0.0,1.0,0.04,1.0,0.04,1.0,1.0,1.0
+2,Equality & non-discrimination,Goods & services (sexual orientation),0.8,1.0,0.0,1.0,0.36,1.0,0.36,1.0,1.0,1.0
+3,Equality & non-discrimination,Education (sexual orientation),1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+4,Equality & non-discrimination,Health (sexual orientation),0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+5,Equality & non-discrimination,Conversion practices ban (sexual orientation),1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+6,Equality & non-discrimination,Equality body mandate (sexual orientation),0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+7,Equality & non-discrimination,Equality action plan (sexual orientation),0.2,1.0,0.0,1.0,0.36,1.0,0.36,1.0,1.0,1.0
+8,Equality & non-discrimination,Constitution (gender identity),1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+9,Equality & non-discrimination,Employment (gender identity),1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+10,Equality & non-discrimination,Goods & services (gender identity),1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+11,Equality & non-discrimination,Education (gender identity),1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+12,Equality & non-discrimination,Health (gender identity),1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+13,Equality & non-discrimination,Conversion practices ban (gender identity),0.4,0.2,0.0,0.6,0.04,1.0,0.04,1.0,1.0,1.0
+14,Equality & non-discrimination,Equality body mandate (gender identity),0.2,1.0,0.0,1.0,0.36,1.0,0.36,1.0,1.0,1.0
+15,Equality & non-discrimination,Equality action plan (gender identity),0.6,1.0,0.0,1.0,0.04,1.0,0.04,1.0,1.0,1.0
+16,Equality & non-discrimination,Law (gender expression),1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+17,Equality & non-discrimination,Constitution (sex characteristics),1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+18,Equality & non-discrimination,Employment (sex characteristics),1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+19,Equality & non-discrimination,Goods & services (sex characteristics),1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+20,Equality & non-discrimination,Education (sex characteristics),1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+21,Equality & non-discrimination,Health (sex characteristics),1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+22,Equality & non-discrimination,Equality body mandate (sex characteristics),0.4,1.0,0.0,1.0,0.04,1.0,0.04,1.0,1.0,1.0
+23,Equality & non-discrimination,Equality action plan (sex characteristics),0.0,1.0,0.2,0.9,1.0,1.0,1.0,0.36,1.0,0.36
+24,Equality & non-discrimination,Blood donations,0.0,0.0,0.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0
+25,Family,Marriage equality,1.0,0.8,0.2,0.8,1.0,1.0,1.0,0.36,1.0,0.36
+26,Family,Registered partnership (similar rights to marriage),0.4,1.0,0.0,1.0,0.04,1.0,0.04,1.0,1.0,1.0
+27,Family,Registered partnership (limited rights),0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+28,Family,Cohabitation,0.6,0.4,0.6,0.4,0.04,1.0,0.04,0.04,1.0,0.04
+29,Family,No constitutional limitation on marriage,0.4,0.6,0.0,0.8,0.04,1.0,0.04,1.0,1.0,1.0
+30,Family,Joint adoption,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+31,Family,Second-parent adoption,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+32,Family,Automatic co-parent recognition,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+33,Family,Medically assisted insemination (couples),0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+34,Family,Medically assisted insemination (singles),0.4,1.0,0.0,1.0,0.04,1.0,0.04,1.0,1.0,1.0
+35,Family,Recognition of trans parenthood,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+36,Hate crime & hate speech,Hate crime law (sexual orientation),0.8,1.0,0.0,1.0,0.36,1.0,0.36,1.0,1.0,1.0
+37,Hate crime & hate speech,Hate speech law (sexual orientation),0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+38,Hate crime & hate speech,Policy tackling hatred (sexual orientation),0.2,1.0,0.0,1.0,0.36,1.0,0.36,1.0,1.0,1.0
+39,Hate crime & hate speech,Hate crime law (gender identity),0.6,1.0,0.2,0.9,0.04,1.0,0.04,0.36,1.0,0.36
+40,Hate crime & hate speech,Hate speech law (gender identity),0.2,1.0,0.8,0.6,0.36,1.0,0.36,0.36,1.0,0.36
+41,Hate crime & hate speech,Policy tackling hatred (gender identity),0.6,1.0,0.0,1.0,0.04,1.0,0.04,1.0,1.0,1.0
+42,Hate crime & hate speech,Hate crime law (intersex),0.2,1.0,0.0,1.0,0.36,1.0,0.36,1.0,1.0,1.0
+43,Hate crime & hate speech,Hate speech law (sex characteristics),0.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0
+44,Hate crime & hate speech,Policies tackling hatred (intersex),0.2,1.0,0.0,1.0,0.36,1.0,0.36,1.0,1.0,1.0
+45,Legal gender recognition,No legal framework making legal gender recognition impossible,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+46,Legal gender recognition,Existence of legal measures,0.8,1.0,0.0,1.0,0.36,1.0,0.36,1.0,1.0,1.0
+47,Legal gender recognition,Existence of administrative procedures,1.0,0.6,0.8,0.4,1.0,1.0,1.0,0.36,1.0,0.36
+48,Legal gender recognition,Name change,0.4,0.2,0.0,0.6,0.04,1.0,0.04,1.0,1.0,1.0
+49,Legal gender recognition,No age restriction (Name change),0.2,1.0,0.2,0.9,0.36,1.0,0.36,0.36,1.0,0.36
+50,Legal gender recognition,Self-determination,0.6,1.0,0.0,1.0,0.04,1.0,0.04,1.0,1.0,1.0
+51,Legal gender recognition,Non-binary recognition,0.0,0.6,0.6,0.5,1.0,1.0,1.0,0.04,1.0,0.04
+52,Legal gender recognition,No 'Gender Identity Disorder' diagnosis/psychological opinion required,0.8,0.8,0.0,0.9,0.36,1.0,0.36,1.0,1.0,1.0
+53,Legal gender recognition,No compulsory medical intervention required,0.0,0.8,0.0,0.9,1.0,1.0,1.0,1.0,1.0,1.0
+54,Legal gender recognition,No compulsory surgical intervention required,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+55,Legal gender recognition,No compulsory sterilisation required,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+56,Legal gender recognition,No compulsory divorce required,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+57,Legal gender recognition,No age restriction,0.0,1.0,0.4,0.8,1.0,1.0,1.0,0.04,1.0,0.04
+58,Legal gender recognition,Legal gender recognition procedures exist for minors,0.0,0.0,0.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0
+59,Legal gender recognition,Depathologisation,0.4,1.0,1.0,0.5,0.04,1.0,0.04,1.0,1.0,1.0
+60,Intersex bodily integrity,Prohibition of medical intervention without informed consent (intersex),0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+61,Intersex bodily integrity,Universality of prohibition of medical interventions,0.2,1.0,0.0,1.0,0.36,1.0,0.36,1.0,1.0,1.0
+62,Intersex bodily integrity,Existence of effective monitoring mechanism,0.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0
+63,Intersex bodily integrity,Access to justice for victims and reparations,0.0,1.0,0.4,0.8,1.0,1.0,1.0,0.04,1.0,0.04
+64,Civil society space,"Public event held, no state obstruction of freedom of assembly (last 3 years)",0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+65,Civil society space,"Public event held, there is enough protection (last 3 years)",0.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0
+66,Civil society space,"Associations operate, no state obstruction of freedom association (last 3 years)",0.2,1.0,0.0,1.0,0.36,1.0,0.36,1.0,1.0,1.0
+67,Civil society space,LGBTI human rights defenders are not at risk,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+68,Civil society space,No laws limiting external funding,0.0,0.8,0.0,0.9,1.0,1.0,1.0,1.0,1.0,1.0
+69,Civil society space,No laws limiting freedom of expression (national/local),0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+70,Asylum,Asylum law (sexual orientation),0.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0
+71,Asylum,Other positive measures (sexual orientation),0.0,0.8,0.0,0.9,1.0,1.0,1.0,1.0,1.0,1.0
+72,Asylum,Asylum law (gender identity),0.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0
+73,Asylum,Other positive measures (gender identity),0.4,1.0,0.2,0.9,0.04,1.0,0.04,0.36,1.0,0.36
+74,Asylum,Asylum law (intersex),0.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0
+75,Asylum,Other positive measures (intersex),0.0,1.0,0.2,0.9,1.0,1.0,1.0,0.36,1.0,0.36

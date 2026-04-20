@@ -208,7 +208,7 @@ def test_systems_translation_abilities(model_list):
 
 #translate the English Rainbow Meter questions prompt from to all the other languages and populate the scenario folders nested in the data/rainbow_meter folder            
 def translate_rainbow_meter():
-    result_path = f"data/{RAINBOW_METER_PATH}/{scenario}"
+    result_path = f"{RAINBOW_METER_DATA_PATH}/{scenario}"
     
     model_name = DEEPL
     model = Model(model_name)
@@ -226,7 +226,6 @@ def translate_rainbow_meter():
 
         #Iterate on the scenarios
         for scenario in SCENARIOS:
-            os.makedirs(f"data/{RAINBOW_METER_PATH}/{scenario}", exist_ok=True)
             
             rainbow_meter ={
                 CATEGORY: [],
@@ -241,7 +240,7 @@ def translate_rainbow_meter():
                 rainbow_meter[CATEGORY].append(row[CATEGORY])
                 for type in QUESTION_TYPES:
                     if scenario == SCENARIO_LANGUAGE: #SCENARIO LANGUAGE
-                        rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country_language_code}.csv"
+                        rm_path = f"{result_path}/rainbow_meter_{country_language_code}.csv"
                         
                         try:
                             #Translate question from English in the country language
@@ -253,12 +252,12 @@ def translate_rainbow_meter():
                             logger.error(f"translate_rainbow_meter: {X}")
                             
                     elif scenario == SCENARIO_NATIONALITY: #SCENARIO NATIONALITY
-                        rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country_id}.csv"
+                        rm_path = f"{result_path}/rainbow_meter_{country_id}.csv"
                         #Insert the country country in the question
                         question = f"In {country_name}, {row[type].lower()}"
                         
                     else: #SCENARIO LANGIAGE + NATIONALITY
-                        rm_path = f"{result_path}/{RAINBOW_METER_PATH}_{country_language_code}_{country_id}.csv"
+                        rm_path = f"{result_path}/rainbow_meter_{country_language_code}_{country_id}.csv"
                         
                         #Insert the country in the questionand translate it from English in the country language
                         try:
@@ -313,7 +312,7 @@ def translate_default_prompt():
     
 
 # #Check models ability to support the langauges bit back translation 
-model_list = [DEEPSEEKV32]
+model_list = [GPT54]
 test_systems_translation_abilities(model_list)
 
 #Translate the prompt instructions

@@ -15,7 +15,7 @@ class Rainbow_Meter:
     
         #Return True if the results exists, otherwise False
     def rm_result_exist(self):
-        result_path = f"{RESULT_PATH}/{RAINBOW_METER_PATH}/{self.scenario}/{self.model.model_name}/"
+        result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model.model_name}/"
         if self.scenario == SCENARIO_LANGUAGE:
             scenario_path = f"rm_answers_{self.language_code}.csv"
         elif self.scenario == SCENARIO_NATIONALITY:
@@ -26,7 +26,7 @@ class Rainbow_Meter:
         
     #Export and save the Rainbow Meter
     def export_rm_result(self, rainbow_meter):
-        result_path = f"{RESULT_PATH}/{RAINBOW_METER_PATH}/{self.scenario}/{self.model.model_name}/"
+        result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model.model_name}/"
         if self.scenario == SCENARIO_LANGUAGE:
             scenario_path = f"rm_answers_{self.language_code}.csv"
         elif self.scenario == SCENARIO_NATIONALITY:
@@ -38,7 +38,7 @@ class Rainbow_Meter:
     
     #Get the Rainbow Meter file based on the scenario
     def get_rainbow_meter(self):
-        result_path = f"data/{RAINBOW_METER_PATH}/{self.scenario}/"
+        result_path = f"{RAINBOW_METER_DATA_PATH}/{self.scenario}/"
         if self.scenario == SCENARIO_LANGUAGE:
             scenario_path = f"rainbow_meter_{self.language_code}.csv"
         elif self.scenario == SCENARIO_NATIONALITY:
@@ -212,7 +212,7 @@ def model_scores(answers):
 
 
 
-model_list = [GPT54_MINI]
+model_list = [GPT54]
 
 #Iterate on Models
 for model_name in model_list: #tqdm.tqdm(model_list, desc="Answering Rainbow Meter Criteria", total=len(model_list)):

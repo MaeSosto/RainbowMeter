@@ -52,8 +52,8 @@ MODELS_LABELS = {
     DEEPSEEKV32: "DeepSeek-V3.2",
     SONNET46: "Sonnet 4.6",
     DEEPL: "DeepL",
-    GPT54 : 'GPT 4o',
-    GPT54_MINI : 'GPT 5',
+    GPT54 : 'GPT 5.4',
+    GPT54_MINI : 'GPT 5.4-mini',
     GEMINI3_FLASH: 'Gemini 3 Flash'
 }
 
