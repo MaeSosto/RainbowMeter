@@ -212,7 +212,7 @@ def model_scores(answers):
 
 
 
-model_list = [GPT54]
+model_list = [SONNET46]
 
 #Iterate on Models
 for model_name in model_list: #tqdm.tqdm(model_list, desc="Answering Rainbow Meter Criteria", total=len(model_list)):
