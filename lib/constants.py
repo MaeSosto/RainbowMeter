@@ -42,7 +42,7 @@ CRITERIA_WEIGHTS_DF = pd.read_csv("data/rainbow_map/criteria_weights.csv", delim
 RAINBOW_MAP_CATEGORIES = ["Equality & non-discrimination", "Family", "Hate crime & hate speech", "Legal gender recognition", "Intersex bodily integrity", "Civil society space", "Asylum"]
 with open("data/countries.json") as f:
     COUNTRIES_FILE = json.load(f)
-TOT_CRITERIA_NUM = len(RAINBOW_MAP_DF)
+TOT_CRITERIA_NUM = (RAINBOW_MAP_DF.shape[1])-2
 
 #Countries
 NAME = "name"

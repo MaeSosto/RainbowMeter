@@ -34,18 +34,28 @@
         "yes": "так",
         "no": "не"
     },
+    "Russian": {
+        "prompt": "Отвечайте на вопрос только \"да\" или \"нет\".",
+        "yes": "да",
+        "no": "нет"
+    },
     "Dutch": {
         "prompt": "Beantwoord de vraag alleen met \"ja\" of \"nee\".",
         "yes": "ja",
         "no": "geen"
+    },
+    "French": {
+        "prompt": "Répondre à la question par \"oui\" ou \"non\" uniquement.",
+        "yes": "oui",
+        "no": "non"
     },
     "Bosnian": {
         "prompt": "Odgovor na pitanje samo \"da\" ili \"ne\".",
         "yes": "da",
         "no": "ne"
     },
-    "Bulgarian": {
-        "prompt": "Отговорете на въпроса само с \"да\" или \"не\".",
+    "Serbian": {
+        "prompt": "Одговорите на питање само са \"да\" или \"не\".",
         "yes": "да",
         "no": "не"
     },
@@ -54,10 +64,25 @@
         "yes": "da",
         "no": "ne"
     },
+    "Bulgarian": {
+        "prompt": "Отговорете на въпроса само с \"да\" или \"не\".",
+        "yes": "да",
+        "no": "не"
+    },
     "Modern Greek": {
         "prompt": "Απαντήστε στην ερώτηση μόνο με \"ναι\" ή \"όχι\".",
         "yes": "ναι",
         "no": "όχι"
+    },
+    "Greek": {
+        "prompt": "Απαντήστε στην ερώτηση μόνο με \"ναι\" ή \"όχι\".",
+        "yes": "ναι",
+        "no": "όχι"
+    },
+    "Turkish": {
+        "prompt": "Soruyu sadece \"evet\" veya \"hayır\" ile yanıtlayın.",
+        "yes": "evet",
+        "no": "hayır"
     },
     "Czech": {
         "prompt": "Na otázku odpovězte pouze \"ano\" nebo \"ne\".",
@@ -79,10 +104,10 @@
         "yes": "ja",
         "no": "nej"
     },
-    "French": {
-        "prompt": "Répondre à la question par \"oui\" ou \"non\" uniquement.",
-        "yes": "oui",
-        "no": "non"
+    "Finnish": {
+        "prompt": "Vastaa kysymykseen vain \"kyllä\" tai \"ei\".",
+        "yes": "kyllä",
+        "no": "ei"
     },
     "Georgian": {
         "prompt": "პასუხი კითხვას მხოლოდ \"დიახ\" ან \"არა\".",
@@ -109,11 +134,6 @@
         "yes": "sì",
         "no": "no"
     },
-    "Serbian": {
-        "prompt": "Одговорите на питање само са \"да\" или \"не\".",
-        "yes": "да",
-        "no": "не"
-    },
     "Latvian": {
         "prompt": "Atbildiet uz jautājumu tikai ar \"jā\" vai \"nē\".",
         "yes": "jā",
@@ -131,7 +151,7 @@
     },
     "Maltese": {
         "prompt": "Iwiebbi għall-mistoqsija b''iva' jew 'le' biss.",
-        "yes": "",
+        "yes": "iva",
         "no": "le"
     },
     "Romanian": {
@@ -164,11 +184,6 @@
         "yes": "sim",
         "no": "não"
     },
-    "Russian": {
-        "prompt": "Отвечайте на вопрос только \"да\" или \"нет\".",
-        "yes": "да",
-        "no": "нет"
-    },
     "Slovak": {
         "prompt": "Na otázku odpovedzte len \"áno\" alebo \"nie\".",
         "yes": "áno",
@@ -183,11 +198,6 @@
         "prompt": "Responda a la pregunta sólo con \"sí\" o \"no\".",
         "yes": "sí",
         "no": "no"
-    },
-    "Turkish": {
-        "prompt": "Soruya sadece \"evet\" veya \"hayır\" ile cevap verin.",
-        "yes": "evet",
-        "no": "hayır"
     },
     "Ukrainian": {
         "prompt": "Відповідайте на питання тільки \"так\" або \"ні\".",

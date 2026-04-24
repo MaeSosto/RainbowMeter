@@ -13,7 +13,7 @@ class Rainbow_Meter:
         self.model = model
         self.scenario = scenario
     
-        #Return True if the results exists, otherwise False
+    #Return True if the results exists, otherwise False
     def rm_result_exist(self):
         result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model.model_name}/"
         if self.scenario == SCENARIO_LANGUAGE:
@@ -23,7 +23,26 @@ class Rainbow_Meter:
         else:
             scenario_path = f"rm_answers_{self.language_code}_{self.country_id}.csv"
         return os.path.exists(result_path+scenario_path), result_path+scenario_path #If a rainbow meter with the looked characteristics exist
-        
+    
+    #Return True if the results exists, otherwise False
+    def get_rm(self):
+        result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model.model_name}/"
+        if self.scenario == SCENARIO_LANGUAGE:
+            scenario_path = f"rm_answers_{self.language_code}.csv"
+        elif self.scenario == SCENARIO_NATIONALITY:
+            scenario_path = f"rm_answers_{self.country_id}.csv"
+        else:
+            scenario_path = f"rm_answers_{self.language_code}_{self.country_id}.csv"
+        if os.path.exists(result_path+scenario_path):
+            df = pd.read_csv(result_path+scenario_path, sep=";", index_col=SUBCATEGORY) 
+            if df.shape[0] == TOT_CRITERIA_NUM:
+                return df
+            else:
+                logger.error(f"⚠️ {result_path+scenario_path} is incomplete")
+        else:
+            logger.error(f"⚠️ {result_path+scenario_path} is missing")
+        return pd.DataFrame()
+    
     #Export and save the Rainbow Meter
     def export_rm_result(self, rainbow_meter):
         result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model.model_name}/"
@@ -48,6 +67,7 @@ class Rainbow_Meter:
         if os.path.exists(result_path+ scenario_path): #If exist
             df = pd.read_csv(result_path+scenario_path, sep=";", index_col=SUBCATEGORY)
             return True,  df
+        logger.error(f"⚠️ {result_path+scenario_path} is missing")
         return False, None
     
     def get_answers(self):
@@ -85,17 +105,20 @@ class Rainbow_Meter:
                 # elif self.scenario == SCENARIO_NATIONALITY:
                 #     rm_language_exist, complete_rm_language = self.get_rainbow_meter()
                 
-                self.num_answers = 0
-                rm_exist, rm_path = self.rm_result_exist()
-                if rm_exist:
-                    rainbow_meter = self.fill_in_rm(rainbow_meter, rm_path)
                 
+                #rm_exist, rm_path = self.rm_result_exist()
+                rm_existent = self.get_rm()
+                # if rm_exist:
+                #     rainbow_meter = self.fill_in_rm(rainbow_meter, rm_path)
+                num_answers = len(rm_existent) #Number of lines in the existent rainbow meter file
+                #if not rm_existent.empty:  #RM doesn't exist or is incomplete
+                rainbow_meter = self.fill_in_rm(rainbow_meter, rm_existent)
                 #if self.num_answers < MAX_NUM_ANSWERS:
                     #logger.info(f"🔄 {self.model.model_name} - {self.scenario} : {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_NATIONALITY else f"{self.country_id} in {self.language_code}"}")
-                
+        #if num_answers < TOT_CRITERIA_NUM
                 #Get answers for the missing criterion in the csv file
-                for subcategory, row in tqdm.tqdm(complete_rm_language[self.num_answers:].iterrows(), 
-                                                total=len(complete_rm_language[self.num_answers:]), 
+                for subcategory, row in tqdm.tqdm(complete_rm_language[num_answers:].iterrows(), 
+                                                total=len(complete_rm_language[num_answers:]), 
                                                 desc=f"🔄 {self.model.model_name} - {self.scenario} : {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_NATIONALITY else f"{self.country_id} in {self.language_code}"}",
                                                 leave= False
                     ):
@@ -131,13 +154,13 @@ class Rainbow_Meter:
                     self.export_rm_result(rainbow_meter_df)
 
     from typing import List, Tuple
-    def fill_in_rm(self, rainbow_meter, rm_path):
+    def fill_in_rm(self, rainbow_meter, df):
         #If a RM exist starts from there
-        self.existent_rm_df = pd.read_csv(rm_path, sep=";", index_col=SUBCATEGORY)
-        self.num_answers = len(self.existent_rm_df) #Number of lines in the existent rainbow meter file
-        if self.num_answers < TOT_CRITERIA_NUM: #The RM exist but it's incomplete
+        # # self.existent_rm_df = df
+        #num_answers =  #Number of lines in the existent rainbow meter file
+        if df.shape[0] < TOT_CRITERIA_NUM: #The RM exist but it's incomplete
             #If the csv contains answers already, then fill it up until there and continue from there
-            for subcategory, row in self.existent_rm_df[:self.num_answers].iterrows():
+            for subcategory, row in df[:df.shape[0]].iterrows():
                 rainbow_meter[CATEGORY].append(row[CATEGORY])
                 rainbow_meter[SUBCATEGORY].append(subcategory)
                 rainbow_meter[FACT].append(row[FACT])
@@ -212,7 +235,7 @@ def model_scores(answers):
 
 
 
-model_list = [SONNET46]
+model_list = [LlaMa32_3]
 
 #Iterate on Models
 for model_name in model_list: #tqdm.tqdm(model_list, desc="Answering Rainbow Meter Criteria", total=len(model_list)):

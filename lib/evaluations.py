@@ -1,7 +1,6 @@
 # Create data
-from lib.constants import *
-from lib.country import *
-from lib.evaluations import *
+from constants import *
+from models import *
 import scipy.stats as stats
 import numpy as np
 from os import listdir
@@ -10,104 +9,115 @@ from os.path import isfile, join
 RAINBOW_MAP = "Rainbow Map"
 COUNTRY = "Country"
 
+def convert_array(arr):
+    return [
+        float(str(x).replace(",", "."))
+        for x in arr
+    ]
+    
 class Evaluations:
-    def __init__(self, model, prompt_num):
+    def __init__(self, model, scenario):
         self.weights_list = convert_array(CRITERIA_WEIGHTS_DF["Weight"].tolist())
-        self.prompt_num = prompt_num
         self.model = model
-
-        self.plain_result()
+        self.scenario = scenario
+        #Get the criteria weights
+        self.weights_list = CRITERIA_WEIGHTS_DF["Weight"].values
     
-    def plain_result(self):
+    #Return True if the results exists, otherwise False
+    def get_rm(self):
+        result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model.model_name}/"
+        if self.scenario == SCENARIO_LANGUAGE:
+            scenario_path = f"rm_answers_{self.language_code}.csv"
+        elif self.scenario == SCENARIO_NATIONALITY:
+            scenario_path = f"rm_answers_{self.country_id}.csv"
+        else:
+            scenario_path = f"rm_answers_{self.language_code}_{self.country_id}.csv"
+        if os.path.exists(result_path+scenario_path):
+            df = pd.read_csv(result_path+scenario_path, sep=";", index_col=SUBCATEGORY) 
+            if df.shape[0] == TOT_CRITERIA_NUM:
+                return df
+            else:
+                logger.error(f"⚠️ {result_path+scenario_path} is incomplete")
+        else:
+            logger.error(f"⚠️ {result_path+scenario_path} is missing")
+        return pd.DataFrame()
 
-        results = {
-            COUNTRY: [],
-            #"Predicted": [],
-            RAINBOW_MAP: [],
-            #"Error": []
-        }
-        for sce in SCENARIOS:
-            results[sce] = []
-        # for cat in RAINBOW_MAP_CATEGORIES:
-        #     results[cat] = []
-        
-        for country_name in COUNTRIES_FILE: 
-        
-            #Iterate on every language and citizenship 
-            for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
-                self.language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num]
-                self.country_id = COUNTRIES_FILE[country_name][ID]
-                self.citizenship = COUNTRIES_FILE[country_name][CITIZENSHIP]
-                
-                for scenario in SCENARIOS:
-                    
-                    #Retrieve the Rainbow Meter of a specific language (if exist)
-                    rm_exist, rm_path = self.rm_scenario_exist()
-                    if rm_exist:
-                        #RM exist
-                        self.existent_rm_df = pd.read_csv(rm_path, sep=";", index_col=SUBCATEGORY)
-                        self.num_answers = len(self.existent_rm_df) #Number of lines in the existent rainbow meter file
-                        if self.num_answers < TOT_CRITERIA_NUM: #RM is incomplete
-                            continue
-                    else: #RM doesn't exist
-                        continue
-                    
-                    results[COUNTRY].append(country_name)
-                    
-                    #Get the criteria weights
-                    self.weights_list = CRITERIA_WEIGHTS_DF["Weight"].values
-                    #Get the Rainbow Map real Scores of that country
-                    rainbow_map_scores = RAINBOW_MAP_DF.loc[self.country_id].drop("country_name").drop("Rank").values
-                    #Get the rainbow Meter scores of that country
-                    rainbow_meter_scores = self.existent_rm_df[FACT].values
-                    
-                    rainbow_map_scores, w1 = self.family_workaround(rainbow_map_scores)
-                    rainbow_meter_scores, w2 = self.family_workaround(rainbow_meter_scores)
-                    
-                    results[RAINBOW_MAP].append(float(sum(np.multiply(rainbow_map_scores, w1))))
-                    results["Predicted"].append(float(sum(np.multiply(rainbow_meter_scores, w2))))
-                    #results["Error"].append(float(np.linalg.norm(rainbow_map_scores - rainbow_meter_scores, 1)))    
-                    
-                #Export Results
-                results_df = pd.DataFrame(results)
-                self.export_plain_result(results_df)
-
-    # def family_cat_mod(weights_list, rainbow_map_scores):
-    #     family_weight_list = weights_list[24:29]
-    #     family_rm_scores = rainbow_map_scores[24:29]
-    #     for idx in range(len(family_weight_list)):
-    #         max_num = -1
-    #         weight_max = -1
-    #         for idx, sco in enumerate(reversed(family_rm_scores)):
-    #             if sco >= max_num:
-    #                 max_num = np.int64(sco)
-    #                 weight_max = np.float64(family_rm_scores[3-idx])
-        # rainbow_map_scores = np.insert(existent_rm[4:], 0, max_num)
-        # weights_list = np.insert(self.weights_list[4:], 0, weight_max)
-        #weights_list = weights_list[:24] + weights_list[29:]
     
-    def family_workaround(self, vector):
+    #Get the full list of scores and adjust them accordingly to the Family category contraints
+    def family_workaround(self, rm_scores):
         #Workaround for the marriage criteria
         family_weight_list = self.weights_list[25:29]
-        family_rm_scores = vector[25:29]
-        max_num = -1
+        family_rm_scores = rm_scores[25:29]
+        max_num = 0
         for idx, sco in enumerate(reversed(family_rm_scores)):
             if sco >= max_num:
                 max_num = sco
                 weight_max = family_weight_list[3-idx]
         
-        tmp1 = np.insert(vector[29:], 0, max_num)
+        tmp1 = np.insert(rm_scores[29:], 0, max_num)
         tmp2 = np.insert(self.weights_list[29:], 0, weight_max)
-        return np.concatenate([vector[:25], tmp1]), np.concatenate([self.weights_list[:25], tmp2])
+        return np.concatenate([rm_scores[:25], tmp1]), np.concatenate([self.weights_list[:25], tmp2])
+    
+    def plain_result(self):
+
+        results = {
+            COUNTRY: [],
+            "Predicted": [],
+            RAINBOW_MAP: [],
+            #"Error": []
+        }
+        # for sce in SCENARIOS:
+        #     results[sce] = []
+        # for cat in RAINBOW_MAP_CATEGORIES:
+        #     results[cat] = []
+        
+        #Iterate on every country
+        #for country_name, country_data in tqdm.tqdm(COUNTRIES_FILE.items(), total=len(COUNTRIES_FILE), desc=f"🔄 {self.model.model_name} - {self.scenario}"):
+        for country_name, country_data in COUNTRIES_FILE.items():
+            self.country_name = country_name
+            self.country_id = country_data[ID]
+            self.citizenship = country_data[CITIZENSHIP]
+        
+            #Iterate on every language and citizenship 
+            for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
+                self.language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num]
+                
+                #Retrieve the Rainbow Meter of a specific language (if exist)
+                self.existent_rm_df = self.get_rm()
+                if self.existent_rm_df.empty:  #RM doesn't exist or is incomplete
+                    continue
+                
+                results[COUNTRY].append(country_name)
+                
+                
+                #Get the Rainbow Map real Scores of that country
+                rainbow_map_scores = RAINBOW_MAP_DF.loc[self.country_id].drop("country_name").drop("Rank").values
+                #Get the rainbow Meter scores of that country
+                rainbow_meter_scores = self.existent_rm_df[FACT].values
+                
+                rainbow_map_scores, w1 = self.family_workaround(rainbow_map_scores)
+                rainbow_meter_scores, w2 = self.family_workaround(rainbow_meter_scores)
+                
+                results[RAINBOW_MAP].append(float(sum(np.multiply(rainbow_map_scores, w1))))
+                results["Predicted"].append(float(sum(np.multiply(rainbow_meter_scores, w2))))
+                #results["Error"].append(float(np.linalg.norm(rainbow_map_scores - rainbow_meter_scores, 1)))    
+                    
+                #Export Results
+                results_df = pd.DataFrame(results)
+                self.export_plain_result(results_df)
                 
     #Export and save plain results            
     def export_plain_result(self, plain_results):
-        result_path = f"{RESULT_PATH}/{EVALUATIONS_PATH}/{self.scenario}/{self.model.name}/"
-        if self.scenario == SCENARIO_LANGUAGE:
-            scenario_path = f"{self.language_code}_plain_results_{self.prompt_num}.csv"
-        elif self.scenario == SCENARIO_NATIONALITY:
-            scenario_path = f"{self.country_id}_plain_results_{self.prompt_num}.csv"
+        result_path = f"{RESULT_PATH}/{EVALUATIONS_PATH}/{self.scenario}/{self.model.model_name}/"
         os.makedirs(result_path, exist_ok=True)
+        
+        if self.scenario == SCENARIO_LANGUAGE:
+            scenario_path = f"plain_results_{self.language_code}.csv"
+        elif self.scenario == SCENARIO_NATIONALITY:
+            scenario_path = f"plain_results_{self.language_code}.csv"
+        else:
+            scenario_path = f"plain_results_{self.language_code}_{self.country_id}.csv"
+            
         plain_results.to_csv(result_path+scenario_path, sep=";", index=False)
                 
     
@@ -150,7 +160,7 @@ class Evaluations:
     
 
         #Get the languages of the rainbow meters retreived in the language scenario  
-        path_rainbow_meters = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model.name}/" 
+        path_rainbow_meters = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model.model_name}/" 
         rm_lanaguages = list(set([f.split("_")[0] for f in listdir(path_rainbow_meters) if isfile(join(path_rainbow_meters, f))]))
 
 
@@ -187,20 +197,11 @@ class Evaluations:
         results = pd.DataFrame(results)
         print(results)
         self.export_csv(country, results)
-    
-    def rm_scenario_exist(self):
-        result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model.name}/"
-        
-        if self.scenario == SCENARIO_LANGUAGE:
-            scenario_path = f"{self.language_code}_rainbow_meter_{self.prompt_num}.csv"
-        elif self.scenario == SCENARIO_NATIONALITY:
-            scenario_path = f"{self.country_id}_rainbow_meter_{self.prompt_num}.csv"
-        return os.path.exists(result_path+scenario_path), result_path+scenario_path #If a rainbow meter with the looked characteristics exist    
         
     def export_csv(self, country, df):
-        result_path = f"{RESULT_PATH}/{EVALUATIONS_PATH}/{self.scenario}/{self.model.name}/"
+        result_path = f"{RESULT_PATH}/{EVALUATIONS_PATH}/{self.scenario}/{self.model.model_name}/"
         os.makedirs(result_path, exist_ok=True)
-        df.to_csv(f"{result_path}{country.language}_wilcoxon_{self.prompt_num}.csv", sep=";", index=False)
+        df.to_csv(f"{result_path}{country.language}_wilcoxon.csv", sep=";", index=False)
 
         
     # conduct the Wilcoxon-Signed Rank Test
@@ -208,17 +209,36 @@ class Evaluations:
         return stats.wilcoxon(group1, group2).statistic, stats.wilcoxon(group1, group2).pvalue
 
     def _get_rainbow_meter_results(self, country):
-        result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model_name}/{country.language}_rainbow_meter_{self.prompt_num}.csv"
+        result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model_name}/{country.language}_rainbow_meter.csv"
         if os.path.exists(result_path):
             pd_rm = pd.read_csv(result_path, delimiter=";", index_col="Subcategory")
-            num_rows = len(pd_rm)
-            if num_rows == TOT_CRITERIA_NUM:  
+            if pd_rm.shape[0] == TOT_CRITERIA_NUM:  
                 return True, pd_rm
         return False, 0
+    
+    
+model_list = [LlaMa32_3]
 
-def convert_array(arr):
-    return [
-        float(str(x).replace(",", "."))
-        for x in arr
-    ]
+#Iterate on Models
+for model_name in model_list: #tqdm.tqdm(model_list, desc="Answering Rainbow Meter Criteria", total=len(model_list)):
+    model = Model(model_name)
+    error = model.initialize_model()
+    if error: #If there are no errors in initializing the model
+        logger.info("Error initializing the model")
+        break
+    
+    logger.info("🧮 Evaluations")
+    #Iterate on the scenario
+    for scenario in SCENARIOS:
+        # rainbow_meter = Rainbow_Meter(model, scenario)
+        # rainbow_meter.get_answers()
+            
+        #Evaluations
+        eval = Evaluations(model, scenario)
+        eval.plain_result()
+        # eval.calculate_wilcoxon()
+        logger.info(f"✅ {scenario} Done")    
+
+if not error:
+    logger.info("✅ All models done")
 

@@ -209,114 +209,146 @@ def test_systems_translation_abilities(model_list):
 #translate the English Rainbow Meter questions prompt from to all the other languages and populate the scenario folders nested in the data/rainbow_meter folder            
 def translate_rainbow_meter():
     result_path = f"{RAINBOW_METER_DATA_PATH}/{scenario}"
-    
-    model_name = DEEPL
-    model = Model(model_name)
+
+    model = Model(TRANSLATION_MODEL)
     error = model.initialize_model()
     if error:
         logger.error(f"translate_rainbow_meter")
         return None
+    
+    if TRANSLATION_MODEL == DEEPL:
+        model_exception = Model(TRANSLATION_MODEL)
+        error = model_exception.initialize_model()
+        if error:
+            logger.error(f"translate_rainbow_meter")
+            return None
         
-    #Iterate on the countries
-    for country_name in tqdm.tqdm(COUNTRIES_FILE, desc="Generating Rainbow Meter Questions", total=len(COUNTRIES_FILE)): 
-        country_id = COUNTRIES_FILE[country_name][ID]
-        country_language = COUNTRIES_FILE[country_name][LANGUAGES][0]
-        country_language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][0]
-        country_citizenship = COUNTRIES_FILE[country_name][CITIZENSHIP][0]
-
-        #Iterate on the scenarios
-        for scenario in SCENARIOS:
+    #Iterate on the scenarios
+    for scenario in SCENARIOS:
+        
+        rainbow_meter ={
+            CATEGORY: [],
+            SUBCATEGORY: []
+        }
+        
+        for country_name, country_data in tqdm.tqdm(COUNTRIES_FILE.items(), desc=f"Translating prompt"):
+            country_name = country_name
+            country_id = country_data[ID]
+            citizenship = country_data[CITIZENSHIP]
             
-            rainbow_meter ={
-                CATEGORY: [],
-                SUBCATEGORY: []
-            }
-            for type in QUESTION_TYPES:
-                rainbow_meter[type]= []
+            #Iterate on every language and citizenship 
+            for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
+                language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num]
 
-            #Iterate on the criteria
-            for subcategory, row in RAINBOW_METER_EN.iterrows():
-                rainbow_meter[SUBCATEGORY].append(subcategory)
-                rainbow_meter[CATEGORY].append(row[CATEGORY])
+            
                 for type in QUESTION_TYPES:
-                    if scenario == SCENARIO_LANGUAGE: #SCENARIO LANGUAGE
-                        rm_path = f"{result_path}/rainbow_meter_{country_language_code}.csv"
-                        
-                        try:
-                            #Translate question from English in the country language
-                            if model_name == DEEPL:
-                                question = deepl_translation(model, row[type].lower(), country_language_code)
-                            else:
-                                question = model_translation(model, row[type].lower(), country_language)  
-                        except Exception as X:
-                            logger.error(f"translate_rainbow_meter: {X}")
+                    rainbow_meter[type]= []
+
+                #Iterate on the criteria
+                for subcategory, row in RAINBOW_METER_EN.iterrows():
+                    rainbow_meter[SUBCATEGORY].append(subcategory)
+                    rainbow_meter[CATEGORY].append(row[CATEGORY])
+                    for type in QUESTION_TYPES:
+                        if scenario == SCENARIO_LANGUAGE: #SCENARIO LANGUAGE
+                            rm_path = f"{result_path}/rainbow_meter_{language_code}.csv"
                             
-                    elif scenario == SCENARIO_NATIONALITY: #SCENARIO NATIONALITY
-                        rm_path = f"{result_path}/rainbow_meter_{country_id}.csv"
-                        #Insert the country country in the question
-                        question = f"In {country_name}, {row[type].lower()}"
+                            try:
+                                #Translate question from English in the country language
+                                if TRANSLATION_MODEL == DEEPL and language == "Montenegrin":
+                                    question = model_translation(model_exception, row[type].lower(), language)
+                                elif TRANSLATION_MODEL == DEEPL:
+                                    question = deepl_translation(model, row[type].lower(), language_code)
+                                else:
+                                    question = model_translation(model, row[type].lower(), language)  
+                            except Exception as X:
+                                logger.error(f"translate_rainbow_meter: {X}")
+                                
+                        elif scenario == SCENARIO_NATIONALITY: #SCENARIO NATIONALITY
+                            rm_path = f"{result_path}/rainbow_meter_{country_id}.csv"
+                            #Insert the country country in the question
+                            question = f"In {country_name}, {row[type].lower()}"
+                            
+                        else: #SCENARIO LANGIAGE + NATIONALITY
+                            rm_path = f"{result_path}/rainbow_meter_{language_code}_{country_id}.csv"
+                            
+                            #Insert the country in the questionand translate it from English in the country language
+                            try:
+                                if TRANSLATION_MODEL == DEEPL and language == "Montenegrin":
+                                    question = model_translation(model_exception, row[type].lower(), language)
+                                elif TRANSLATION_MODEL == DEEPL:
+                                    question = deepl_translation(model, f"In {country_name}, {row[type].lower()}", language_code) 
+                                else:
+                                    question = model_translation(model, f"In {country_name}, {row[type].lower()}", language)
+                            except Exception as X:
+                                logger.error(f"translate_rainbow_meter: {X}")
                         
-                    else: #SCENARIO LANGIAGE + NATIONALITY
-                        rm_path = f"{result_path}/rainbow_meter_{country_language_code}_{country_id}.csv"
+                        rainbow_meter[type].append(question)
                         
-                        #Insert the country in the questionand translate it from English in the country language
-                        try:
-                            if model_name == DEEPL:
-                                question = deepl_translation(model, f"In {country_name}, {row[type].lower()}", country_language_code) 
-                            else:
-                                question = model_translation(model, f"In {country_name}, {row[type].lower()}", country_language)
-                        except Exception as X:
-                            logger.error(f"translate_rainbow_meter: {X}")
-                    
-                    rainbow_meter[type].append(question)
-                    
-                df = pd.DataFrame(rainbow_meter)
-                df.to_csv(rm_path, sep=";", index=False)
+                    df = pd.DataFrame(rainbow_meter)
+                    df.to_csv(rm_path, sep=";", index=False)
 
 #translate the default prompt from English to all the other languages and populate the file prompt.json
 def translate_default_prompt():
     model_name = DEEPL
     
-    languages_list = [
-        {
-            LANGUAGES: COUNTRIES_FILE[country_name][LANGUAGES][0],
-            LANGUAGES_CODE: COUNTRIES_FILE[country_name][LANGUAGES_CODE][0],
-        }
-        for country_name in COUNTRIES_FILE
-    ]
     model = Model(model_name)
     error = model.initialize_model()
     if error:
         logging.error(f"translate_prompt")
-    
+        
+    #Iterate on every country
+    #for country_name, country_data in tqdm.tqdm(COUNTRIES_FILE.items(), total=len(COUNTRIES_FILE), desc=f"🔄 {self.model.model_name} - {self.scenario}"):
     row_results = {
-        "English":{
-            "prompt":'Answer to the question with "yes" or "no" only.',
-            YES: YES, 
+        "English": {
+            "prompt": 'Answer to the question with "yes" or "no" only.',
+            YES: YES,
             NO: NO
         }
     }
+
+    for country_name, country_data in tqdm.tqdm(COUNTRIES_FILE.items(), desc=f"Translating prompt"):
+        country_name = country_name
+        country_id = country_data[ID]
+        citizenship = country_data[CITIZENSHIP]
         
-    for language in tqdm.tqdm(languages_list, desc=f"Translating prompt"):
-        if language[LANGUAGES] not in row_results and language[LANGUAGES] != "English":
-            row_results[language[LANGUAGES]] = {}
-            for key, val in row_results["English"].items():
-                if model.model_name == DEEPL:
-                    translation = deepl_translation(model, val, language[LANGUAGES_CODE], "EN")
-                else: 
-                    translation = model_translation(model, val, language[LANGUAGES])
-                row_results[language[LANGUAGES]][key] = translation.lower().replace(".", "").replace("*", "").replace('"', "").replace('\\"', "").strip() if key == YES or key == NO else translation 
-    
-    with open("data/prompt.json", "w", encoding="utf-8") as f:
-        json.dump(row_results, f, indent=4, ensure_ascii=False)
+        #Iterate on every language and citizenship 
+        for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
+            language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num]
+            
+            if language not in row_results and language != "English":
+                row_results[language] = {}
+
+                for key, val in row_results["English"].items():
+                    if model.model_name == DEEPL:
+                        translation = deepl_translation(model, val, language_code, "EN")
+                    else:
+                        translation = model_translation(model, val, language)
+
+                    if key in [YES, NO]:
+                        translation = (
+                            translation.lower()
+                            .replace(".", "")
+                            .replace("*", "")
+                            .replace('"', "")
+                            .replace('\\"', "")
+                            .strip()
+                        )
+
+                    row_results[language][key] = translation
+
+            # Write ONCE after the loop
+            with open("data/prompt.json", "w", encoding="utf-8") as f:
+                json.dump(row_results, f, indent=4, ensure_ascii=False)
     
 
 # #Check models ability to support the langauges bit back translation 
-model_list = [GPT54]
-test_systems_translation_abilities(model_list)
+#model_list = [GPT54]
+#test_systems_translation_abilities(model_list)
 
 #Translate the prompt instructions
-#translate_default_prompt()
+TRANSLATION_MODEL = DEEPL
+TRANSLATION_MODEL_EXCEPTION = DEEPL
+translate_default_prompt()
 
 #translate_rainbow_meter()
 
