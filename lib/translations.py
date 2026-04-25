@@ -63,12 +63,15 @@ def similarity_test(original, translated):
 def deepl_translation(model, question, target_lang = "EN-US", source_lang = "EN"):
     if target_lang == "pt":
         target_lang = "pt-pt"
+    if target_lang == "en":
+        target_lang = "EN-GB"
     if question == "" or target_lang == "cnr":
         return ""
     try:
         result = model.client.translate_text(question, target_lang=target_lang.upper(), source_lang=source_lang.upper())
         return result.text
     except Exception as X:
+
         logger.error(f"deepl_translation: {X}")
         return ""
 
@@ -206,86 +209,105 @@ def test_systems_translation_abilities(model_list):
             
             df.to_csv(csv_path, sep=";", index=False)
 
+def _build_question(
+    base_text,
+    scenario,
+    country_name,
+    language,
+    language_code,
+    model,
+    model_exception=None,
+):
+    # NATIONALITY only → no translation
+    if scenario == SCENARIO_NATIONALITY:
+        return f"In {country_name}, {base_text}"
+
+    # Build input text
+    if scenario == SCENARIO_LANGUAGE:
+        text = base_text
+    else:  # LANGUAGE + NATIONALITY
+        text = f"In {country_name}, {base_text}"
+
+    # Translation logic
+    if TRANSLATION_MODEL == DEEPL:
+        if language == "Montenegrin" and model_exception:
+            return model_translation(model_exception, text, language)
+        return deepl_translation(model, text, language_code)
+
+    return model_translation(model, text, language)
+
 #translate the English Rainbow Meter questions prompt from to all the other languages and populate the scenario folders nested in the data/rainbow_meter folder            
 def translate_rainbow_meter():
-    result_path = f"{RAINBOW_METER_DATA_PATH}/{scenario}"
-
     model = Model(TRANSLATION_MODEL)
-    error = model.initialize_model()
-    if error:
-        logger.error(f"translate_rainbow_meter")
+    if model.initialize_model():
+        logger.error("translate_rainbow_meter: failed to initialize main model")
         return None
-    
+
+    model_exception = None
     if TRANSLATION_MODEL == DEEPL:
-        model_exception = Model(TRANSLATION_MODEL)
-        error = model_exception.initialize_model()
-        if error:
-            logger.error(f"translate_rainbow_meter")
+        model_exception = Model(TRANSLATION_MODEL_EXCEPTION)
+        if model_exception.initialize_model():
+            logger.error("translate_rainbow_meter: failed to initialize exception model")
             return None
-        
-    #Iterate on the scenarios
+
     for scenario in SCENARIOS:
-        
-        rainbow_meter ={
-            CATEGORY: [],
-            SUBCATEGORY: []
-        }
-        
-        for country_name, country_data in tqdm.tqdm(COUNTRIES_FILE.items(), desc=f"Translating prompt"):
-            country_name = country_name
+        result_path = f"{RAINBOW_METER_DATA_PATH}/{scenario}"
+
+        for country_name, country_data in tqdm.tqdm(
+            COUNTRIES_FILE.items(), desc=f"Translating ({scenario})"
+        ):
             country_id = country_data[ID]
-            citizenship = country_data[CITIZENSHIP]
-            
-            #Iterate on every language and citizenship 
-            for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
-                language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num]
+            languages = country_data[LANGUAGES]
+            language_codes = country_data[LANGUAGES_CODE]
 
-            
-                for type in QUESTION_TYPES:
-                    rainbow_meter[type]= []
+            for idx, language in enumerate(languages):
+                language_code = language_codes[idx]
 
-                #Iterate on the criteria
+                # Initialize per-file data
+                rainbow_meter = {
+                    CATEGORY: [],
+                    SUBCATEGORY: [],
+                    **{q_type: [] for q_type in QUESTION_TYPES},
+                }
+
+                # Determine output path once
+                if scenario == SCENARIO_LANGUAGE:
+                    rm_path = f"{result_path}/rainbow_meter_{language_code}.csv"
+                elif scenario == SCENARIO_NATIONALITY:
+                    rm_path = f"{result_path}/rainbow_meter_{country_id}.csv"
+                else:
+                    rm_path = f"{result_path}/rainbow_meter_{language_code}_{country_id}.csv"
+
+                if os.path.exists(rm_path):
+                    #logger.info(f"Skipping existing file: {rm_path}")
+                    continue
+
                 for subcategory, row in RAINBOW_METER_EN.iterrows():
                     rainbow_meter[SUBCATEGORY].append(subcategory)
                     rainbow_meter[CATEGORY].append(row[CATEGORY])
-                    for type in QUESTION_TYPES:
-                        if scenario == SCENARIO_LANGUAGE: #SCENARIO LANGUAGE
-                            rm_path = f"{result_path}/rainbow_meter_{language_code}.csv"
-                            
-                            try:
-                                #Translate question from English in the country language
-                                if TRANSLATION_MODEL == DEEPL and language == "Montenegrin":
-                                    question = model_translation(model_exception, row[type].lower(), language)
-                                elif TRANSLATION_MODEL == DEEPL:
-                                    question = deepl_translation(model, row[type].lower(), language_code)
-                                else:
-                                    question = model_translation(model, row[type].lower(), language)  
-                            except Exception as X:
-                                logger.error(f"translate_rainbow_meter: {X}")
-                                
-                        elif scenario == SCENARIO_NATIONALITY: #SCENARIO NATIONALITY
-                            rm_path = f"{result_path}/rainbow_meter_{country_id}.csv"
-                            #Insert the country country in the question
-                            question = f"In {country_name}, {row[type].lower()}"
-                            
-                        else: #SCENARIO LANGIAGE + NATIONALITY
-                            rm_path = f"{result_path}/rainbow_meter_{language_code}_{country_id}.csv"
-                            
-                            #Insert the country in the questionand translate it from English in the country language
-                            try:
-                                if TRANSLATION_MODEL == DEEPL and language == "Montenegrin":
-                                    question = model_translation(model_exception, row[type].lower(), language)
-                                elif TRANSLATION_MODEL == DEEPL:
-                                    question = deepl_translation(model, f"In {country_name}, {row[type].lower()}", language_code) 
-                                else:
-                                    question = model_translation(model, f"In {country_name}, {row[type].lower()}", language)
-                            except Exception as X:
-                                logger.error(f"translate_rainbow_meter: {X}")
-                        
-                        rainbow_meter[type].append(question)
-                        
-                    df = pd.DataFrame(rainbow_meter)
-                    df.to_csv(rm_path, sep=";", index=False)
+
+                    for q_type in QUESTION_TYPES:
+                        base_text = row[q_type].lower()
+
+                        try:
+                            question = _build_question(
+                                base_text=base_text,
+                                scenario=scenario,
+                                country_name=country_name,
+                                language=language,
+                                language_code=language_code,
+                                model=model,
+                                model_exception=model_exception,
+                            )
+                        except Exception as e:
+                            logger.error(f"translate_rainbow_meter: {e}")
+                            question = None  # avoid undefined variable
+
+                        rainbow_meter[q_type].append(question)
+
+                # Save once per language/country
+                df = pd.DataFrame(rainbow_meter)
+                df.to_csv(rm_path, index=False)
 
 #translate the default prompt from English to all the other languages and populate the file prompt.json
 def translate_default_prompt():
@@ -295,6 +317,13 @@ def translate_default_prompt():
     error = model.initialize_model()
     if error:
         logging.error(f"translate_prompt")
+    
+    if TRANSLATION_MODEL == DEEPL:
+        model_exception = Model(TRANSLATION_MODEL_EXCEPTION)
+        error = model_exception.initialize_model()
+        if error:
+            logger.error(f"translate_rainbow_meter")
+            return None
         
     #Iterate on every country
     #for country_name, country_data in tqdm.tqdm(COUNTRIES_FILE.items(), total=len(COUNTRIES_FILE), desc=f"🔄 {self.model.model_name} - {self.scenario}"):
@@ -319,7 +348,9 @@ def translate_default_prompt():
                 row_results[language] = {}
 
                 for key, val in row_results["English"].items():
-                    if model.model_name == DEEPL:
+                    if TRANSLATION_MODEL == DEEPL and language == "Montenegrin":
+                        translation = model_translation(model_exception, val, language)
+                    elif TRANSLATION_MODEL == DEEPL:
                         translation = deepl_translation(model, val, language_code, "EN")
                     else:
                         translation = model_translation(model, val, language)
@@ -347,9 +378,10 @@ def translate_default_prompt():
 
 #Translate the prompt instructions
 TRANSLATION_MODEL = DEEPL
-TRANSLATION_MODEL_EXCEPTION = DEEPL
-translate_default_prompt()
+# With TRANSLATION_MODEL = DEEPL this is necessary
+TRANSLATION_MODEL_EXCEPTION = LlaMa31_70
+#translate_default_prompt()
 
-#translate_rainbow_meter()
+translate_rainbow_meter()
 
 

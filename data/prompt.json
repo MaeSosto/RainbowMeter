@@ -160,9 +160,9 @@
         "no": "nu"
     },
     "Montenegrin": {
-        "prompt": "",
-        "yes": "",
-        "no": ""
+        "prompt": "Odgovorite na pitanje samo sa \"da\" ili \"ne\".",
+        "yes": "da",
+        "no": "ne"
     },
     "Macedonian": {
         "prompt": "Одговорете на прашањето само со \"да\" или \"не\".",
