@@ -3,3 +3,4 @@
 __pycache__/
 .env
 lib/fix.py
+.python-version

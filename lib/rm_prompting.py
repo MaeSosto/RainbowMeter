@@ -72,7 +72,11 @@ class Rainbow_Meter:
     
     def get_answers(self):
         #Iterate on every country
-        for country_name, country_data in tqdm.tqdm(COUNTRIES_FILE.items(), total=len(COUNTRIES_FILE), desc=f"🔄 {self.model.model_name} - {self.scenario}"):
+        for country_name, country_data in tqdm.tqdm(
+                COUNTRIES_FILE.items(),
+                total=len(COUNTRIES_FILE),
+                desc=f"🔄 {self.model.model_name} - {self.scenario}"
+            ):
             self.country_name = country_name
             self.country_id = country_data[ID]
             self.citizenship = country_data[CITIZENSHIP]
@@ -119,9 +123,9 @@ class Rainbow_Meter:
                 #Get answers for the missing criterion in the csv file
                 for subcategory, row in tqdm.tqdm(complete_rm_language[num_answers:].iterrows(), 
                                                 total=len(complete_rm_language[num_answers:]), 
-                                                desc=f"🔄 {self.model.model_name} - {self.scenario} : {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_NATIONALITY else f"{self.country_id} in {self.language_code}"}",
+                                                desc=f"🔄 {self.model.model_name} - {self.scenario} : {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_NATIONALITY else f'{self.country_id} in {self.language_code}'}",
                                                 leave= False
-                    ):
+                                        ):
                     rainbow_meter[CATEGORY].append(row[CATEGORY])
                     rainbow_meter[SUBCATEGORY].append(subcategory)
                     
@@ -211,7 +215,7 @@ class Rainbow_Meter:
         language = "English" if self.scenario == SCENARIO_NATIONALITY else self.language
         lang_data = data[language]
         
-        return f"{criterion}\n{lang_data.get("prompt")}", [lang_data.get(YES), lang_data.get(NO)]
+        return f"{criterion}\n{lang_data.get('prompt')}", [lang_data.get(YES), lang_data.get(NO)]
 
 def model_scores(answers):
     valid_mapping = {YES: 1, NO: 0}
@@ -235,7 +239,7 @@ def model_scores(answers):
 
 
 
-model_list = [LlaMa31_8]
+model_list = [QWEN35_27]
 
 #Iterate on Models
 for model_name in model_list: #tqdm.tqdm(model_list, desc="Answering Rainbow Meter Criteria", total=len(model_list)):
