@@ -86,15 +86,15 @@ class Model:
             QWEN35_08: self._request_HuggingFace,
             QWEN35_2_HF: self._request_HuggingFace,
             QWEN35_2_LMS: self._request_LMSStudio,
-            QWEN35_2: self._request_Ollama,
+            QWEN35_2: self.request_Ollama,
             QWEN35_9_HF: self._request_HuggingFace,
             QWEN35_9_LMS: self._request_LMSStudio,
-            QWEN35_9: self._request_Ollama,
+            QWEN35_9: self.request_Ollama,
             QWEN35_27_LMS: self._request_LMSStudio,
-            QWEN35_27: self._request_Ollama,
-            LlaMa32_3: self._request_Ollama,
-            LlaMa31_8: self._request_Ollama,
-            LlaMa31_70: self._request_Ollama,
+            QWEN35_27: self.request_Ollama,
+            LlaMa32_3: self.request_Ollama,
+            LlaMa31_8: self.request_Ollama,
+            LlaMa31_70: self.request_Ollama,
             DEEPSEEKV32: self.request_OpenAi,
             SONNET46: self.request_Antrophic,
             GPT54: self.request_OpenAi, 
@@ -189,9 +189,9 @@ class Model:
             logger.error(f"⚠️ Hugging Face model {self.model_name} cannot be initialized")
         return True
     
-    def _request_Ollama(self):
+    def request_Ollama(self):
         try:
-            r = requests.post(
+            response = requests.post(
                 f"{URL_OLLAMA_LOCAL}/generate",
                 headers={"Content-Type": "application/json"},
                 json={
@@ -203,15 +203,15 @@ class Model:
                 }
             )
 
-            if r.status_code != 200:
+            if response.status_code != 200 or response == None:
                 # data = r.json()
                 # response = data["content"]["error"]
                 logger.error(f"⚠️ Ollama ERROR: {response.reason}")
                 return None
 
             
-            data = r.json()
-            response = data["response"]
+            response = response.json()
+            response = response["response"]
 
             if response is None or response == "":
                 logger.error("_request_ollama: empty response")

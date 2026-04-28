@@ -307,7 +307,7 @@ def translate_rainbow_meter():
 
                 # Save once per language/country
                 df = pd.DataFrame(rainbow_meter)
-                df.to_csv(rm_path, index=False)
+                df.to_csv(rm_path, index=False, sep=";")
 
 #translate the default prompt from English to all the other languages and populate the file prompt.json
 def translate_default_prompt():
@@ -380,8 +380,8 @@ def translate_default_prompt():
 TRANSLATION_MODEL = DEEPL
 # With TRANSLATION_MODEL = DEEPL this is necessary
 TRANSLATION_MODEL_EXCEPTION = LlaMa31_70
-#translate_default_prompt()
 
-translate_rainbow_meter()
+#translate_default_prompt()
+#translate_rainbow_meter()
 
 
