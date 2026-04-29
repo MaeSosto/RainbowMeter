@@ -23,7 +23,7 @@ echo "🔧 Installing base libraries..."
 pip install torch tqdm pandas data tqdm scipy SPARQLWrapper unidecode surprisal python-dotenv data accelerate > /dev/null
 
 echo "🤖 Installing model APIs..."
-pip install transformers deep-translator openai deepl anthropic google-genai > /dev/null
+pip install transformers deep-translator openai deepl anthropic google-genai google-generativeai > /dev/null
 
 echo "📊 Installing graph & ML libraries..."
 for pkg in tf-keras seaborn scikit-learn scipy matplotlib wordcloud python-ternary; do

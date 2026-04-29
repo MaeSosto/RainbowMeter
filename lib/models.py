@@ -2,7 +2,10 @@ from constants import *
 import requests
 from openai import OpenAI
 #import google.generativeai as genai
+#from google import genai
+import google.generativeai as genai
 from google import genai
+from google.genai import types
 import re
 import deepl
 from transformers import AutoModelForCausalLM, AutoTokenizer, AutoProcessor, AutoModelForImageTextToText
@@ -16,18 +19,12 @@ URL_LMSTUDIO_LOCAL = "http://localhost:1234"
 URL_DEEPSEEK = "https://api.deepseek.com"
 URL_DEEPSEEK_POST = "https://api.deepseek.com/v1/chat/completions"
 
-QWEN35_08 = "Qwen/Qwen3.5-0.8B" #HF
-QWEN35_2_HF = "Qwen/Qwen3.5-2B" #HF
-QWEN35_2_LMS = "qwen/qwen3.5-2b" #LMS
-QWEN35_2 = "qwen3.5:2b" #HF
-QWEN35_9_HF = "Qwen/Qwen3.5-9B" #HF
-QWEN35_9_LMS = "qwen/qwen3.5-9b" #LMS
-QWEN35_9 = "qwen3.5:9b" #Ollama
-QWEN35_27_LMS = "qwen/qwen3.5-27b" #LMS
-QWEN35_27 = "qwen3.5:27b" #Ollama
 
-LlaMa31_8 = "llama3.1:8b" #Ollama
+QWEN35_2 = "Qwen/Qwen3.5-2B" #HF
+QWEN35_9 = "Qwen/Qwen3.5-9B" #HF
+QWEN35_27 = "Qwen/Qwen3.5-27B" #HF
 LlaMa32_3 ="llama3.2:3b" #Ollama
+LlaMa31_8 = "llama3.1:8b" #Ollama
 LlaMa31_70 = "llama3.1:70b" #Ollama
 DEEPSEEKV32 = "deepseek-chat"
 SONNET46 = "claude-sonnet-4-6"
@@ -37,14 +34,8 @@ GEMINI3_FLASH = 'gemini-3-flash-preview'
 DEEPL = "DeepL" 
 
 MODELS_LABELS = {
-    QWEN35_08: "Qwen3.5 0.8B",
-    QWEN35_2_LMS: "Qwen3.5 2B",
-    QWEN35_2_HF: "Qwen3.5 2B",
     QWEN35_2: "Qwen3.5 2B",
-    QWEN35_9_HF: "Qwen3.5 9B",
-    QWEN35_9_LMS: "Qwen3.5 9B",
     QWEN35_9: "Qwen3.5 9B",
-    QWEN35_27_LMS: "Qwen3.5 27B",
     QWEN35_27: "Qwen3.5 27B",
     LlaMa32_3: "LlaMa 3.2 3B",
     LlaMa31_8: "LlaMa 3.1 8B",
@@ -62,15 +53,9 @@ class Model:
         self.model_name = model_name
         
         self.func_initialize_model = {
-            QWEN35_08: self._initialize_HuggingFace,
-            QWEN35_2_LMS: self._initialize_LMSStudio,
-            QWEN35_2_HF: self._initialize_HuggingFace,
-            QWEN35_2: self._initialize_Ollama,
-            QWEN35_9_HF: self._initialize_HuggingFace,
-            QWEN35_9_LMS: self._initialize_LMSStudio,
-            QWEN35_9: self._initialize_Ollama,
-            QWEN35_27_LMS: self._initialize_LMSStudio,
-            QWEN35_27: self._initialize_Ollama,
+            QWEN35_2: self._initialize_HuggingFace,
+            QWEN35_9: self._initialize_HuggingFace,
+            QWEN35_27: self._initialize_HuggingFace,
             LlaMa32_3: self._initialize_Ollama,
             LlaMa31_8: self._initialize_Ollama,
             LlaMa31_70: self._initialize_Ollama,
@@ -83,15 +68,9 @@ class Model:
         }
         
         self.send_request = {
-            QWEN35_08: self._request_HuggingFace,
-            QWEN35_2_HF: self._request_HuggingFace,
-            QWEN35_2_LMS: self._request_LMSStudio,
-            QWEN35_2: self.request_Ollama,
-            QWEN35_9_HF: self._request_HuggingFace,
-            QWEN35_9_LMS: self._request_LMSStudio,
-            QWEN35_9: self.request_Ollama,
-            QWEN35_27_LMS: self._request_LMSStudio,
-            QWEN35_27: self.request_Ollama,
+            QWEN35_2: self._request_HuggingFace,
+            QWEN35_9: self._request_HuggingFace,
+            QWEN35_27: self._request_HuggingFace,
             LlaMa32_3: self.request_Ollama,
             LlaMa31_8: self.request_Ollama,
             LlaMa31_70: self.request_Ollama,
@@ -177,7 +156,7 @@ class Model:
     def _initialize_HuggingFace(self):
         logger.setLevel(logging.ERROR)
         try:
-            if self.model_name == QWEN35_08 or self.model_name == QWEN35_2_HF:
+            if "qwen" in self.model_name.lower():
                 self.auto_processor = AutoProcessor.from_pretrained(self.model_name)
                 self.auto_model = AutoModelForImageTextToText.from_pretrained(self.model_name)
                 #self.auto_model = self.auto_model.to(device)
@@ -186,7 +165,7 @@ class Model:
                 self.auto_model = AutoModelForCausalLM.from_pretrained(self.model_name)
             return False
         except Exception as X:
-            logger.error(f"⚠️ Hugging Face model {self.model_name} cannot be initialized")
+            logger.error(f"⚠️ Hugging Face model {self.model_name} cannot be initialized: {X}")
         return True
     
     def request_Ollama(self):
@@ -256,6 +235,9 @@ class Model:
             response = self.client.models.generate_content(
                     model=self.model_name,
                     contents=self.prompt,
+                    config=types.GenerateContentConfig(
+                        thinking_config=types.ThinkingConfig(thinking_level="minimal")
+                    )
                 )
             response = response.text 
             if response is None or response == "":
@@ -340,7 +322,11 @@ class Model:
                 #pad_token_id=self.auto_processor.eos_token_id,
             ).to(self.auto_model.device)
             
-            outputs = self.auto_model.generate(**inputs, max_new_tokens=40)
+            outputs = self.auto_model.generate(
+                                        **inputs,
+                                        max_new_tokens=40,
+                                        pad_token_id=self.auto_processor.tokenizer.eos_token_id
+                                        )
             out_ = self.auto_processor.decode(outputs[0][inputs["input_ids"].shape[-1]:])
             out_ = extract_model_answer(out_)
             #print("answer")
