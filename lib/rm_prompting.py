@@ -239,7 +239,7 @@ def model_scores(answers):
 
 
 
-model_list = [GEMINI3_FLASH]
+model_list = [QWEN35_27]
 
 #Iterate on Models
 for model_name in model_list: #tqdm.tqdm(model_list, desc="Answering Rainbow Meter Criteria", total=len(model_list)):

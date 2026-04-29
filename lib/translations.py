@@ -373,13 +373,13 @@ def translate_default_prompt():
     
 
 # #Check models ability to support the langauges bit back translation 
-#model_list = [GPT54]
-#test_systems_translation_abilities(model_list)
+model_list = [QWEN35_27]
+test_systems_translation_abilities(model_list)
 
 #Translate the prompt instructions
-TRANSLATION_MODEL = DEEPL
+# TRANSLATION_MODEL = DEEPL
 # With TRANSLATION_MODEL = DEEPL this is necessary
-TRANSLATION_MODEL_EXCEPTION = LlaMa31_70
+# TRANSLATION_MODEL_EXCEPTION = LlaMa31_70
 
 #translate_default_prompt()
 #translate_rainbow_meter()

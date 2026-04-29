@@ -20,7 +20,7 @@ source .venv/bin/activate > /dev/null
 # ollama serve > /dev/null &
 
 echo "🔧 Installing base libraries..."
-pip install torch tqdm pandas data tqdm scipy SPARQLWrapper unidecode surprisal python-dotenv data accelerate > /dev/null
+pip install torch torchvision tqdm pandas data tqdm scipy SPARQLWrapper unidecode surprisal python-dotenv data accelerate > /dev/null
 
 echo "🤖 Installing model APIs..."
 pip install transformers deep-translator openai deepl anthropic google-genai google-generativeai > /dev/null

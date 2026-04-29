@@ -8,7 +8,7 @@ from google import genai
 from google.genai import types
 import re
 import deepl
-from transformers import AutoModelForCausalLM, AutoTokenizer, AutoProcessor, AutoModelForImageTextToText
+from transformers import AutoModelForCausalLM, AutoTokenizer, AutoProcessor, AutoModelForImageTextToText, pipeline
 from dotenv import load_dotenv
 from anthropic import Anthropic
 
@@ -24,8 +24,10 @@ QWEN35_2 = "Qwen/Qwen3.5-2B" #HF
 QWEN35_9 = "Qwen/Qwen3.5-9B" #HF
 QWEN35_27 = "Qwen/Qwen3.5-27B" #HF
 LlaMa32_3 ="llama3.2:3b" #Ollama
-LlaMa31_8 = "llama3.1:8b" #Ollama
-LlaMa31_70 = "llama3.1:70b" #Ollama
+LlaMa31_8_OLL = "llama3.1:8b" #Ollama
+LlaMa31_8 = "meta-llama/Llama-3.1-8B" #HF
+LlaMa31_70 = "meta-llama/Llama-3.1-70B" #HF
+LlaMa31_70_OLL = "llama3.1:70b" #Ollama
 DEEPSEEKV32 = "deepseek-chat"
 SONNET46 = "claude-sonnet-4-6"
 GPT54 = 'gpt-5.4'
@@ -38,8 +40,10 @@ MODELS_LABELS = {
     QWEN35_9: "Qwen3.5 9B",
     QWEN35_27: "Qwen3.5 27B",
     LlaMa32_3: "LlaMa 3.2 3B",
+    LlaMa31_8_OLL: "LlaMa 3.1 8B",
     LlaMa31_8: "LlaMa 3.1 8B",
     LlaMa31_70: "LlaMa 3.1 70B",
+    LlaMa31_70_OLL: "LlaMa 3.1 70B",
     DEEPSEEKV32: "DeepSeek-V3.2",
     SONNET46: "Sonnet 4.6",
     DEEPL: "DeepL",
@@ -53,12 +57,14 @@ class Model:
         self.model_name = model_name
         
         self.func_initialize_model = {
-            QWEN35_2: self._initialize_HuggingFace,
-            QWEN35_9: self._initialize_HuggingFace,
-            QWEN35_27: self._initialize_HuggingFace,
+            QWEN35_2: self.initialize_HuggingFace,
+            QWEN35_9: self.initialize_HuggingFace,
+            QWEN35_27: self.initialize_HuggingFace,
             LlaMa32_3: self._initialize_Ollama,
-            LlaMa31_8: self._initialize_Ollama,
-            LlaMa31_70: self._initialize_Ollama,
+            LlaMa31_8_OLL: self._initialize_Ollama,
+            LlaMa31_8: self.initialize_HuggingFace,
+            LlaMa31_70: self.initialize_HuggingFace,
+            LlaMa31_70_OLL: self._initialize_Ollama,
             DEEPSEEKV32: self.initialize_DeepSeek,
             SONNET46: self.initialize_Antrophic,
             GPT54: self.initialize_OpenAI, 
@@ -68,12 +74,14 @@ class Model:
         }
         
         self.send_request = {
-            QWEN35_2: self._request_HuggingFace,
-            QWEN35_9: self._request_HuggingFace,
-            QWEN35_27: self._request_HuggingFace,
-            LlaMa32_3: self.request_Ollama,
-            LlaMa31_8: self.request_Ollama,
-            LlaMa31_70: self.request_Ollama,
+            QWEN35_2: self.request_HuggingFace,
+            QWEN35_9: self.request_HuggingFace,
+            QWEN35_27: self.request_HuggingFace,
+            LlaMa32_3: self.request_HuggingFace,
+            LlaMa31_8_OLL: self.request_Ollama,
+            LlaMa31_8: self.request_HuggingFace,
+            LlaMa31_70: self.request_HuggingFace,
+            LlaMa31_70_OLL: self.request_Ollama,
             DEEPSEEKV32: self.request_OpenAi,
             SONNET46: self.request_Antrophic,
             GPT54: self.request_OpenAi, 
@@ -153,7 +161,7 @@ class Model:
             logger.error("⚠️ LM Studio server is not running")
             return True
     
-    def _initialize_HuggingFace(self):
+    def initialize_HuggingFace(self):
         logger.setLevel(logging.ERROR)
         try:
             if "qwen" in self.model_name.lower():
@@ -161,8 +169,26 @@ class Model:
                 self.auto_model = AutoModelForImageTextToText.from_pretrained(self.model_name)
                 #self.auto_model = self.auto_model.to(device)
             else:
+                # self.auto_tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+                # self.auto_model = AutoModelForCausalLM.from_pretrained(self.model_name)
+                # self.pipeline = pipeline(
+                #     "text-generation", 
+                #     model=self.model_name, 
+                #     model_kwargs={"torch_dtype": torch.bfloat16}, 
+                #     device_map="auto",
+                #     tokenizer=self.auto_tokenizer
+                # )
+
                 self.auto_tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-                self.auto_model = AutoModelForCausalLM.from_pretrained(self.model_name)
+
+                self.pipeline = pipeline(
+                    "text-generation",
+                    model=self.model_name,
+                    tokenizer=self.auto_tokenizer,
+                    torch_dtype=torch.bfloat16,
+                    device_map="auto",
+                )
+                #pipeline("text-generation", model=self.model_name, tokenizer=self.auto_tokenizer)
             return False
         except Exception as X:
             logger.error(f"⚠️ Hugging Face model {self.model_name} cannot be initialized: {X}")
@@ -294,68 +320,47 @@ class Model:
             logger.error(f"request_Antrophic: {X}")
             return None
         
-    def _request_HuggingFace(self):
+    def request_HuggingFace(self):
         logger.setLevel(logging.ERROR)
         try:
-            # if self.model_name == EUROLLM_9:
-            #     #EuroLLM
-            #     inputs = self.auto_tokenizer(self.prompt, return_tensors="pt")
-            #     gen_tokens = self.auto_model.generate(**inputs, max_new_tokens=500)
-            #     out = self.auto_tokenizer.decode(gen_tokens[0])
-            
-            # else:
-            #print("question")
-            messages = [
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": self.prompt}
-                    ]
-                },
-            ]
-            inputs = self.auto_processor.apply_chat_template(
-                messages,
-                add_generation_prompt=True,
-                tokenize=True,
-                return_dict=True,
-                return_tensors="pt",
-                #pad_token_id=self.auto_processor.eos_token_id,
-            ).to(self.auto_model.device)
-            
-            outputs = self.auto_model.generate(
-                                        **inputs,
-                                        max_new_tokens=40,
-                                        pad_token_id=self.auto_processor.tokenizer.eos_token_id
-                                        )
-            out_ = self.auto_processor.decode(outputs[0][inputs["input_ids"].shape[-1]:])
-            out_ = extract_model_answer(out_)
-            #print("answer")
-            return out_
-                # inputs = self.auto_tokenizer(self.prompt, return_tensors="pt")
-                # outputs = self.auto_model.generate(**inputs, max_new_tokens=500)
+            if "qwen" in self.model_name.lower():
+                messages = [
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": self.prompt}
+                        ]
+                    },
+                ]
+                inputs = self.auto_processor.apply_chat_template(
+                    messages,
+                    add_generation_prompt=True,
+                    tokenize=True,
+                    return_dict=True,
+                    return_tensors="pt",
+                    #pad_token_id=self.auto_processor.eos_token_id,
+                ).to(self.auto_model.device)
+                
+                outputs = self.auto_model.generate(
+                    **inputs,
+                    max_new_tokens=40,
+                    pad_token_id=self.auto_processor.tokenizer.eos_token_id
+                )
+                out_ = self.auto_processor.decode(outputs[0][inputs["input_ids"].shape[-1]:])
+                out_ = extract_model_answer(out_)
+            else:
+                
+                out_ = self.pipeline(
+                    self.prompt,
+                    max_new_tokens=256,
+                    do_sample=True,
+                    pad_token_id=self.auto_tokenizer.eos_token_id,
+                )
 
-                # out = self.auto_tokenizer.decode(outputs[0], skip_special_tokens=True)
-                # out_ = extract_model_answer(out)
-            
-            # else self.model_name == COMMAND_R1:
-            #     #Command R1
-            #     inputs = self.auto_tokenizer.apply_chat_template(
-            #         [{"role": "user", "content": self.prompt}],
-            #         tokenize=True,
-            #         add_generation_prompt=True,
-            #         return_tensors="pt"
-            #     )
-
-            #     gen_tokens = self.auto_model.generate(
-            #         **inputs,   
-            #         max_new_tokens=500,
-            #         do_sample=True
-            #     )
-
-            #     out = self.auto_tokenizer.decode(gen_tokens[0])
-            #     out_ = extract_model_answer(out)
-            #     return out_
-            
+                out_ = out_[0]["generated_text"]
+                out_ = extract_model_answer(out_)
+                
+            return out_            
         except Exception as X:
             logger.error(f"_request_huggingface: {X}")
             return None
