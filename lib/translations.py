@@ -170,7 +170,7 @@ def test_systems_translation_abilities(model_list):
         df = pd.DataFrame(columns=columns)
 
     for model_name in model_list:
-        model_label = MODELS_LABELS[model_name]
+        model_label = MODEL_LABEL[model_name]
 
         # Ensure model row exists
         if model_label not in df["model"].values:

@@ -217,7 +217,7 @@ class Evaluations:
         return False, 0
     
     
-model_list = [LlaMa32_3]
+model_list = [LLAMA32_3]
 
 #Iterate on Models
 for model_name in model_list: #tqdm.tqdm(model_list, desc="Answering Rainbow Meter Criteria", total=len(model_list)):
