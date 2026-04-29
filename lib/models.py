@@ -1,4 +1,4 @@
-from constants import *
+from lib.constants import *
 import requests
 from openai import OpenAI
 #import google.generativeai as genai
@@ -23,7 +23,7 @@ URL_DEEPSEEK_POST = "https://api.deepseek.com/v1/chat/completions"
 QWEN35_2 = "Qwen/Qwen3.5-2B" #HF
 QWEN35_9 = "Qwen/Qwen3.5-9B" #HF
 QWEN35_27 = "Qwen/Qwen3.5-27B" #HF
-LLAMA32_3 ="llama3.2:3b" #Ollama
+LLAMA32_3_OLL ="llama3.2:3b" #Ollama
 LLAMA31_8_OLL = "llama3.1:8b" #Ollama
 LLAMA31_8 = "meta-llama/Llama-3.1-8B" #HF
 LLAMA31_70 = "meta-llama/Llama-3.1-70B" #HF
@@ -35,13 +35,13 @@ GPT54_MINI = 'gpt-5.4-mini'
 GEMINI3_FLASH = 'gemini-3-flash-preview'
 DEEPL = "DeepL" 
 
-MODEL_LIST = [QWEN35_2, QWEN35_9, QWEN35_27, LLAMA32_3, LLAMA31_8_OLL, LLAMA31_70_OLL, DEEPSEEKV32, SONNET46, GPT54, GEMINI3_FLASH]
+MODEL_LIST = [QWEN35_2, QWEN35_9, QWEN35_27, LLAMA32_3_OLL, LLAMA31_8_OLL, LLAMA31_70_OLL, DEEPSEEKV32, SONNET46, GPT54, GEMINI3_FLASH]
 
 MODEL_LABEL = {
     QWEN35_2: "Qwen3.5 2B",
     QWEN35_9: "Qwen3.5 9B",
     QWEN35_27: "Qwen3.5 27B",
-    LLAMA32_3: "LlaMa 3.2 3B",
+    LLAMA32_3_OLL: "LlaMa 3.2 3B",
     LLAMA31_8_OLL: "LlaMa 3.1 8B",
     LLAMA31_8: "LlaMa 3.1 8B",
     LLAMA31_70: "LlaMa 3.1 70B",
@@ -62,7 +62,7 @@ class Model:
             QWEN35_2: self.initialize_HuggingFace,
             QWEN35_9: self.initialize_HuggingFace,
             QWEN35_27: self.initialize_HuggingFace,
-            LLAMA32_3: self._initialize_Ollama,
+            LLAMA32_3_OLL: self._initialize_Ollama,
             LLAMA31_8_OLL: self._initialize_Ollama,
             LLAMA31_8: self.initialize_HuggingFace,
             LLAMA31_70: self.initialize_HuggingFace,
@@ -79,7 +79,7 @@ class Model:
             QWEN35_2: self.request_HuggingFace,
             QWEN35_9: self.request_HuggingFace,
             QWEN35_27: self.request_HuggingFace,
-            LLAMA32_3: self.request_HuggingFace,
+            LLAMA32_3_OLL: self.request_Ollama,
             LLAMA31_8_OLL: self.request_Ollama,
             LLAMA31_8: self.request_HuggingFace,
             LLAMA31_70: self.request_HuggingFace,

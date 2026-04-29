@@ -337,8 +337,6 @@ def translate_default_prompt():
 
     for country_name, country_data in tqdm.tqdm(COUNTRIES_FILE.items(), desc=f"Translating prompt"):
         country_name = country_name
-        country_id = country_data[ID]
-        citizenship = country_data[CITIZENSHIP]
         
         #Iterate on every language and citizenship 
         for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
@@ -347,26 +345,37 @@ def translate_default_prompt():
             if language not in row_results and language != "English":
                 row_results[language] = {}
 
-                for key, val in row_results["English"].items():
-                    if TRANSLATION_MODEL == DEEPL and language == "Montenegrin":
-                        translation = model_translation(model_exception, val, language)
-                    elif TRANSLATION_MODEL == DEEPL:
-                        translation = deepl_translation(model, val, language_code, "EN")
-                    else:
-                        translation = model_translation(model, val, language)
+                prompt = row_results["English"]["prompt"]
+                
+                #for key, val in row_results["English"].items():
+                if TRANSLATION_MODEL == DEEPL and language == "Montenegrin":
+                    translation = model_translation(model_exception, prompt, language)
+                elif TRANSLATION_MODEL == DEEPL:
+                    translation = deepl_translation(model, prompt, language_code, "EN")
+                else:
+                    translation = model_translation(model, prompt, language)
 
-                    if key in [YES, NO]:
-                        translation = (
-                            translation.lower()
-                            .replace(".", "")
-                            .replace("*", "")
-                            .replace('"', "")
-                            .replace('\\"', "")
-                            .strip()
-                        )
+                row_results[language]["prompt"] = translation
+                pattern = r'''
+                        "([^"]+)"          |   # double quotes
+                        «([^»]+)»         |   # guillemets
+                        “([^”]+)”         |   # curly double
+                        ‘([^’]+)’         |   # curly single
+                        '([^']+)'             # straight single
+                    '''
+                matches = re.findall(pattern, translation, re.VERBOSE)
+                extracted = []
+                for match in matches:
+                    # each match is a tuple, only one group filled
+                    for group in match:
+                        if group:
+                            extracted.append(group.strip())
 
-                    row_results[language][key] = translation
-
+                if len(extracted) >= 2:
+                    row_results[language][YES], row_results[language][NO] =  extracted[0], extracted[1]
+                else:
+                    logger.error(f"⚠️ Cannot detect the \"yes\" or \"no\" from the translated text in {language}: {translation}")
+                    
             # Write ONCE after the loop
             with open("data/prompt.json", "w", encoding="utf-8") as f:
                 json.dump(row_results, f, indent=4, ensure_ascii=False)
@@ -374,14 +383,14 @@ def translate_default_prompt():
 
 # #Check models ability to support the langauges bit back translation 
 model_list = [QWEN35_27]
-test_systems_translation_abilities(model_list)
+#test_systems_translation_abilities(model_list)
 
 #Translate the prompt instructions
-# TRANSLATION_MODEL = DEEPL
+TRANSLATION_MODEL = DEEPL
 # With TRANSLATION_MODEL = DEEPL this is necessary
-# TRANSLATION_MODEL_EXCEPTION = LlaMa31_70
+TRANSLATION_MODEL_EXCEPTION = LLAMA32_3_OLL
 
-#translate_default_prompt()
+translate_default_prompt()
 #translate_rainbow_meter()
 
 
