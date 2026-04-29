@@ -60,18 +60,25 @@ def back_translation_heatmap():
 def coh_val_heatmaps():
     for scenario in SCENARIOS:
         root_dir = f"{RAINBOW_METER_RESULT_PATH}/{scenario}"
-        fact_data = {}
-        stance_data = {}
-
-        for model_name in os.listdir(root_dir):
-            model_path = os.path.join(root_dir, model_name)
+        fact_coh_data = {}
+        fact_val_data = {}
+        fact_coh_val_data = {}
+        stance_coh_data = {}
+        stance_val_data = {}
+        stance_coh_val_data = {}
             
-            if not os.path.isdir(model_path):
+        for model_name in MODEL_LIST:
+            model_path = os.path.join(root_dir, model_name)
+            model_label = MODEL_LABEL[model_name]
+            if not os.path.exists(model_path):
                 continue
-            model_label = MODELS_LABELS[model_name]
-            fact_data[model_label] = {}
-            stance_data[model_label] = {}
-
+            
+            fact_coh_data[model_label] = {}
+            fact_val_data[model_label] = {}
+            fact_coh_val_data[model_label] = {}
+            stance_coh_data[model_label] = {}
+            stance_val_data[model_label] = {}
+            stance_coh_val_data[model_label] = {}
             for file in os.listdir(model_path):
                 # extract language (e.g., az from rm_answers_az.csv)
                 
@@ -90,27 +97,57 @@ def coh_val_heatmaps():
                 df = pd.read_csv(file_path, sep=";")
 
                 # compute means
-                fact_mean = df["Fact Weight coherence by validity"].mean()
+                fact_coh_mean = df["Fact Coherence"].mean()
+                fact_val_mean = df["Fact Validity"].mean()
+                fact_coh_val_mean = df["Fact Weight coherence by validity"].mean()
+                stance_coh_mean = df["Stance Coherence"].mean()
+                stance_val_mean = df["Stance Validity"].mean()
                 stance_mean = df["Stance Weight coherence by validity"].mean()
 
-                fact_data[model_label][label] = fact_mean
-                stance_data[model_label][label] = stance_mean
+                fact_coh_data[model_label][label] = fact_coh_mean
+                fact_val_data[model_label][label] = fact_val_mean
+                fact_coh_val_data[model_label][label] = fact_coh_val_mean
+                stance_coh_data[model_label][label] = stance_coh_mean
+                stance_val_data[model_label][label] = stance_val_mean
+                stance_coh_val_data[model_label][label] = stance_mean
 
         # convert to DataFrames
-        fact_df = pd.DataFrame.from_dict(fact_data, orient="index")
-        stance_df = pd.DataFrame.from_dict(stance_data, orient="index")
+        fact_coh_df = pd.DataFrame.from_dict(fact_coh_data, orient="index")
+        fact_val_df = pd.DataFrame.from_dict(fact_val_data, orient="index")
+        fact_df = pd.DataFrame.from_dict(fact_coh_val_data, orient="index")
+        stance_coh_df = pd.DataFrame.from_dict(stance_coh_data, orient="index")
+        stance_val_df = pd.DataFrame.from_dict(stance_val_data, orient="index")
+        stance_df = pd.DataFrame.from_dict(stance_coh_val_data, orient="index")
 
         # optional: sort columns alphabetically
+        #fact_df = fact_df.sort_index(axis=0)
+        fact_coh_df = fact_coh_df.sort_index(axis=1)
+        fact_val_df = fact_val_df.sort_index(axis=1)
         fact_df = fact_df.sort_index(axis=1)
+        #stance_df = stance_df.sort_index(axis=0)
+        stance_coh_df = stance_coh_df.sort_index(axis=1)
+        stance_val_df = stance_val_df.sort_index(axis=1)
         stance_df = stance_df.sort_index(axis=1)
 
         # Convert to numeric (in case some values are read as strings)
+        fact_coh_df = fact_coh_df.apply(pd.to_numeric, errors="coerce")
+        fact_val_df = fact_val_df.apply(pd.to_numeric, errors="coerce")
         fact_df = fact_df.apply(pd.to_numeric, errors="coerce")
+        stance_coh_df = stance_coh_df.apply(pd.to_numeric, errors="coerce")
+        stance_val_df = stance_val_df.apply(pd.to_numeric, errors="coerce")
         stance_df = stance_df.apply(pd.to_numeric, errors="coerce")
 
-        df.to_csv(f"{TABLES_PATH}/{scenario}/fact_coh_val.csv")
-        df.to_csv(f"{TABLES_PATH}/{scenario}/stance_coh_val.csv")
+        fact_coh_df.to_csv(f"{TABLES_PATH}/{scenario}/fact_coh.csv")
+        fact_val_df.to_csv(f"{TABLES_PATH}/{scenario}/fact_val.csv")
+        fact_df.to_csv(f"{TABLES_PATH}/{scenario}/fact_coh_val.csv")
+        stance_coh_df.to_csv(f"{TABLES_PATH}/{scenario}/stance_coh.csv")
+        stance_val_df.to_csv(f"{TABLES_PATH}/{scenario}/stance_val.csv")
+        stance_df.to_csv(f"{TABLES_PATH}/{scenario}/stance_coh_val.csv")
+        generate_heatmap(fact_coh_df, "Language", "Model", "Models Fact Coherence scores", f"{GRAPHS_PATH}/{scenario}/fact_coh.png")
+        generate_heatmap(fact_val_df, "Language", "Model", "Models Fact Validity scores", f"{GRAPHS_PATH}/{scenario}/fact_val.png")
         generate_heatmap(fact_df, "Language", "Model", "Models Fact Weight coherence by validity scores", f"{GRAPHS_PATH}/{scenario}/fact_coh_val.png")
+        generate_heatmap(stance_coh_df, "Language", "Model", "Models Stance Coherence scores", f"{GRAPHS_PATH}/{scenario}/stance_coh.png")
+        generate_heatmap(stance_val_df, "Language", "Model", "Models Stance Validity scores", f"{GRAPHS_PATH}/{scenario}/stance_val.png")
         generate_heatmap(stance_df, "Language", "Model", "Models Stance Weight coherence by validity scores", f"{GRAPHS_PATH}/{scenario}/stance_coh_val.png")
 
 #Back translation Heatmap

@@ -22,12 +22,12 @@
     "German": {
         "prompt": "Beantworten Sie die Frage nur mit \"ja\" oder \"nein\".",
         "yes": "ja",
-        "no": "keine"
+        "no": "nein"
     },
     "Azerbaijani": {
         "prompt": "Suala yalnız \"bəli\" və ya \"xeyr\" ilə cavab verin.",
         "yes": "bəli",
-        "no": "yox"
+        "no": "xeyr"
     },
     "Belarusian": {
         "prompt": "Адказ на пытанне толькі «так» або «не».",
@@ -42,7 +42,7 @@
     "Dutch": {
         "prompt": "Beantwoord de vraag alleen met \"ja\" of \"nee\".",
         "yes": "ja",
-        "no": "geen"
+        "no": "nee"
     },
     "French": {
         "prompt": "Répondre à la question par \"oui\" ou \"non\" uniquement.",
@@ -117,17 +117,17 @@
     "Hungarian": {
         "prompt": "A kérdésre csak \"igen\" vagy \"nem\" válasszal válaszoljon.",
         "yes": "igen",
-        "no": "nincs"
+        "no": "nem"
     },
     "Icelandic": {
         "prompt": "Svaraðu spurningunni eingöngu með \"já\" eða \"nei\".",
         "yes": "já",
-        "no": "ekki"
+        "no": "nei"
     },
     "Irish": {
         "prompt": "Freagair an cheist le \"tá\" nó \"níl\" amháin.",
         "yes": "tá",
-        "no": "ní hea"
+        "no": "níl"
     },
     "Italian": {
         "prompt": "Rispondere alla domanda solo con \"sì\" o \"no\".",
@@ -137,7 +137,7 @@
     "Latvian": {
         "prompt": "Atbildiet uz jautājumu tikai ar \"jā\" vai \"nē\".",
         "yes": "jā",
-        "no": "nav"
+        "no": "nē"
     },
     "Lithuanian": {
         "prompt": "Į klausimą atsakykite tik \"taip\" arba \"ne\".",
@@ -146,8 +146,8 @@
     },
     "Luxembourgish": {
         "prompt": "Äntwert op d'Fro nëmmen mat \"Jo\" oder \"Nee\".",
-        "yes": "jo",
-        "no": "nee"
+        "yes": "Jo",
+        "no": "Nee"
     },
     "Maltese": {
         "prompt": "Iwiebbi għall-mistoqsija b''iva' jew 'le' biss.",

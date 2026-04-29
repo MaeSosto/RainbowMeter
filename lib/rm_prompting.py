@@ -106,21 +106,10 @@ class Rainbow_Meter:
                 rm_language_exist, complete_rm_language = self.get_rainbow_meter()
                 if not rm_language_exist: #If the Rainbow Meter questionnaire in doesn't exist in that language than we cannot compare the results
                     continue
-                # elif self.scenario == SCENARIO_NATIONALITY:
-                #     rm_language_exist, complete_rm_language = self.get_rainbow_meter()
                 
-                
-                #rm_exist, rm_path = self.rm_result_exist()
                 rm_existent = self.get_rm()
-                # if rm_exist:
-                #     rainbow_meter = self.fill_in_rm(rainbow_meter, rm_path)
                 num_answers = len(rm_existent) #Number of lines in the existent rainbow meter file
-                #if not rm_existent.empty:  #RM doesn't exist or is incomplete
                 rainbow_meter = self.fill_in_rm(rainbow_meter, rm_existent)
-                #if self.num_answers < MAX_NUM_ANSWERS:
-                    #logger.info(f"🔄 {self.model.model_name} - {self.scenario} : {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_NATIONALITY else f"{self.country_id} in {self.language_code}"}")
-        #if num_answers < TOT_CRITERIA_NUM
-                #Get answers for the missing criterion in the csv file
                 for subcategory, row in tqdm.tqdm(complete_rm_language[num_answers:].iterrows(), 
                                                 total=len(complete_rm_language[num_answers:]), 
                                                 desc=f"🔄 {self.model.model_name} - {self.scenario} : {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_NATIONALITY else f'{self.country_id} in {self.language_code}'}",
@@ -132,6 +121,9 @@ class Rainbow_Meter:
                     for question_type in QUESTION_TYPES:
                         full_prompt, possible_binary_answers = self.get_prompt(row[question_type])
 
+                        if self.language_code == "az":
+                            breakpoint
+                            
                         # Generate answers
                         question_responses = []
                         while len(question_responses) < MAX_NUM_ANSWERS:
@@ -239,7 +231,7 @@ def model_scores(answers):
 
 
 
-model_list = [QWEN35_27]
+model_list = [LLAMA32_3_OLL]
 
 #Iterate on Models
 for model_name in model_list: #tqdm.tqdm(model_list, desc="Answering Rainbow Meter Criteria", total=len(model_list)):
