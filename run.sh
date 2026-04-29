@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=qwen27translations
+#SBATCH --job-name=llama79
 #SBATCH --partition=gpu_h100
-#SBATCH --time=00-5:00:00
+#SBATCH --time=00-8:00:00
 #SBATCH --gres=gpu:h100:2
 #SBATCH --mem=20G
 #SBATCH --output=./slurmout/%x.out
@@ -9,4 +9,4 @@
 
 cd "${SLURM_SUBMIT_DIR}"
 source .venv/bin/activate
-python lib/translations.py
+python lib/rm_prompting.py

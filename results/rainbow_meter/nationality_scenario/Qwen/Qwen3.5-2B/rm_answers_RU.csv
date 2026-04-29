@@ -5,7 +5,7 @@ Equality & non-discrimination;Goods & services (sexual orientation);0.0;1.0;1.0;
 Equality & non-discrimination;Education (sexual orientation);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Health (sexual orientation);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Conversion practices ban (sexual orientation);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
-Equality & non-discrimination;Equality body mandate (sexual orientation);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+Equality & non-discrimination;Equality body mandate (sexual orientation);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Equality action plan (sexual orientation);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Constitution (gender identity);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Employment (gender identity);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
@@ -13,7 +13,7 @@ Equality & non-discrimination;Goods & services (gender identity);0.0;1.0;0.0;1.0
 Equality & non-discrimination;Education (gender identity);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Health (gender identity);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Conversion practices ban (gender identity);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
-Equality & non-discrimination;Equality body mandate (gender identity);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+Equality & non-discrimination;Equality body mandate (gender identity);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Equality action plan (gender identity);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Law (gender expression);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Constitution (sex characteristics);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
@@ -21,7 +21,7 @@ Equality & non-discrimination;Employment (sex characteristics);1.0;1.0;0.0;1.0;1
 Equality & non-discrimination;Goods & services (sex characteristics);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Education (sex characteristics);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Health (sex characteristics);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
-Equality & non-discrimination;Equality body mandate (sex characteristics);0.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+Equality & non-discrimination;Equality body mandate (sex characteristics);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Equality action plan (sex characteristics);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Blood donations;1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Family;Marriage equality;1.0;0.0;0.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
@@ -30,7 +30,7 @@ Family;Registered partnership (limited rights);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1
 Family;Cohabitation;1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Family;No constitutional limitation on marriage;1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Family;Joint adoption;1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
-Family;Second-parent adoption;0.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+Family;Second-parent adoption;1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Family;Automatic co-parent recognition;1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Family;Medically assisted insemination (couples);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Family;Medically assisted insemination (singles);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
@@ -39,10 +39,10 @@ Hate crime & hate speech;Hate crime law (sexual orientation);1.0;1.0;1.0;0.5;1.0
 Hate crime & hate speech;Hate speech law (sexual orientation);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Hate crime & hate speech;Policy tackling hatred (sexual orientation);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Hate crime & hate speech;Hate crime law (gender identity);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
-Hate crime & hate speech;Hate speech law (gender identity);0.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
+Hate crime & hate speech;Hate speech law (gender identity);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Hate crime & hate speech;Policy tackling hatred (gender identity);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
-Hate crime & hate speech;Hate crime law (intersex);0.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
-Hate crime & hate speech;Hate speech law (sex characteristics);0.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
+Hate crime & hate speech;Hate crime law (intersex);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
+Hate crime & hate speech;Hate speech law (sex characteristics);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Hate crime & hate speech;Policies tackling hatred (intersex);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Legal gender recognition;No legal framework making legal gender recognition impossible;1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Legal gender recognition;Existence of legal measures;1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
@@ -56,9 +56,9 @@ Legal gender recognition;No compulsory medical intervention required;1.0;1.0;1.0
 Legal gender recognition;No compulsory surgical intervention required;1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Legal gender recognition;No compulsory sterilisation required;1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Legal gender recognition;No compulsory divorce required;1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
-Legal gender recognition;No age restriction;1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+Legal gender recognition;No age restriction;1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Legal gender recognition;Legal gender recognition procedures exist for minors;1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
-Legal gender recognition;Depathologisation;1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+Legal gender recognition;Depathologisation;0.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Intersex bodily integrity;Prohibition of medical intervention without informed consent (intersex);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Intersex bodily integrity;Universality of prohibition of medical interventions;1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Intersex bodily integrity;Existence of effective monitoring mechanism;1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0

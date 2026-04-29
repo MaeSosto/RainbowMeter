@@ -38,3 +38,473 @@ https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/READM
 🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  28%|██▊       | 21/76 [26:44<1:09:57, 76.32s/it][A
 🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  29%|██▉       | 22/76 [28:01<1:08:42, 76.34s/it][A
 🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  30%|███       | 23/76 [29:17<1:07:24, 76.32s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  32%|███▏      | 24/76 [30:33<1:06:01, 76.18s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  33%|███▎      | 25/76 [31:49<1:04:42, 76.13s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  34%|███▍      | 26/76 [33:05<1:03:25, 76.11s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  36%|███▌      | 27/76 [34:21<1:02:11, 76.15s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  37%|███▋      | 28/76 [35:36<1:00:45, 75.94s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  38%|███▊      | 29/76 [36:52<59:23, 75.83s/it]  [A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  39%|███▉      | 30/76 [38:08<58:10, 75.88s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  41%|████      | 31/76 [39:24<56:50, 75.79s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  42%|████▏     | 32/76 [40:39<55:31, 75.72s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  43%|████▎     | 33/76 [41:55<54:16, 75.72s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  45%|████▍     | 34/76 [43:11<53:08, 75.92s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  46%|████▌     | 35/76 [44:27<51:53, 75.94s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  47%|████▋     | 36/76 [45:45<50:53, 76.33s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  49%|████▊     | 37/76 [47:01<49:33, 76.25s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  50%|█████     | 38/76 [48:17<48:17, 76.25s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  51%|█████▏    | 39/76 [49:33<46:59, 76.21s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  53%|█████▎    | 40/76 [50:49<45:41, 76.17s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  54%|█████▍    | 41/76 [52:05<44:25, 76.16s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  55%|█████▌    | 42/76 [53:21<43:09, 76.15s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  57%|█████▋    | 43/76 [54:37<41:50, 76.09s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  58%|█████▊    | 44/76 [55:54<40:37, 76.18s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  59%|█████▉    | 45/76 [57:10<39:20, 76.14s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  61%|██████    | 46/76 [58:26<38:04, 76.15s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  62%|██████▏   | 47/76 [59:42<36:47, 76.11s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  63%|██████▎   | 48/76 [1:00:58<35:28, 76.02s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  64%|██████▍   | 49/76 [1:02:13<34:10, 75.94s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  66%|██████▌   | 50/76 [1:03:29<32:54, 75.94s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  67%|██████▋   | 51/76 [1:04:45<31:37, 75.91s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  68%|██████▊   | 52/76 [1:06:01<30:21, 75.92s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  70%|██████▉   | 53/76 [1:07:17<29:06, 75.93s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  71%|███████   | 54/76 [1:08:33<27:50, 75.93s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  72%|███████▏  | 55/76 [1:09:49<26:34, 75.95s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  74%|███████▎  | 56/76 [1:11:05<25:17, 75.89s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  75%|███████▌  | 57/76 [1:12:21<24:02, 75.93s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  76%|███████▋  | 58/76 [1:13:37<22:45, 75.89s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  78%|███████▊  | 59/76 [1:14:53<21:30, 75.90s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  79%|███████▉  | 60/76 [1:16:09<20:18, 76.17s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  80%|████████  | 61/76 [1:17:25<19:01, 76.09s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  82%|████████▏ | 62/76 [1:18:42<17:46, 76.18s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  83%|████████▎ | 63/76 [1:19:58<16:29, 76.12s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  84%|████████▍ | 64/76 [1:21:14<15:13, 76.13s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  86%|████████▌ | 65/76 [1:22:30<13:57, 76.14s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  87%|████████▋ | 66/76 [1:23:46<12:42, 76.24s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  88%|████████▊ | 67/76 [1:25:03<11:26, 76.28s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  89%|████████▉ | 68/76 [1:26:19<10:09, 76.15s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  91%|█████████ | 69/76 [1:27:35<08:53, 76.18s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  92%|█████████▏| 70/76 [1:28:51<07:37, 76.24s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  93%|█████████▎| 71/76 [1:30:07<06:21, 76.23s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  95%|█████████▍| 72/76 [1:31:24<05:05, 76.37s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  96%|█████████▌| 73/76 [1:32:40<03:49, 76.37s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  97%|█████████▋| 74/76 [1:33:57<02:32, 76.47s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan:  99%|█████████▊| 75/76 [1:35:14<01:16, 76.46s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Catalan: 100%|██████████| 76/76 [1:36:30<00:00, 76.51s/it][A
+                                                                                                    [A🔄 Qwen/Qwen3.5-27B - language_scenario:   4%|▍         | 2/49 [1:36:30<37:48:02, 2895.38s/it]ERROR:root:⚠️ results/rainbow_meter/language_scenario/Qwen/Qwen3.5-27B/rm_answers_hy.csv is missing
+
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:   0%|          | 0/76 [00:00<?, ?it/s][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:   1%|▏         | 1/76 [01:16<1:35:30, 76.41s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:   3%|▎         | 2/76 [02:32<1:33:58, 76.20s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:   4%|▍         | 3/76 [03:48<1:32:35, 76.10s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:   5%|▌         | 4/76 [05:04<1:31:15, 76.05s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:   7%|▋         | 5/76 [06:20<1:30:04, 76.12s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:   8%|▊         | 6/76 [07:37<1:29:15, 76.51s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:   9%|▉         | 7/76 [08:54<1:27:53, 76.43s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  11%|█         | 8/76 [10:10<1:26:24, 76.24s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  12%|█▏        | 9/76 [11:25<1:25:02, 76.16s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  13%|█▎        | 10/76 [12:42<1:23:57, 76.32s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  14%|█▍        | 11/76 [13:58<1:22:36, 76.26s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  16%|█▌        | 12/76 [15:15<1:21:23, 76.30s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  17%|█▋        | 13/76 [16:31<1:20:08, 76.33s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  18%|█▊        | 14/76 [17:48<1:18:56, 76.40s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  20%|█▉        | 15/76 [19:04<1:17:43, 76.45s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  21%|██        | 16/76 [20:20<1:16:17, 76.29s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  22%|██▏       | 17/76 [21:36<1:14:57, 76.23s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  24%|██▎       | 18/76 [22:52<1:13:38, 76.19s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  25%|██▌       | 19/76 [24:08<1:12:22, 76.18s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  26%|██▋       | 20/76 [25:25<1:11:08, 76.23s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  28%|██▊       | 21/76 [26:42<1:10:00, 76.37s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  29%|██▉       | 22/76 [27:58<1:08:49, 76.48s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  30%|███       | 23/76 [29:15<1:07:31, 76.44s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  32%|███▏      | 24/76 [30:31<1:06:12, 76.40s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  33%|███▎      | 25/76 [31:47<1:04:57, 76.42s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  34%|███▍      | 26/76 [33:03<1:03:35, 76.31s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  36%|███▌      | 27/76 [34:20<1:02:18, 76.29s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  37%|███▋      | 28/76 [35:36<1:00:58, 76.21s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  38%|███▊      | 29/76 [36:52<59:36, 76.09s/it]  [A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  39%|███▉      | 30/76 [38:07<58:14, 75.98s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  41%|████      | 31/76 [39:23<57:01, 76.04s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  42%|████▏     | 32/76 [40:39<55:44, 76.00s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  43%|████▎     | 33/76 [41:56<54:31, 76.08s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  45%|████▍     | 34/76 [43:12<53:16, 76.10s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  46%|████▌     | 35/76 [44:28<52:04, 76.20s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  47%|████▋     | 36/76 [45:47<51:16, 76.91s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  49%|████▊     | 37/76 [47:03<49:53, 76.77s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  50%|█████     | 38/76 [48:20<48:33, 76.68s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  51%|█████▏    | 39/76 [49:36<47:11, 76.53s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  53%|█████▎    | 40/76 [50:52<45:50, 76.39s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  54%|█████▍    | 41/76 [52:08<44:30, 76.30s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  55%|█████▌    | 42/76 [53:24<43:13, 76.29s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  57%|█████▋    | 43/76 [54:41<41:57, 76.30s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  58%|█████▊    | 44/76 [55:57<40:39, 76.25s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  59%|█████▉    | 45/76 [57:13<39:23, 76.24s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  61%|██████    | 46/76 [58:29<38:06, 76.22s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  62%|██████▏   | 47/76 [59:45<36:47, 76.12s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  63%|██████▎   | 48/76 [1:01:01<35:29, 76.04s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  64%|██████▍   | 49/76 [1:02:17<34:12, 76.04s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  66%|██████▌   | 50/76 [1:03:33<32:59, 76.14s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  67%|██████▋   | 51/76 [1:04:50<31:48, 76.35s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  68%|██████▊   | 52/76 [1:06:06<30:32, 76.34s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  70%|██████▉   | 53/76 [1:07:23<29:16, 76.36s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  71%|███████   | 54/76 [1:08:39<27:56, 76.23s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  72%|███████▏  | 55/76 [1:09:55<26:41, 76.24s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  74%|███████▎  | 56/76 [1:11:11<25:25, 76.26s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  75%|███████▌  | 57/76 [1:12:28<24:09, 76.30s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  76%|███████▋  | 58/76 [1:13:44<22:55, 76.40s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  78%|███████▊  | 59/76 [1:15:01<21:39, 76.44s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  79%|███████▉  | 60/76 [1:16:18<20:24, 76.56s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  80%|████████  | 61/76 [1:17:35<19:10, 76.71s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  82%|████████▏ | 62/76 [1:18:53<17:59, 77.10s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  83%|████████▎ | 63/76 [1:20:09<16:38, 76.77s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  84%|████████▍ | 64/76 [1:21:25<15:20, 76.75s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  86%|████████▌ | 65/76 [1:22:42<14:02, 76.55s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  87%|████████▋ | 66/76 [1:23:58<12:44, 76.49s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  88%|████████▊ | 67/76 [1:25:14<11:27, 76.35s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  89%|████████▉ | 68/76 [1:26:30<10:10, 76.28s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  91%|█████████ | 69/76 [1:27:46<08:53, 76.21s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  92%|█████████▏| 70/76 [1:29:02<07:37, 76.20s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  93%|█████████▎| 71/76 [1:30:18<06:20, 76.15s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  95%|█████████▍| 72/76 [1:31:34<05:04, 76.13s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  96%|█████████▌| 73/76 [1:32:50<03:47, 75.99s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  97%|█████████▋| 74/76 [1:34:06<02:32, 76.00s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian:  99%|█████████▊| 75/76 [1:35:22<01:15, 75.85s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Armenian: 100%|██████████| 76/76 [1:36:37<00:00, 75.84s/it][A
+                                                                                                     [A🔄 Qwen/Qwen3.5-27B - language_scenario:   6%|▌         | 3/49 [3:13:08<52:26:59, 4104.76s/it]ERROR:root:⚠️ results/rainbow_meter/language_scenario/Qwen/Qwen3.5-27B/rm_answers_de.csv is missing
+
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:   0%|          | 0/76 [00:00<?, ?it/s][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:   1%|▏         | 1/76 [01:15<1:34:22, 75.50s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:   3%|▎         | 2/76 [02:31<1:33:09, 75.53s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:   4%|▍         | 3/76 [03:46<1:31:47, 75.45s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:   5%|▌         | 4/76 [05:01<1:30:27, 75.39s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:   7%|▋         | 5/76 [06:17<1:29:14, 75.42s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:   8%|▊         | 6/76 [07:32<1:28:06, 75.51s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:   9%|▉         | 7/76 [08:48<1:26:55, 75.59s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  11%|█         | 8/76 [10:04<1:25:37, 75.55s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  12%|█▏        | 9/76 [11:19<1:24:14, 75.43s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  13%|█▎        | 10/76 [12:34<1:22:54, 75.36s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  14%|█▍        | 11/76 [13:49<1:21:38, 75.36s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  16%|█▌        | 12/76 [15:04<1:20:10, 75.16s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  17%|█▋        | 13/76 [16:19<1:18:46, 75.03s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  18%|█▊        | 14/76 [17:34<1:17:35, 75.10s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  20%|█▉        | 15/76 [18:49<1:16:20, 75.09s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  21%|██        | 16/76 [20:04<1:15:05, 75.10s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  22%|██▏       | 17/76 [21:19<1:13:49, 75.08s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  24%|██▎       | 18/76 [22:34<1:12:34, 75.08s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  25%|██▌       | 19/76 [23:49<1:11:20, 75.09s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  26%|██▋       | 20/76 [25:05<1:10:06, 75.12s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  28%|██▊       | 21/76 [26:20<1:08:50, 75.11s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  29%|██▉       | 22/76 [27:35<1:07:34, 75.08s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  30%|███       | 23/76 [28:50<1:06:22, 75.13s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  32%|███▏      | 24/76 [30:05<1:05:07, 75.14s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  33%|███▎      | 25/76 [31:21<1:03:57, 75.24s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  34%|███▍      | 26/76 [32:36<1:02:40, 75.20s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  36%|███▌      | 27/76 [33:51<1:01:23, 75.18s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  37%|███▋      | 28/76 [35:06<1:00:05, 75.11s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  38%|███▊      | 29/76 [36:21<58:49, 75.10s/it]  [A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  39%|███▉      | 30/76 [37:36<57:33, 75.07s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  41%|████      | 31/76 [38:51<56:15, 75.01s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  42%|████▏     | 32/76 [40:06<54:59, 74.98s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  43%|████▎     | 33/76 [41:21<53:46, 75.04s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  45%|████▍     | 34/76 [42:36<52:31, 75.03s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  46%|████▌     | 35/76 [43:50<51:09, 74.85s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  47%|████▋     | 36/76 [45:05<49:54, 74.86s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  49%|████▊     | 37/76 [46:20<48:40, 74.89s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  50%|█████     | 38/76 [47:35<47:26, 74.90s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  51%|█████▏    | 39/76 [48:50<46:14, 74.99s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  53%|█████▎    | 40/76 [50:05<44:59, 74.99s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  54%|█████▍    | 41/76 [51:20<43:45, 75.03s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  55%|█████▌    | 42/76 [52:36<42:32, 75.08s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  57%|█████▋    | 43/76 [53:51<41:22, 75.22s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  58%|█████▊    | 44/76 [55:06<40:06, 75.19s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  59%|█████▉    | 45/76 [56:22<38:53, 75.28s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  61%|██████    | 46/76 [57:37<37:39, 75.33s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  62%|██████▏   | 47/76 [58:52<36:23, 75.29s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  63%|██████▎   | 48/76 [1:00:07<35:04, 75.17s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  64%|██████▍   | 49/76 [1:01:22<33:49, 75.17s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  66%|██████▌   | 50/76 [1:02:37<32:33, 75.14s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  67%|██████▋   | 51/76 [1:03:53<31:18, 75.15s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  68%|██████▊   | 52/76 [1:05:08<30:04, 75.17s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  70%|██████▉   | 53/76 [1:06:23<28:48, 75.14s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  71%|███████   | 54/76 [1:07:38<27:32, 75.11s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  72%|███████▏  | 55/76 [1:08:53<26:16, 75.08s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  74%|███████▎  | 56/76 [1:10:08<25:00, 75.02s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  75%|███████▌  | 57/76 [1:11:23<23:43, 74.93s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  76%|███████▋  | 58/76 [1:12:37<22:28, 74.92s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  78%|███████▊  | 59/76 [1:13:53<21:14, 74.96s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  79%|███████▉  | 60/76 [1:15:08<20:00, 75.02s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  80%|████████  | 61/76 [1:16:23<18:45, 75.06s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  82%|████████▏ | 62/76 [1:17:39<17:33, 75.25s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  83%|████████▎ | 63/76 [1:18:54<16:18, 75.26s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  84%|████████▍ | 64/76 [1:20:09<15:03, 75.33s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  86%|████████▌ | 65/76 [1:21:25<13:49, 75.38s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  87%|████████▋ | 66/76 [1:22:40<12:34, 75.42s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  88%|████████▊ | 67/76 [1:23:55<11:18, 75.34s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  89%|████████▉ | 68/76 [1:25:11<10:02, 75.32s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  91%|█████████ | 69/76 [1:26:26<08:47, 75.29s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  92%|█████████▏| 70/76 [1:27:41<07:31, 75.27s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  93%|█████████▎| 71/76 [1:28:56<06:16, 75.24s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  95%|█████████▍| 72/76 [1:30:12<05:01, 75.32s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  96%|█████████▌| 73/76 [1:31:27<03:45, 75.29s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  97%|█████████▋| 74/76 [1:32:43<02:30, 75.34s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German:  99%|█████████▊| 75/76 [1:33:58<01:15, 75.33s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : German: 100%|██████████| 76/76 [1:35:13<00:00, 75.40s/it][A
+                                                                                                   [A🔄 Qwen/Qwen3.5-27B - language_scenario:   8%|▊         | 4/49 [4:48:22<58:48:53, 4705.19s/it]ERROR:root:⚠️ results/rainbow_meter/language_scenario/Qwen/Qwen3.5-27B/rm_answers_az.csv is missing
+
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:   0%|          | 0/76 [00:00<?, ?it/s][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:   1%|▏         | 1/76 [01:15<1:34:08, 75.31s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:   3%|▎         | 2/76 [02:30<1:32:45, 75.21s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:   4%|▍         | 3/76 [03:45<1:31:28, 75.18s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:   5%|▌         | 4/76 [05:00<1:30:10, 75.15s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:   7%|▋         | 5/76 [06:15<1:28:58, 75.19s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:   8%|▊         | 6/76 [07:31<1:27:42, 75.18s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:   9%|▉         | 7/76 [08:46<1:26:29, 75.21s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  11%|█         | 8/76 [10:01<1:25:11, 75.17s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  12%|█▏        | 9/76 [11:16<1:23:48, 75.05s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  13%|█▎        | 10/76 [12:31<1:22:35, 75.09s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  14%|█▍        | 11/76 [13:46<1:21:24, 75.15s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  16%|█▌        | 12/76 [15:02<1:20:18, 75.30s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  17%|█▋        | 13/76 [16:17<1:19:08, 75.37s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  18%|█▊        | 14/76 [17:33<1:17:56, 75.42s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  20%|█▉        | 15/76 [18:48<1:16:40, 75.42s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  21%|██        | 16/76 [20:04<1:15:23, 75.39s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  22%|██▏       | 17/76 [21:19<1:14:04, 75.32s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  24%|██▎       | 18/76 [22:34<1:12:47, 75.31s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  25%|██▌       | 19/76 [23:50<1:11:35, 75.36s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  26%|██▋       | 20/76 [25:05<1:10:22, 75.40s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  28%|██▊       | 21/76 [26:21<1:09:08, 75.43s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  29%|██▉       | 22/76 [27:36<1:07:55, 75.47s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  30%|███       | 23/76 [28:52<1:06:40, 75.48s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  32%|███▏      | 24/76 [30:07<1:05:26, 75.51s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  33%|███▎      | 25/76 [31:23<1:04:11, 75.53s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  34%|███▍      | 26/76 [32:38<1:02:57, 75.55s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  36%|███▌      | 27/76 [33:54<1:01:42, 75.55s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  37%|███▋      | 28/76 [35:09<1:00:23, 75.49s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  38%|███▊      | 29/76 [36:25<59:05, 75.44s/it]  [A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  39%|███▉      | 30/76 [37:40<57:46, 75.35s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  41%|████      | 31/76 [38:55<56:31, 75.36s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  42%|████▏     | 32/76 [40:10<55:15, 75.35s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  43%|████▎     | 33/76 [41:26<53:58, 75.32s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  45%|████▍     | 34/76 [42:41<52:43, 75.32s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  46%|████▌     | 35/76 [43:56<51:28, 75.32s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  47%|████▋     | 36/76 [45:12<50:13, 75.35s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  49%|████▊     | 37/76 [46:27<48:58, 75.35s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  50%|█████     | 38/76 [47:43<47:46, 75.42s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  51%|█████▏    | 39/76 [48:58<46:28, 75.37s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  53%|█████▎    | 40/76 [50:13<45:13, 75.39s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  54%|█████▍    | 41/76 [51:29<43:59, 75.41s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  55%|█████▌    | 42/76 [52:44<42:44, 75.43s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  57%|█████▋    | 43/76 [54:00<41:30, 75.48s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  58%|█████▊    | 44/76 [55:15<40:14, 75.47s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  59%|█████▉    | 45/76 [56:31<39:00, 75.50s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  61%|██████    | 46/76 [57:46<37:43, 75.46s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  62%|██████▏   | 47/76 [59:02<36:26, 75.39s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  63%|██████▎   | 48/76 [1:00:17<35:09, 75.35s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  64%|██████▍   | 49/76 [1:01:32<33:53, 75.33s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  66%|██████▌   | 50/76 [1:02:47<32:38, 75.32s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  67%|██████▋   | 51/76 [1:04:03<31:24, 75.37s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  68%|██████▊   | 52/76 [1:05:18<30:09, 75.41s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  70%|██████▉   | 53/76 [1:06:34<28:53, 75.36s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  71%|███████   | 54/76 [1:07:49<27:35, 75.23s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  72%|███████▏  | 55/76 [1:09:03<26:16, 75.09s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  74%|███████▎  | 56/76 [1:10:19<25:02, 75.12s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  75%|███████▌  | 57/76 [1:11:33<23:46, 75.06s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  76%|███████▋  | 58/76 [1:12:49<22:31, 75.10s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  78%|███████▊  | 59/76 [1:14:04<21:16, 75.11s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  79%|███████▉  | 60/76 [1:15:19<20:03, 75.20s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  80%|████████  | 61/76 [1:16:35<18:50, 75.34s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  82%|████████▏ | 62/76 [1:17:50<17:34, 75.34s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  83%|████████▎ | 63/76 [1:19:05<16:19, 75.34s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  84%|████████▍ | 64/76 [1:20:21<15:02, 75.24s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  86%|████████▌ | 65/76 [1:21:36<13:47, 75.22s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  87%|████████▋ | 66/76 [1:22:51<12:31, 75.14s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  88%|████████▊ | 67/76 [1:24:06<11:16, 75.19s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  89%|████████▉ | 68/76 [1:25:21<10:01, 75.18s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  91%|█████████ | 69/76 [1:26:36<08:46, 75.19s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  92%|█████████▏| 70/76 [1:27:52<07:31, 75.22s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  93%|█████████▎| 71/76 [1:29:07<06:16, 75.21s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  95%|█████████▍| 72/76 [1:30:22<05:00, 75.23s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  96%|█████████▌| 73/76 [1:31:37<03:45, 75.17s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  97%|█████████▋| 74/76 [1:32:52<02:30, 75.22s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani:  99%|█████████▊| 75/76 [1:34:08<01:15, 75.23s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Azerbaijani: 100%|██████████| 76/76 [1:35:23<00:00, 75.27s/it][A
+                                                                                                        [A🔄 Qwen/Qwen3.5-27B - language_scenario:  10%|█         | 5/49 [6:23:46<61:50:08, 5059.28s/it]ERROR:root:⚠️ results/rainbow_meter/language_scenario/Qwen/Qwen3.5-27B/rm_answers_be.csv is missing
+
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:   0%|          | 0/76 [00:00<?, ?it/s][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:   1%|▏         | 1/76 [01:15<1:33:54, 75.13s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:   3%|▎         | 2/76 [02:30<1:32:49, 75.26s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:   4%|▍         | 3/76 [03:45<1:31:41, 75.37s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:   5%|▌         | 4/76 [05:01<1:30:22, 75.32s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:   7%|▋         | 5/76 [06:16<1:29:09, 75.34s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:   8%|▊         | 6/76 [07:31<1:27:52, 75.33s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:   9%|▉         | 7/76 [08:47<1:26:36, 75.31s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  11%|█         | 8/76 [10:02<1:25:19, 75.28s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  12%|█▏        | 9/76 [11:17<1:23:56, 75.17s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  13%|█▎        | 10/76 [12:32<1:22:50, 75.31s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  14%|█▍        | 11/76 [13:48<1:21:40, 75.39s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  16%|█▌        | 12/76 [15:04<1:20:35, 75.56s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  17%|█▋        | 13/76 [16:20<1:19:31, 75.74s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  18%|█▊        | 14/76 [17:35<1:18:06, 75.58s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  20%|█▉        | 15/76 [18:51<1:16:43, 75.46s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  21%|██        | 16/76 [20:06<1:15:22, 75.37s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  22%|██▏       | 17/76 [21:21<1:14:04, 75.33s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  24%|██▎       | 18/76 [22:36<1:12:43, 75.24s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  25%|██▌       | 19/76 [23:51<1:11:29, 75.25s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  26%|██▋       | 20/76 [25:07<1:10:16, 75.30s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  28%|██▊       | 21/76 [26:22<1:08:59, 75.26s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  29%|██▉       | 22/76 [27:37<1:07:43, 75.24s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  30%|███       | 23/76 [28:53<1:06:32, 75.33s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  32%|███▏      | 24/76 [30:08<1:05:16, 75.32s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  33%|███▎      | 25/76 [31:23<1:04:02, 75.35s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  34%|███▍      | 26/76 [32:39<1:02:47, 75.35s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  36%|███▌      | 27/76 [33:54<1:01:34, 75.39s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  37%|███▋      | 28/76 [35:10<1:00:19, 75.41s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  38%|███▊      | 29/76 [36:25<59:02, 75.37s/it]  [A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  39%|███▉      | 30/76 [37:40<57:45, 75.35s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  41%|████      | 31/76 [38:55<56:26, 75.27s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  42%|████▏     | 32/76 [40:10<55:11, 75.26s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  43%|████▎     | 33/76 [41:26<53:59, 75.33s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  45%|████▍     | 34/76 [42:41<52:44, 75.35s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  46%|████▌     | 35/76 [43:57<51:32, 75.44s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  47%|████▋     | 36/76 [45:12<50:16, 75.42s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  49%|████▊     | 37/76 [46:28<49:00, 75.40s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  50%|█████     | 38/76 [47:43<47:43, 75.36s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  51%|█████▏    | 39/76 [48:58<46:30, 75.41s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  53%|█████▎    | 40/76 [50:13<45:10, 75.29s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  54%|█████▍    | 41/76 [51:29<43:53, 75.24s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  55%|█████▌    | 42/76 [52:44<42:38, 75.24s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  57%|█████▋    | 43/76 [53:59<41:23, 75.26s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  58%|█████▊    | 44/76 [55:14<40:09, 75.29s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  59%|█████▉    | 45/76 [56:30<38:54, 75.31s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  61%|██████    | 46/76 [57:45<37:39, 75.33s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  62%|██████▏   | 47/76 [59:00<36:22, 75.25s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  63%|██████▎   | 48/76 [1:00:15<35:06, 75.22s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  64%|██████▍   | 49/76 [1:01:31<33:49, 75.17s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  66%|██████▌   | 50/76 [1:02:45<32:33, 75.12s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  67%|██████▋   | 51/76 [1:04:01<31:18, 75.14s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  68%|██████▊   | 52/76 [1:05:16<30:05, 75.22s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  70%|██████▉   | 53/76 [1:06:31<28:50, 75.24s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  71%|███████   | 54/76 [1:07:47<27:36, 75.31s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  72%|███████▏  | 55/76 [1:09:02<26:21, 75.30s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  74%|███████▎  | 56/76 [1:10:17<25:05, 75.30s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  75%|███████▌  | 57/76 [1:11:33<23:51, 75.35s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  76%|███████▋  | 58/76 [1:12:48<22:36, 75.34s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  78%|███████▊  | 59/76 [1:14:04<21:20, 75.34s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  79%|███████▉  | 60/76 [1:15:19<20:07, 75.45s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  80%|████████  | 61/76 [1:16:35<18:52, 75.49s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  82%|████████▏ | 62/76 [1:17:50<17:37, 75.51s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  83%|████████▎ | 63/76 [1:19:06<16:20, 75.44s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  84%|████████▍ | 64/76 [1:20:21<15:05, 75.46s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  86%|████████▌ | 65/76 [1:21:37<13:50, 75.52s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  87%|████████▋ | 66/76 [1:22:52<12:34, 75.43s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  88%|████████▊ | 67/76 [1:24:07<11:18, 75.41s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  89%|████████▉ | 68/76 [1:25:23<10:03, 75.44s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  91%|█████████ | 69/76 [1:26:39<08:48, 75.49s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  92%|█████████▏| 70/76 [1:27:54<07:33, 75.51s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  93%|█████████▎| 71/76 [1:29:10<06:17, 75.51s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  95%|█████████▍| 72/76 [1:30:25<05:01, 75.47s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  96%|█████████▌| 73/76 [1:31:40<03:46, 75.42s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  97%|█████████▋| 74/76 [1:32:56<02:30, 75.38s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian:  99%|█████████▊| 75/76 [1:34:11<01:15, 75.38s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Belarusian: 100%|██████████| 76/76 [1:35:26<00:00, 75.36s/it][A
+                                                                                                       [AERROR:root:⚠️ results/rainbow_meter/language_scenario/Qwen/Qwen3.5-27B/rm_answers_ru.csv is missing
+
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:   0%|          | 0/76 [00:00<?, ?it/s][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:   1%|▏         | 1/76 [01:14<1:33:37, 74.90s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:   3%|▎         | 2/76 [02:29<1:32:21, 74.88s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:   4%|▍         | 3/76 [03:44<1:31:06, 74.89s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:   5%|▌         | 4/76 [04:59<1:29:47, 74.82s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:   7%|▋         | 5/76 [06:14<1:28:33, 74.83s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:   8%|▊         | 6/76 [07:29<1:27:22, 74.90s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:   9%|▉         | 7/76 [08:44<1:26:19, 75.06s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  11%|█         | 8/76 [10:00<1:25:10, 75.15s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  12%|█▏        | 9/76 [11:14<1:23:50, 75.08s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  13%|█▎        | 10/76 [12:29<1:22:29, 74.99s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  14%|█▍        | 11/76 [13:44<1:21:17, 75.04s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  16%|█▌        | 12/76 [14:59<1:20:00, 75.01s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  17%|█▋        | 13/76 [16:14<1:18:44, 75.00s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  18%|█▊        | 14/76 [17:30<1:17:36, 75.11s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  20%|█▉        | 15/76 [18:45<1:16:23, 75.13s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  21%|██        | 16/76 [20:00<1:15:06, 75.10s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  22%|██▏       | 17/76 [21:15<1:13:53, 75.15s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  24%|██▎       | 18/76 [22:30<1:12:37, 75.13s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  25%|██▌       | 19/76 [23:45<1:11:19, 75.08s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  26%|██▋       | 20/76 [25:00<1:10:05, 75.10s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  28%|██▊       | 21/76 [26:15<1:08:50, 75.09s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  29%|██▉       | 22/76 [27:30<1:07:33, 75.07s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  30%|███       | 23/76 [28:46<1:06:22, 75.15s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  32%|███▏      | 24/76 [30:01<1:05:10, 75.20s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  33%|███▎      | 25/76 [31:16<1:03:57, 75.25s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  34%|███▍      | 26/76 [32:31<1:02:39, 75.20s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  36%|███▌      | 27/76 [33:47<1:01:23, 75.18s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  37%|███▋      | 28/76 [35:02<1:00:05, 75.12s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  38%|███▊      | 29/76 [36:17<58:52, 75.15s/it]  [A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  39%|███▉      | 30/76 [37:32<57:36, 75.15s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  41%|████      | 31/76 [38:47<56:21, 75.14s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  42%|████▏     | 32/76 [40:02<55:02, 75.05s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  43%|████▎     | 33/76 [41:17<53:51, 75.15s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  45%|████▍     | 34/76 [42:32<52:36, 75.16s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  46%|████▌     | 35/76 [43:48<51:21, 75.17s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  47%|████▋     | 36/76 [45:03<50:12, 75.32s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  49%|████▊     | 37/76 [46:19<48:56, 75.29s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  50%|█████     | 38/76 [47:34<47:41, 75.30s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  51%|█████▏    | 39/76 [48:50<46:29, 75.40s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  53%|█████▎    | 40/76 [50:05<45:16, 75.46s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  54%|█████▍    | 41/76 [51:20<43:55, 75.29s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  55%|█████▌    | 42/76 [52:35<42:37, 75.22s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  57%|█████▋    | 43/76 [53:50<41:22, 75.22s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  58%|█████▊    | 44/76 [55:05<40:05, 75.16s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  59%|█████▉    | 45/76 [56:21<38:51, 75.22s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  61%|██████    | 46/76 [57:36<37:38, 75.29s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  62%|██████▏   | 47/76 [58:51<36:23, 75.28s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  63%|██████▎   | 48/76 [1:00:06<35:05, 75.21s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  64%|██████▍   | 49/76 [1:01:21<33:48, 75.14s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  66%|██████▌   | 50/76 [1:02:37<32:34, 75.18s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  67%|██████▋   | 51/76 [1:03:52<31:20, 75.20s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  68%|██████▊   | 52/76 [1:05:07<30:05, 75.24s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  70%|██████▉   | 53/76 [1:06:22<28:49, 75.19s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  71%|███████   | 54/76 [1:07:37<27:31, 75.07s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  72%|███████▏  | 55/76 [1:08:52<26:16, 75.06s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  74%|███████▎  | 56/76 [1:10:07<24:59, 74.98s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  75%|███████▌  | 57/76 [1:11:22<23:43, 74.91s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  76%|███████▋  | 58/76 [1:12:37<22:27, 74.89s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  78%|███████▊  | 59/76 [1:13:52<21:13, 74.92s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  79%|███████▉  | 60/76 [1:15:07<19:59, 74.99s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  80%|████████  | 61/76 [1:16:22<18:46, 75.11s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  82%|████████▏ | 62/76 [1:17:37<17:32, 75.17s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  83%|████████▎ | 63/76 [1:18:52<16:16, 75.08s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  84%|████████▍ | 64/76 [1:20:08<15:01, 75.14s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  86%|████████▌ | 65/76 [1:21:23<13:46, 75.13s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  87%|████████▋ | 66/76 [1:22:38<12:32, 75.21s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  88%|████████▊ | 67/76 [1:23:53<11:16, 75.17s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  89%|████████▉ | 68/76 [1:25:08<10:00, 75.10s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  91%|█████████ | 69/76 [1:26:23<08:45, 75.07s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  92%|█████████▏| 70/76 [1:27:38<07:30, 75.05s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  93%|█████████▎| 71/76 [1:28:53<06:15, 75.05s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  95%|█████████▍| 72/76 [1:30:08<05:00, 75.14s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  96%|█████████▌| 73/76 [1:31:23<03:45, 75.07s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  97%|█████████▋| 74/76 [1:32:39<02:30, 75.16s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian:  99%|█████████▊| 75/76 [1:33:54<01:15, 75.16s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Russian: 100%|██████████| 76/76 [1:35:09<00:00, 75.21s/it][A
+                                                                                                    [A🔄 Qwen/Qwen3.5-27B - language_scenario:  12%|█▏        | 6/49 [9:34:22<85:42:34, 7175.69s/it]ERROR:root:⚠️ results/rainbow_meter/language_scenario/Qwen/Qwen3.5-27B/rm_answers_nl.csv is missing
+
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:   0%|          | 0/76 [00:00<?, ?it/s][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:   1%|▏         | 1/76 [01:15<1:33:47, 75.04s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:   3%|▎         | 2/76 [02:29<1:32:27, 74.96s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:   4%|▍         | 3/76 [03:44<1:31:14, 75.00s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:   5%|▌         | 4/76 [04:59<1:29:57, 74.97s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:   7%|▋         | 5/76 [06:14<1:28:42, 74.96s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:   8%|▊         | 6/76 [07:29<1:27:28, 74.97s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:   9%|▉         | 7/76 [08:45<1:26:22, 75.11s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:  11%|█         | 8/76 [10:00<1:25:00, 75.00s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:  12%|█▏        | 9/76 [11:14<1:23:41, 74.95s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:  13%|█▎        | 10/76 [12:29<1:22:22, 74.89s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:  14%|█▍        | 11/76 [13:44<1:21:14, 74.99s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:  16%|█▌        | 12/76 [14:59<1:20:00, 75.01s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:  17%|█▋        | 13/76 [16:15<1:18:56, 75.19s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:  18%|█▊        | 14/76 [17:30<1:17:43, 75.21s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:  20%|█▉        | 15/76 [18:46<1:16:32, 75.29s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:  21%|██        | 16/76 [20:01<1:15:16, 75.27s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:  22%|██▏       | 17/76 [21:16<1:13:54, 75.17s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:  24%|██▎       | 18/76 [22:31<1:12:36, 75.11s/it][A
+🔄 Qwen/Qwen3.5-27B - language_scenario : Dutch:  25%|██▌       | 19/76 [23:46<1:11:20, 75.10s/it][A[2026-04-29T07:23:29.044] error: *** JOB 22318201 ON gcn133 CANCELLED AT 2026-04-29T07:23:29 DUE TO TIME LIMIT ***

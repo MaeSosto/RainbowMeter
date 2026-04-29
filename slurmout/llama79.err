@@ -1,0 +1,20 @@
+INFO:root:Using device: cuda
+/gpfs/home3/msosto/Projects/RainbowMeter/lib/models.py:6: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Fetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]Fetching 30 files:   0%|          | 0/30 [00:10<?, ?it/s]
+Fetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]Fetching 30 files:   0%|          | 0/30 [00:11<?, ?it/s]
+Fetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]Fetching 30 files:   0%|          | 0/30 [00:10<?, ?it/s]
+Fetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]Fetching 30 files:   0%|          | 0/30 [00:11<?, ?it/s]
+Fatal Python error: _PyImport_Init: global import state already initialized
+Python runtime state: preinitialized
+
+Thread 0x0000151e4234d740 (most recent call first):
+  <no Python frame>
