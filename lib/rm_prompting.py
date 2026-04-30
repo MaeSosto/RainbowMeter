@@ -109,6 +109,8 @@ class Rainbow_Meter:
                 
                 rm_existent = self.get_rm()
                 num_answers = len(rm_existent) #Number of lines in the existent rainbow meter file
+                if num_answers == TOT_CRITERIA_NUM:
+                    continue
                 rainbow_meter = self.fill_in_rm(rainbow_meter, rm_existent)
                 for subcategory, row in tqdm.tqdm(complete_rm_language[num_answers:].iterrows(), 
                                                 total=len(complete_rm_language[num_answers:]), 
@@ -152,8 +154,6 @@ class Rainbow_Meter:
     from typing import List, Tuple
     def fill_in_rm(self, rainbow_meter, df):
         #If a RM exist starts from there
-        # # self.existent_rm_df = df
-        #num_answers =  #Number of lines in the existent rainbow meter file
         if df.shape[0] < TOT_CRITERIA_NUM: #The RM exist but it's incomplete
             #If the csv contains answers already, then fill it up until there and continue from there
             for subcategory, row in df[:df.shape[0]].iterrows():
@@ -231,7 +231,7 @@ def model_scores(answers):
 
 
 
-model_list = [LLAMA32_3_OLL]
+model_list = [QWEN35_9]
 
 #Iterate on Models
 for model_name in model_list: #tqdm.tqdm(model_list, desc="Answering Rainbow Meter Criteria", total=len(model_list)):
