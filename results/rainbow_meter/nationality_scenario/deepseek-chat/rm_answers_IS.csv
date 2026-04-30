@@ -1,9 +1,17 @@
 Category;Subcategory;Fact;Support;Opposition;Stance;Fact Coherence;Fact Validity;Fact Weight coherence by validity;Stance Coherence;Stance Validity;Stance Weight coherence by validity
+<<<<<<< HEAD:results/rainbow_meter/nationality_scenario/deepseek-chat/rm_answers_IS.csv
 Equality & non-discrimination;Constitution (sexual orientation);0.8;1.0;0.0;1.0;0.36;1.0;0.36;1.0;1.0;1.0
 Equality & non-discrimination;Employment (sexual orientation);1.0;1.0;0.2;0.9;1.0;1.0;1.0;0.36;1.0;0.36
 Equality & non-discrimination;Goods & services (sexual orientation);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Education (sexual orientation);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Health (sexual orientation);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+=======
+Equality & non-discrimination;Constitution (sexual orientation);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+Equality & non-discrimination;Employment (sexual orientation);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+Equality & non-discrimination;Goods & services (sexual orientation);0.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
+Equality & non-discrimination;Education (sexual orientation);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
+Equality & non-discrimination;Health (sexual orientation);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
+>>>>>>> ed09524f56a119d81a61c8ca03fac781d1a5947f:results/rainbow_meter/nationality_scenario/Qwen/Qwen3.5-2B/rm_answers_IE.csv
 Equality & non-discrimination;Conversion practices ban (sexual orientation);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Equality body mandate (sexual orientation);1.0;1.0;0.4;0.8;1.0;1.0;1.0;0.04;1.0;0.04
 Equality & non-discrimination;Equality action plan (sexual orientation);1.0;1.0;0.4;0.8;1.0;1.0;1.0;0.04;1.0;0.04
@@ -15,6 +23,7 @@ Equality & non-discrimination;Health (gender identity);1.0;1.0;0.0;1.0;1.0;1.0;1
 Equality & non-discrimination;Conversion practices ban (gender identity);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Equality body mandate (gender identity);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Equality action plan (gender identity);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+<<<<<<< HEAD:results/rainbow_meter/nationality_scenario/deepseek-chat/rm_answers_IS.csv
 Equality & non-discrimination;Law (gender expression);1.0;1.0;0.2;0.9;1.0;1.0;1.0;0.36;1.0;0.36
 Equality & non-discrimination;Constitution (sex characteristics);0.2;1.0;0.0;1.0;0.36;1.0;0.36;1.0;1.0;1.0
 Equality & non-discrimination;Employment (sex characteristics);1.0;1.0;0.4;0.8;1.0;1.0;1.0;0.04;1.0;0.04
@@ -23,6 +32,16 @@ Equality & non-discrimination;Education (sex characteristics);1.0;1.0;0.0;1.0;1.
 Equality & non-discrimination;Health (sex characteristics);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Equality body mandate (sex characteristics);0.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Equality & non-discrimination;Equality action plan (sex characteristics);1.0;1.0;0.4;0.8;1.0;1.0;1.0;0.04;1.0;0.04
+=======
+Equality & non-discrimination;Law (gender expression);0.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+Equality & non-discrimination;Constitution (sex characteristics);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+Equality & non-discrimination;Employment (sex characteristics);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+Equality & non-discrimination;Goods & services (sex characteristics);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+Equality & non-discrimination;Education (sex characteristics);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+Equality & non-discrimination;Health (sex characteristics);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+Equality & non-discrimination;Equality body mandate (sex characteristics);0.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
+Equality & non-discrimination;Equality action plan (sex characteristics);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+>>>>>>> ed09524f56a119d81a61c8ca03fac781d1a5947f:results/rainbow_meter/nationality_scenario/Qwen/Qwen3.5-2B/rm_answers_IE.csv
 Equality & non-discrimination;Blood donations;1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Family;Marriage equality;1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Family;Registered partnership (similar rights to marriage);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
@@ -55,8 +74,13 @@ Legal gender recognition;No 'Gender Identity Disorder' diagnosis/psychological o
 Legal gender recognition;No compulsory medical intervention required;1.0;1.0;0.4;0.8;1.0;1.0;1.0;0.04;1.0;0.04
 Legal gender recognition;No compulsory surgical intervention required;1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Legal gender recognition;No compulsory sterilisation required;1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+<<<<<<< HEAD:results/rainbow_meter/nationality_scenario/deepseek-chat/rm_answers_IS.csv
 Legal gender recognition;No compulsory divorce required;1.0;0.8;0.0;0.9;1.0;1.0;1.0;1.0;1.0;1.0
 Legal gender recognition;No age restriction;0.4;0.2;0.0;0.6;0.04;1.0;0.04;1.0;1.0;1.0
+=======
+Legal gender recognition;No compulsory divorce required;1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
+Legal gender recognition;No age restriction;1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+>>>>>>> ed09524f56a119d81a61c8ca03fac781d1a5947f:results/rainbow_meter/nationality_scenario/Qwen/Qwen3.5-2B/rm_answers_IE.csv
 Legal gender recognition;Legal gender recognition procedures exist for minors;1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Legal gender recognition;Depathologisation;0.0;1.0;0.4;0.8;1.0;1.0;1.0;0.04;1.0;0.04
 Intersex bodily integrity;Prohibition of medical intervention without informed consent (intersex);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
@@ -65,11 +89,19 @@ Intersex bodily integrity;Existence of effective monitoring mechanism;0.0;1.0;1.
 Intersex bodily integrity;Access to justice for victims and reparations;0.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Civil society space;Public event held, no state obstruction of freedom of assembly (last 3 years);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Civil society space;Public event held, there is enough protection (last 3 years);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
+<<<<<<< HEAD:results/rainbow_meter/nationality_scenario/deepseek-chat/rm_answers_IS.csv
 Civil society space;Associations operate, no state obstruction of freedom association (last 3 years);1.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
 Civil society space;LGBTI human rights defenders are not at risk;0.8;1.0;0.0;1.0;0.36;1.0;0.36;1.0;1.0;1.0
 Civil society space;No laws limiting external funding;1.0;0.2;0.2;0.5;1.0;1.0;1.0;0.36;1.0;0.36
 Civil society space;No laws limiting freedom of expression (national/local);0.4;1.0;0.0;1.0;0.04;1.0;0.04;1.0;1.0;1.0
 Asylum;Asylum law (sexual orientation);1.0;1.0;0.8;0.6;1.0;1.0;1.0;0.36;1.0;0.36
+=======
+Civil society space;Associations operate, no state obstruction of freedom association (last 3 years);1.0;0.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0
+Civil society space;LGBTI human rights defenders are not at risk;0.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+Civil society space;No laws limiting external funding;1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
+Civil society space;No laws limiting freedom of expression (national/local);1.0;0.0;0.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
+Asylum;Asylum law (sexual orientation);0.0;1.0;0.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0
+>>>>>>> ed09524f56a119d81a61c8ca03fac781d1a5947f:results/rainbow_meter/nationality_scenario/Qwen/Qwen3.5-2B/rm_answers_IE.csv
 Asylum;Other positive measures (sexual orientation);1.0;1.0;1.0;0.5;1.0;1.0;1.0;1.0;1.0;1.0
 Asylum;Asylum law (gender identity);0.6;0.8;0.2;0.8;0.04;1.0;0.04;0.36;1.0;0.36
 Asylum;Other positive measures (gender identity);0.2;1.0;1.0;0.5;0.36;1.0;0.36;1.0;1.0;1.0
