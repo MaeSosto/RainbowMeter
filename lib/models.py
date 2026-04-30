@@ -1,4 +1,4 @@
-from lib.constants import *
+from constants import *
 import requests
 from openai import OpenAI
 #import google.generativeai as genai
@@ -23,9 +23,10 @@ URL_DEEPSEEK_POST = "https://api.deepseek.com/v1/chat/completions"
 QWEN35_2 = "Qwen/Qwen3.5-2B" #HF
 QWEN35_9 = "Qwen/Qwen3.5-9B" #HF
 QWEN35_27 = "Qwen/Qwen3.5-27B" #HF
+LLAMA32_3 = "meta-llama/Llama-3.2-3B" #HF
 LLAMA32_3_OLL ="llama3.2:3b" #Ollama
-LLAMA31_8_OLL = "llama3.1:8b" #Ollama
 LLAMA31_8 = "meta-llama/Llama-3.1-8B" #HF
+LLAMA31_8_OLL = "llama3.1:8b" #Ollama
 LLAMA31_70 = "meta-llama/Llama-3.1-70B" #HF
 LLAMA31_70_OLL = "llama3.1:70b" #Ollama
 DEEPSEEKV32 = "deepseek-chat"
@@ -41,6 +42,7 @@ MODEL_LABEL = {
     QWEN35_2: "Qwen3.5 2B",
     QWEN35_9: "Qwen3.5 9B",
     QWEN35_27: "Qwen3.5 27B",
+    LLAMA32_3: "LlaMa 3.2 3B",
     LLAMA32_3_OLL: "LlaMa 3.2 3B",
     LLAMA31_8_OLL: "LlaMa 3.1 8B",
     LLAMA31_8: "LlaMa 3.1 8B",
@@ -62,6 +64,7 @@ class Model:
             QWEN35_2: self.initialize_HuggingFace,
             QWEN35_9: self.initialize_HuggingFace,
             QWEN35_27: self.initialize_HuggingFace,
+            LLAMA32_3: self.initialize_HuggingFace,
             LLAMA32_3_OLL: self._initialize_Ollama,
             LLAMA31_8_OLL: self._initialize_Ollama,
             LLAMA31_8: self.initialize_HuggingFace,
@@ -79,6 +82,7 @@ class Model:
             QWEN35_2: self.request_HuggingFace,
             QWEN35_9: self.request_HuggingFace,
             QWEN35_27: self.request_HuggingFace,
+            LLAMA32_3: self.request_HuggingFace,
             LLAMA32_3_OLL: self.request_Ollama,
             LLAMA31_8_OLL: self.request_Ollama,
             LLAMA31_8: self.request_HuggingFace,
@@ -169,28 +173,17 @@ class Model:
             if "qwen" in self.model_name.lower():
                 self.auto_processor = AutoProcessor.from_pretrained(self.model_name)
                 self.auto_model = AutoModelForImageTextToText.from_pretrained(self.model_name)
-                #self.auto_model = self.auto_model.to(device)
+            
             else:
-                # self.auto_tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-                # self.auto_model = AutoModelForCausalLM.from_pretrained(self.model_name)
-                # self.pipeline = pipeline(
-                #     "text-generation", 
-                #     model=self.model_name, 
-                #     model_kwargs={"torch_dtype": torch.bfloat16}, 
-                #     device_map="auto",
-                #     tokenizer=self.auto_tokenizer
-                # )
-
                 self.auto_tokenizer = AutoTokenizer.from_pretrained(self.model_name)
 
                 self.pipeline = pipeline(
                     "text-generation",
                     model=self.model_name,
                     tokenizer=self.auto_tokenizer,
-                    torch_dtype=torch.bfloat16,
-                    device_map="auto",
+                    dtype=torch.bfloat16,
+                    device_map="auto"
                 )
-                #pipeline("text-generation", model=self.model_name, tokenizer=self.auto_tokenizer)
             return False
         except Exception as X:
             logger.error(f"⚠️ Hugging Face model {self.model_name} cannot be initialized: {X}")
@@ -354,7 +347,6 @@ class Model:
                 
                 out_ = self.pipeline(
                     self.prompt,
-                    max_new_tokens=256,
                     do_sample=True,
                     pad_token_id=self.auto_tokenizer.eos_token_id,
                 )

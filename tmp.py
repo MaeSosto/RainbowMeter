@@ -26,6 +26,11 @@ for scenario in SCENARIOS:
             if scenario == SCENARIO_LANGUAGE:
                 language, country_name = get_lang_from_lang_code(label)
                 label = language
+                
+                if language in ["German","Azerbaijani", "Dutch", "Hungarian", "Icelandic", "Irish", "Latvian", "Luxembourgish"]:
+                    file_path = os.path.join(model_path, file) 
+                    #print(file_path)
+                    os.remove(file_path)
             elif scenario == SCENARIO_NATIONALITY:
                 language, country_name = get_lang_from_lang_code("", label)
                 label = country_name
@@ -33,7 +38,7 @@ for scenario in SCENARIOS:
                 language, country_name = get_lang_from_lang_code(label.split("_")[0], label.split("_")[1])
                 label = f"{language} - {country_name}"
             
-            if language in ["German","Azerbaijani", "Dutch", "Hungarian", "Icelandic", "Irish", "Latvian", "Luxembourgish"]:
-                file_path = os.path.join(model_path, file) 
-                #print(file_path)
-                os.remove(file_path)
+                if language in ["German","Azerbaijani", "Dutch", "Hungarian", "Icelandic", "Irish", "Latvian", "Luxembourgish"]:
+                    file_path = os.path.join(model_path, file) 
+                    #print(file_path)
+                    os.remove(file_path)
