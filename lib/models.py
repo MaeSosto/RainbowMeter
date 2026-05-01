@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 from anthropic import Anthropic
 
 load_dotenv()
+MAX_GENERATION_TOKEN = 10
 
 URL_OLLAMA_LOCAL = "http://localhost:11434/api"
 URL_LMSTUDIO_LOCAL = "http://localhost:1234"
@@ -36,7 +37,7 @@ GPT54_MINI = 'gpt-5.4-mini'
 GEMINI3_FLASH = 'gemini-3-flash-preview'
 DEEPL = "DeepL" 
 
-MODEL_LIST = [QWEN35_2, QWEN35_9, QWEN35_27, LLAMA32_3_OLL, LLAMA31_8_OLL, LLAMA31_70_OLL, DEEPSEEKV32, SONNET46, GPT54, GEMINI3_FLASH]
+MODEL_LIST = [QWEN35_2, QWEN35_9, QWEN35_27, LLAMA32_3, LLAMA31_8, LLAMA31_70, DEEPSEEKV32, SONNET46, GPT54, GEMINI3_FLASH]
 
 MODEL_LABEL = {
     QWEN35_2: "Qwen3.5 2B",
@@ -199,7 +200,7 @@ class Model:
                     "prompt": self.prompt,
                     "messages": [{"role": "user", "content": self.prompt}],
                     "stream": False,
-                    "max_new_tokens": 500
+                    "max_new_tokens": MAX_GENERATION_TOKEN
                 }
             )
 
@@ -222,7 +223,6 @@ class Model:
         except Exception as X:
             logger.error(f"_request_ollama: {X}")
             return None
-    import requests
 
     def _request_LMSStudio(self):
         try:
@@ -233,7 +233,7 @@ class Model:
                     "model": self.model_name,
                     "messages": [{"role": "user", "content": self.prompt}],
                     "stream": False,
-                    "max_new_tokens": 500
+                    "max_new_tokens": MAX_GENERATION_TOKEN
                 },
                 timeout=60  # in seconds
             )
@@ -260,6 +260,16 @@ class Model:
                         thinking_config=types.ThinkingConfig(thinking_level="minimal")
                     )
                 )
+            response = self.client.models.generate_content(
+                model=self.model_name,
+                contents=self.prompt,
+                config=types.GenerateContentConfig(
+                    max_output_tokens=MAX_GENERATION_TOKEN,
+                    thinking_config=types.ThinkingConfig(
+                        thinkingBudget=0
+                    ),
+                )
+            )
             response = response.text 
             if response is None or response == "":
                 logger.error(f"request_GoogleGenAI: empty response")
@@ -295,7 +305,7 @@ class Model:
         logger.setLevel(logging.ERROR)
         try:
             message = self.client.messages.create(
-                max_tokens=500,
+                max_tokens=MAX_GENERATION_TOKEN,
                 messages=[
                     {
                         "role": "user",
@@ -327,10 +337,12 @@ class Model:
                         ]
                     },
                 ]
+                
                 inputs = self.auto_processor.apply_chat_template(
                     messages,
                     add_generation_prompt=True,
                     tokenize=True,
+                    enable_thinking=False,
                     return_dict=True,
                     return_tensors="pt",
                     #pad_token_id=self.auto_processor.eos_token_id,
@@ -338,7 +350,7 @@ class Model:
                 
                 outputs = self.auto_model.generate(
                     **inputs,
-                    max_new_tokens=40,
+                    max_new_tokens=MAX_GENERATION_TOKEN,
                     pad_token_id=self.auto_processor.tokenizer.eos_token_id
                 )
                 out_ = self.auto_processor.decode(outputs[0][inputs["input_ids"].shape[-1]:])
@@ -348,6 +360,7 @@ class Model:
                 out_ = self.pipeline(
                     self.prompt,
                     do_sample=True,
+                    max_new_tokens=MAX_GENERATION_TOKEN,
                     pad_token_id=self.auto_tokenizer.eos_token_id,
                 )
 

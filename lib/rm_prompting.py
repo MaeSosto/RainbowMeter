@@ -122,10 +122,6 @@ class Rainbow_Meter:
                     
                     for question_type in QUESTION_TYPES:
                         full_prompt, possible_binary_answers = self.get_prompt(row[question_type])
-
-                        if self.language_code == "az":
-                            breakpoint
-                            
                         # Generate answers
                         question_responses = []
                         while len(question_responses) < MAX_NUM_ANSWERS:
@@ -227,11 +223,7 @@ def model_scores(answers):
     return coherence, validity, final_score
     
 
-
-
-
-
-model_list = [QWEN35_9]
+model_list = [QWEN35_2]
 
 #Iterate on Models
 for model_name in model_list: #tqdm.tqdm(model_list, desc="Answering Rainbow Meter Criteria", total=len(model_list)):
