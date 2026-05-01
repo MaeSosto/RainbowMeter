@@ -6,3 +6,4 @@ lib/fix.py
 .python-version
 tables/
 graphs/
+slurmout/
