@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 from anthropic import Anthropic
 
 load_dotenv()
+MAX_GENERATION_TOKEN = 10
 
 URL_OLLAMA_LOCAL = "http://localhost:11434/api"
 URL_LMSTUDIO_LOCAL = "http://localhost:1234"
@@ -199,7 +200,7 @@ class Model:
                     "prompt": self.prompt,
                     "messages": [{"role": "user", "content": self.prompt}],
                     "stream": False,
-                    "max_new_tokens": 500
+                    "max_new_tokens": MAX_GENERATION_TOKEN
                 }
             )
 
@@ -233,7 +234,7 @@ class Model:
                     "model": self.model_name,
                     "messages": [{"role": "user", "content": self.prompt}],
                     "stream": False,
-                    "max_new_tokens": 500
+                    "max_new_tokens": MAX_GENERATION_TOKEN
                 },
                 timeout=60  # in seconds
             )
@@ -260,6 +261,16 @@ class Model:
                         thinking_config=types.ThinkingConfig(thinking_level="minimal")
                     )
                 )
+            response = self.client.models.generate_content(
+                model=self.model_name,
+                contents=self.prompt,
+                config=types.GenerateContentConfig(
+                    max_output_tokens=MAX_GENERATION_TOKEN,
+                    thinking_config=types.ThinkingConfig(
+                        thinkingBudget=0
+                    ),
+                )
+            )
             response = response.text 
             if response is None or response == "":
                 logger.error(f"request_GoogleGenAI: empty response")
@@ -295,7 +306,7 @@ class Model:
         logger.setLevel(logging.ERROR)
         try:
             message = self.client.messages.create(
-                max_tokens=500,
+                max_tokens=MAX_GENERATION_TOKEN,
                 messages=[
                     {
                         "role": "user",
