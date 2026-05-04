@@ -223,7 +223,7 @@ def model_scores(answers):
     return coherence, validity, final_score
     
 
-model_list = [QWEN35_2]
+model_list = [QWEN35_27]
 
 #Iterate on Models
 for model_name in model_list: #tqdm.tqdm(model_list, desc="Answering Rainbow Meter Criteria", total=len(model_list)):
