@@ -70,6 +70,7 @@ def coh_val_heatmaps():
         for model_name in MODEL_LIST:
             model_path = os.path.join(root_dir, model_name)
             model_label = MODEL_LABEL[model_name]
+            
             if not os.path.exists(model_path):
                 continue
             
@@ -79,6 +80,7 @@ def coh_val_heatmaps():
             stance_coh_data[model_label] = {}
             stance_val_data[model_label] = {}
             stance_coh_val_data[model_label] = {}
+            
             for file in os.listdir(model_path):
                 # extract language (e.g., az from rm_answers_az.csv)
                 

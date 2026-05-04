@@ -55,6 +55,7 @@ CITIZENSHIP = "citizenships"
 FACT = "Fact"
 SUPPORT = "Support"
 OPPOSITION = "Opposition"
+STANCE = "Stance"
 QUESTION_TYPES = [FACT, SUPPORT, OPPOSITION]
 STANCE = "Stance"
 YES = "yes"

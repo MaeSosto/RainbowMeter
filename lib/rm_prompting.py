@@ -9,9 +9,92 @@ COH_VAL_SCORE = "Weight coherence by validity"
 
 class Rainbow_Meter:
     #Return True if the Rainbow map is complete, otherwise return False (and therefore needs to be calculated)
-    def __init__(self, model, scenario):
-        self.model = model
-        self.scenario = scenario
+    def __init__(self, model_name):
+        self.model = Model(model_name)
+        error = self.model.initialize_model()
+        if error: #If there are no errors in initializing the model
+            logger.info("Error initializing the model")
+            return None
+        
+        #Iterate on the scenario
+        for scenario in SCENARIOS:
+            self.scenario = scenario
+            
+                #Iterate on every country
+            for country_name, country_data in tqdm.tqdm(
+                    COUNTRIES_FILE.items(),
+                    total=len(COUNTRIES_FILE),
+                    desc=f"🔄 {self.model.model_name} - {self.scenario}"
+                ):
+                self.country_name = country_name
+                self.country_id = country_data[ID]
+                self.citizenship = country_data[CITIZENSHIP]
+            
+                #Iterate on every language and citizenship 
+                for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
+                    self.language = COUNTRIES_FILE[country_name][LANGUAGES][country_identity_num]
+                    self.language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num]
+                    
+                    rainbow_meter = {
+                            CATEGORY: [],
+                            SUBCATEGORY: [],
+                            FACT: [], 
+                            SUPPORT: [], 
+                            OPPOSITION: [],
+                            f"{STANCE}" : [],
+                            f"{FACT} {COHERENCE}" : [],
+                            f"{FACT} {VALIDITY}" : [],
+                            f"{FACT} {COH_VAL_SCORE}" : [],
+                            f"{STANCE} {COHERENCE}" : [],
+                            f"{STANCE} {VALIDITY}" : [],
+                            f"{STANCE} {COH_VAL_SCORE}"  : [],
+                        }
+                    
+                    #Retrieve the Rainbow Meter of a specific language (if exist)
+                    #if self.scenario == SCENARIO_LANGUAGE:
+                    rm_language_exist, complete_rm_language = self.get_rainbow_meter()
+                    if not rm_language_exist: #If the Rainbow Meter questionnaire in doesn't exist in that language than we cannot compare the results
+                        continue
+                    
+                    rm_existent = self.get_rainbow_map()
+                    num_answers = len(rm_existent) #Number of lines in the existent rainbow meter file
+                    if num_answers == TOT_CRITERIA_NUM:
+                        continue
+                    rainbow_meter = self.fill_in_rm(rainbow_meter, rm_existent)
+                    for subcategory, row in tqdm.tqdm(complete_rm_language[num_answers:].iterrows(), 
+                                                    total=len(complete_rm_language[num_answers:]), 
+                                                    desc=f"🔄 {self.model.model_name} - {self.scenario} : {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_NATIONALITY else f'{self.country_id} in {self.language_code}'}",
+                                                    leave= False
+                                            ):
+                        rainbow_meter[CATEGORY].append(row[CATEGORY])
+                        rainbow_meter[SUBCATEGORY].append(subcategory)
+                        
+                        for question_type in QUESTION_TYPES:
+                            full_prompt, possible_binary_answers = self.get_prompt(row[question_type])
+                            # Generate answers
+                            question_responses = []
+                            while len(question_responses) < MAX_NUM_ANSWERS:
+                                resp = self.model.call_model(full_prompt)
+                                if resp == None or resp == "":
+                                    continue
+                                resp = self.get_binary_answer(resp, possible_binary_answers)
+                                question_responses.append(resp)
+
+                            rainbow_meter[question_type].append(round(self.combine_binary_answers(question_responses),2))
+
+                            if question_type == OPPOSITION:
+                                rainbow_meter[f"{STANCE}"].append(round(np.mean([rainbow_meter[SUPPORT][-1], np.abs(rainbow_meter[OPPOSITION][-1] - 1)]), 2))
+                                
+                            if question_type in {FACT, OPPOSITION}:
+                                coherence, validity, final_score = model_scores(question_responses)
+                                prefix = FACT if question_type == FACT else STANCE
+                                rainbow_meter[f"{prefix} {COHERENCE}"].append(round(coherence, 2))
+                                rainbow_meter[f"{prefix} {VALIDITY}"].append(round(validity, 2))
+                                rainbow_meter[f"{prefix} {COH_VAL_SCORE}"].append(round(final_score, 2))
+                                
+                        #Export Rainbow Meter
+                        rainbow_meter_df = pd.DataFrame(rainbow_meter)
+                        self.export_rm_result(rainbow_meter_df)
     
     #Return True if the results exists, otherwise False
     def rm_result_exist(self):
@@ -25,7 +108,7 @@ class Rainbow_Meter:
         return os.path.exists(result_path+scenario_path), result_path+scenario_path #If a rainbow meter with the looked characteristics exist
     
     #Return True if the results exists, otherwise False
-    def get_rm(self):
+    def get_rainbow_map(self):
         result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model.model_name}/"
         if self.scenario == SCENARIO_LANGUAGE:
             scenario_path = f"rm_answers_{self.language_code}.csv"
@@ -69,84 +152,6 @@ class Rainbow_Meter:
             return True,  df
         logger.error(f"⚠️ {result_path+scenario_path} is missing")
         return False, None
-    
-    def get_answers(self):
-        #Iterate on every country
-        for country_name, country_data in tqdm.tqdm(
-                COUNTRIES_FILE.items(),
-                total=len(COUNTRIES_FILE),
-                desc=f"🔄 {self.model.model_name} - {self.scenario}"
-            ):
-            self.country_name = country_name
-            self.country_id = country_data[ID]
-            self.citizenship = country_data[CITIZENSHIP]
-        
-            #Iterate on every language and citizenship 
-            for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
-                self.language = COUNTRIES_FILE[country_name][LANGUAGES][country_identity_num]
-                self.language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num]
-                
-                rainbow_meter = {
-                        CATEGORY: [],
-                        SUBCATEGORY: [],
-                        FACT: [], 
-                        SUPPORT: [], 
-                        OPPOSITION: [],
-                        f"{STANCE}" : [],
-                        f"{FACT} {COHERENCE}" : [],
-                        f"{FACT} {VALIDITY}" : [],
-                        f"{FACT} {COH_VAL_SCORE}" : [],
-                        f"{STANCE} {COHERENCE}" : [],
-                        f"{STANCE} {VALIDITY}" : [],
-                        f"{STANCE} {COH_VAL_SCORE}"  : [],
-                    }
-                
-                #Retrieve the Rainbow Meter of a specific language (if exist)
-                #if self.scenario == SCENARIO_LANGUAGE:
-                rm_language_exist, complete_rm_language = self.get_rainbow_meter()
-                if not rm_language_exist: #If the Rainbow Meter questionnaire in doesn't exist in that language than we cannot compare the results
-                    continue
-                
-                rm_existent = self.get_rm()
-                num_answers = len(rm_existent) #Number of lines in the existent rainbow meter file
-                if num_answers == TOT_CRITERIA_NUM:
-                    continue
-                rainbow_meter = self.fill_in_rm(rainbow_meter, rm_existent)
-                for subcategory, row in tqdm.tqdm(complete_rm_language[num_answers:].iterrows(), 
-                                                total=len(complete_rm_language[num_answers:]), 
-                                                desc=f"🔄 {self.model.model_name} - {self.scenario} : {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_NATIONALITY else f'{self.country_id} in {self.language_code}'}",
-                                                leave= False
-                                        ):
-                    rainbow_meter[CATEGORY].append(row[CATEGORY])
-                    rainbow_meter[SUBCATEGORY].append(subcategory)
-                    
-                    for question_type in QUESTION_TYPES:
-                        full_prompt, possible_binary_answers = self.get_prompt(row[question_type])
-                            
-                        # Generate answers
-                        question_responses = []
-                        while len(question_responses) < MAX_NUM_ANSWERS:
-                            resp = self.model.call_model(full_prompt)
-                            if resp == None or resp == "":
-                                continue
-                            resp_ = self.get_binary_answer(resp, possible_binary_answers)
-                            question_responses.append(resp_)
-
-                        rainbow_meter[question_type].append(round(self.combine_binary_answers(question_responses),2))
-
-                        if question_type == OPPOSITION:
-                            rainbow_meter[f"{STANCE}"].append(round(np.mean([rainbow_meter[SUPPORT][-1], np.abs(rainbow_meter[OPPOSITION][-1] - 1)]), 2))
-                            
-                        if question_type in {FACT, OPPOSITION}:
-                            coherence, validity, final_score = model_scores(question_responses)
-                            prefix = FACT if question_type == FACT else STANCE
-                            rainbow_meter[f"{prefix} {COHERENCE}"].append(round(coherence, 2))
-                            rainbow_meter[f"{prefix} {VALIDITY}"].append(round(validity, 2))
-                            rainbow_meter[f"{prefix} {COH_VAL_SCORE}"].append(round(final_score, 2))
-                            
-                    #Export Rainbow Meter
-                    rainbow_meter_df = pd.DataFrame(rainbow_meter)
-                    self.export_rm_result(rainbow_meter_df)
 
     from typing import List, Tuple
     def fill_in_rm(self, rainbow_meter, df):
@@ -173,10 +178,10 @@ class Rainbow_Meter:
     #Return yes/no/unsure/undefined based on the answer
     def get_binary_answer(self, response, answ_options):
         response = response.lower().replace(".", "").replace("*", "").replace('"', '').strip()
-        first_word = response.split()[0].strip(",;:!?.").lower()
-        if first_word == answ_options[0].lower():
-            return YES
-        if first_word == answ_options[1].lower():
+        first_word = response.split()[0].strip(",;:!?.")
+        if response and first_word in answ_options: #Response is valid
+            if first_word == answ_options[0]:
+                return YES
             return NO
         return UNDEFINED
     
@@ -225,29 +230,10 @@ def model_scores(answers):
     
 
 
-
-
-
-model_list = [GPT54]
-
-#Iterate on Models
-for model_name in model_list: #tqdm.tqdm(model_list, desc="Answering Rainbow Meter Criteria", total=len(model_list)):
-    model = Model(model_name)
-    error = model.initialize_model()
-    if error: #If there are no errors in initializing the model
-        logger.info("Error initializing the model")
-        break
+model_name = GPT54
+rainbow_meter = Rainbow_Meter(model_name)
     
-    #Iterate on the scenario
-    for scenario in SCENARIOS:
-        rainbow_meter = Rainbow_Meter(model, scenario)
-        rainbow_meter.get_answers()
-            
-            # #Evaluations
-            # logger.info("🧮 Evaluations")
-            # eval = Evaluations(model, scenario, PROMPT_NUM)
-            # # eval.calculate_wilcoxon()
-        logger.info(f"✅ {scenario} Done")    
-
-if not error:
-    logger.info("✅ All models done")
+    # #Evaluations
+    # logger.info("🧮 Evaluations")
+    # eval = Evaluations(model, scenario, PROMPT_NUM)
+    # # eval.calculate_wilcoxon()

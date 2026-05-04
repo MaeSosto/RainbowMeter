@@ -25,11 +25,8 @@ QWEN35_2 = "Qwen/Qwen3.5-2B" #HF
 QWEN35_9 = "Qwen/Qwen3.5-9B" #HF
 QWEN35_27 = "Qwen/Qwen3.5-27B" #HF
 LLAMA32_3 = "meta-llama/Llama-3.2-3B" #HF
-LLAMA32_3_OLL ="llama3.2:3b" #Ollama
 LLAMA31_8 = "meta-llama/Llama-3.1-8B" #HF
-LLAMA31_8_OLL = "llama3.1:8b" #Ollama
 LLAMA31_70 = "meta-llama/Llama-3.1-70B" #HF
-LLAMA31_70_OLL = "llama3.1:70b" #Ollama
 DEEPSEEKV32 = "deepseek-chat"
 SONNET46 = "claude-sonnet-4-6"
 GPT54 = 'gpt-5.4'
@@ -44,11 +41,8 @@ MODEL_LABEL = {
     QWEN35_9: "Qwen3.5 9B",
     QWEN35_27: "Qwen3.5 27B",
     LLAMA32_3: "LlaMa 3.2 3B",
-    LLAMA32_3_OLL: "LlaMa 3.2 3B",
-    LLAMA31_8_OLL: "LlaMa 3.1 8B",
     LLAMA31_8: "LlaMa 3.1 8B",
     LLAMA31_70: "LlaMa 3.1 70B",
-    LLAMA31_70_OLL: "LlaMa 3.1 70B",
     DEEPSEEKV32: "DeepSeek-V3.2",
     SONNET46: "Sonnet 4.6",
     DEEPL: "DeepL",
@@ -66,11 +60,8 @@ class Model:
             QWEN35_9: self.initialize_HuggingFace,
             QWEN35_27: self.initialize_HuggingFace,
             LLAMA32_3: self.initialize_HuggingFace,
-            LLAMA32_3_OLL: self._initialize_Ollama,
-            LLAMA31_8_OLL: self._initialize_Ollama,
             LLAMA31_8: self.initialize_HuggingFace,
             LLAMA31_70: self.initialize_HuggingFace,
-            LLAMA31_70_OLL: self._initialize_Ollama,
             DEEPSEEKV32: self.initialize_DeepSeek,
             SONNET46: self.initialize_Antrophic,
             GPT54: self.initialize_OpenAI, 
@@ -84,11 +75,8 @@ class Model:
             QWEN35_9: self.request_HuggingFace,
             QWEN35_27: self.request_HuggingFace,
             LLAMA32_3: self.request_HuggingFace,
-            LLAMA32_3_OLL: self.request_Ollama,
-            LLAMA31_8_OLL: self.request_Ollama,
             LLAMA31_8: self.request_HuggingFace,
             LLAMA31_70: self.request_HuggingFace,
-            LLAMA31_70_OLL: self.request_Ollama,
             DEEPSEEKV32: self.request_OpenAi,
             SONNET46: self.request_Antrophic,
             GPT54: self.request_OpenAi, 
@@ -157,17 +145,6 @@ class Model:
             logger.error(f"⚠️ Ollama server is not running")
             return True
     
-    def _initialize_LMSStudio(self):
-        try:
-            response = requests.get(f"{URL_LMSTUDIO_LOCAL}/v1/models")
-            if response.status_code != 200:
-                logger.error("⚠️ LM Studio server is not running")
-                return True
-            return False
-        except requests.RequestException:
-            logger.error("⚠️ LM Studio server is not running")
-            return True
-    
     def initialize_HuggingFace(self):
         logger.setLevel(logging.ERROR)
         try:
@@ -222,32 +199,6 @@ class Model:
 
         except Exception as X:
             logger.error(f"_request_ollama: {X}")
-            return None
-
-    def _request_LMSStudio(self):
-        try:
-            response = requests.post(
-                f"{URL_LMSTUDIO_LOCAL}/v1/chat/completions",
-                headers={"Content-Type": "application/json"},
-                json={
-                    "model": self.model_name,
-                    "messages": [{"role": "user", "content": self.prompt}],
-                    "stream": False,
-                    "max_new_tokens": MAX_GENERATION_TOKEN
-                },
-                timeout=60  # in seconds
-            )
-
-            if response is None or response == "":
-                logger.error(f"_request_lmstudio: empty response")
-                return None
-
-            data = response.json()
-            response = data["choices"][0]["message"]["content"]
-            return response
-
-        except Exception as e:
-            logger.error(f"_request_lmstudio error: {str(e)}")
             return None
     
     def request_GoogleGenAI(self):
@@ -329,14 +280,7 @@ class Model:
         logger.setLevel(logging.ERROR)
         try:
             if "qwen" in self.model_name.lower():
-                messages = [
-                    {
-                        "role": "user",
-                        "content": [
-                            {"type": "text", "text": self.prompt}
-                        ]
-                    },
-                ]
+                messages = [{"role": "user", "content": [{"type": "text", "text": self.prompt}]},]
                 
                 inputs = self.auto_processor.apply_chat_template(
                     messages,
