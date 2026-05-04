@@ -10,12 +10,12 @@ CMAP_RG=LinearSegmentedColormap.from_list('rg',["r", "y", "g"], N=256)
 #Given a lan id, return the language name
 def get_lang_from_lang_code(lang_code = "", count_code = ""):
     for country_name in COUNTRIES_FILE: 
-            for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
-                if lang_code == COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num] and (count_code == "" or count_code == COUNTRIES_FILE[country_name][ID]):
-                    return language, country_name
-                if count_code == COUNTRIES_FILE[country_name][ID] and lang_code == "":
-                    return language, country_name
-    return None
+        for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
+            if lang_code == COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num] and (count_code == "" or count_code == COUNTRIES_FILE[country_name][ID]):
+                return language, country_name
+            if count_code == COUNTRIES_FILE[country_name][ID] and lang_code == "":
+                return language, country_name
+    return None, None
 
 #Generate, show and save an heatmap
 def generate_heatmap(df, xlabel, ylabel, title, savefig):

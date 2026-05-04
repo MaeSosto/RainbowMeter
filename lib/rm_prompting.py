@@ -122,14 +122,15 @@ class Rainbow_Meter:
                     
                     for question_type in QUESTION_TYPES:
                         full_prompt, possible_binary_answers = self.get_prompt(row[question_type])
+                            
                         # Generate answers
                         question_responses = []
                         while len(question_responses) < MAX_NUM_ANSWERS:
                             resp = self.model.call_model(full_prompt)
                             if resp == None or resp == "":
                                 continue
-                            resp = self.get_binary_answer(resp, possible_binary_answers)
-                            question_responses.append(resp)
+                            resp_ = self.get_binary_answer(resp, possible_binary_answers)
+                            question_responses.append(resp_)
 
                         rainbow_meter[question_type].append(round(self.combine_binary_answers(question_responses),2))
 
@@ -172,10 +173,10 @@ class Rainbow_Meter:
     #Return yes/no/unsure/undefined based on the answer
     def get_binary_answer(self, response, answ_options):
         response = response.lower().replace(".", "").replace("*", "").replace('"', '').strip()
-        first_word = response.split()[0].strip(",;:!?.")
-        if response and first_word in answ_options: #Response is valid
-            if first_word == answ_options[0]:
-                return YES
+        first_word = response.split()[0].strip(",;:!?.").lower()
+        if first_word == answ_options[0].lower():
+            return YES
+        if first_word == answ_options[1].lower():
             return NO
         return UNDEFINED
     
