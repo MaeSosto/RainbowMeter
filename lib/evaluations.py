@@ -183,6 +183,7 @@ class Evaluations:
             weights_list = np.insert(self.weights_list[4:], 0, weight_max)
         return np.multiply(rainbow_map_scores, weights_list)
 
+
     def calculate_wilcoxon(self):
         
         #Scenario Language --> paragono i risultati rainbow meter di scenario language per ogni lingua (e associated country con quella lingua) e i risultati della rainbow map di quello stesso country  

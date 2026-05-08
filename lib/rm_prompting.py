@@ -117,6 +117,7 @@ class Rainbow_Meter:
     
     #Return True if the results exists, otherwise False
     def get_rainbow_map(self):
+    def get_rainbow_map(self):
         result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model.model_name}/"
         if self.scenario == SCENARIO_LANGUAGE:
             scenario_path = f"rm_answers_{self.language_code}.csv"
