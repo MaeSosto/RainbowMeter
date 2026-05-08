@@ -17,6 +17,20 @@ def get_lang_from_lang_code(lang_code = "", count_code = ""):
                 return language, country_name
     return None, None
 
+#Given a scenario and the name of the rainbow meter file, it returns the language/country or both as label for the graph
+def get_label(label, scenario):
+    if scenario == SCENARIO_LANGUAGE:
+        language, _ = get_lang_from_lang_code(label)
+        return language
+    elif scenario == SCENARIO_NATIONALITY:
+        _, country = get_lang_from_lang_code("", label)
+        return country
+    elif scenario == SCENARIO_LAN_NAT:
+        lang_code, country_code = label.split("_")
+        language, country = get_lang_from_lang_code(lang_code, country_code)
+        return f"{language} - {country}"
+    return label
+
 #Generate, show and save an heatmap
 def generate_heatmap(df, xlabel, ylabel, title, savefig):
     # Plot heatmap
@@ -56,102 +70,85 @@ def back_translation_heatmap():
     generate_heatmap(df, "Language", "Model", "Models Performance in Back Translation Test", f"{GRAPHS_PATH}/back_translation.png")
     return df
 
-##Generate Coherence-validity Heatmap dataframes and heatmaps
 def coh_val_heatmaps():
+    # Define metrics once
+    metrics = {
+        "fact_coh": "Fact Coherence",
+        "fact_val": "Fact Validity",
+        "fact_coh_val": "Fact Weight coherence by validity",
+        "stance_coh": "Stance Coherence",
+        "stance_val": "Stance Validity",
+        "stance_coh_val": "Stance Weight coherence by validity",
+    }
+
     for scenario in SCENARIOS:
         root_dir = f"{RAINBOW_METER_RESULT_PATH}/{scenario}"
-        fact_coh_data = {}
-        fact_val_data = {}
-        fact_coh_val_data = {}
-        stance_coh_data = {}
-        stance_val_data = {}
-        stance_coh_val_data = {}
-            
+
+        # metric_name -> {model -> {label -> value}}
+        data = {m: {} for m in metrics}
+
         for model_name in MODEL_LIST:
             model_path = os.path.join(root_dir, model_name)
-            model_label = MODEL_LABEL[model_name]
             if not os.path.exists(model_path):
                 continue
-            
-            fact_coh_data[model_label] = {}
-            fact_val_data[model_label] = {}
-            fact_coh_val_data[model_label] = {}
-            stance_coh_data[model_label] = {}
-            stance_val_data[model_label] = {}
-            stance_coh_val_data[model_label] = {}
+
+            model_label = MODEL_LABEL[model_name]
+
+            # initialize model entries
+            for m in metrics:
+                data[m][model_label] = {}
+
             for file in os.listdir(model_path):
-                # extract language (e.g., az from rm_answers_az.csv)
-                
-                label = file.replace("rm_answers_", "").replace(".csv", "")
-                if scenario == SCENARIO_LANGUAGE:
-                    language, country_name = get_lang_from_lang_code(label)
-                    label = language
-                elif scenario == SCENARIO_NATIONALITY:
-                    language, country_name = get_lang_from_lang_code("", label)
-                    label = country_name
-                elif scenario == SCENARIO_LAN_NAT:
-                    language, country_name = get_lang_from_lang_code(label.split("_")[0], label.split("_")[1])
-                    label = f"{language} - {country_name}" 
-                
-                file_path = os.path.join(model_path, file)
-                df = pd.read_csv(file_path, sep=";")
+                if not file.endswith(".csv"):
+                    continue
 
-                # compute means
-                fact_coh_mean = df["Fact Coherence"].mean()
-                fact_val_mean = df["Fact Validity"].mean()
-                fact_coh_val_mean = df["Fact Weight coherence by validity"].mean()
-                stance_coh_mean = df["Stance Coherence"].mean()
-                stance_val_mean = df["Stance Validity"].mean()
-                stance_mean = df["Stance Weight coherence by validity"].mean()
+                raw_label = file.replace("rm_answers_", "").replace(".csv", "")
+                label = get_label(raw_label, scenario)
 
-                fact_coh_data[model_label][label] = fact_coh_mean
-                fact_val_data[model_label][label] = fact_val_mean
-                fact_coh_val_data[model_label][label] = fact_coh_val_mean
-                stance_coh_data[model_label][label] = stance_coh_mean
-                stance_val_data[model_label][label] = stance_val_mean
-                stance_coh_val_data[model_label][label] = stance_mean
+                df = pd.read_csv(os.path.join(model_path, file), sep=";")
 
-        # convert to DataFrames
-        fact_coh_df = pd.DataFrame.from_dict(fact_coh_data, orient="index")
-        fact_val_df = pd.DataFrame.from_dict(fact_val_data, orient="index")
-        fact_df = pd.DataFrame.from_dict(fact_coh_val_data, orient="index")
-        stance_coh_df = pd.DataFrame.from_dict(stance_coh_data, orient="index")
-        stance_val_df = pd.DataFrame.from_dict(stance_val_data, orient="index")
-        stance_df = pd.DataFrame.from_dict(stance_coh_val_data, orient="index")
+                # compute all means in one go
+                means = df[list(metrics.values())].mean()
 
-        # optional: sort columns alphabetically
-        #fact_df = fact_df.sort_index(axis=0)
-        fact_coh_df = fact_coh_df.sort_index(axis=1)
-        fact_val_df = fact_val_df.sort_index(axis=1)
-        fact_df = fact_df.sort_index(axis=1)
-        #stance_df = stance_df.sort_index(axis=0)
-        stance_coh_df = stance_coh_df.sort_index(axis=1)
-        stance_val_df = stance_val_df.sort_index(axis=1)
-        stance_df = stance_df.sort_index(axis=1)
+                for m, col in metrics.items():
+                    data[m][model_label][label] = means[col]
 
-        # Convert to numeric (in case some values are read as strings)
-        fact_coh_df = fact_coh_df.apply(pd.to_numeric, errors="coerce")
-        fact_val_df = fact_val_df.apply(pd.to_numeric, errors="coerce")
-        fact_df = fact_df.apply(pd.to_numeric, errors="coerce")
-        stance_coh_df = stance_coh_df.apply(pd.to_numeric, errors="coerce")
-        stance_val_df = stance_val_df.apply(pd.to_numeric, errors="coerce")
-        stance_df = stance_df.apply(pd.to_numeric, errors="coerce")
+        # Convert, clean, save, plot
+        for m, metric_data in data.items():
+            df_metric = pd.DataFrame.from_dict(metric_data, orient="index")
 
-        fact_coh_df.to_csv(f"{TABLES_PATH}/{scenario}/fact_coh.csv")
-        fact_val_df.to_csv(f"{TABLES_PATH}/{scenario}/fact_val.csv")
-        fact_df.to_csv(f"{TABLES_PATH}/{scenario}/fact_coh_val.csv")
-        stance_coh_df.to_csv(f"{TABLES_PATH}/{scenario}/stance_coh.csv")
-        stance_val_df.to_csv(f"{TABLES_PATH}/{scenario}/stance_val.csv")
-        stance_df.to_csv(f"{TABLES_PATH}/{scenario}/stance_coh_val.csv")
-        generate_heatmap(fact_coh_df, "Language", "Model", "Models Fact Coherence scores", f"{GRAPHS_PATH}/{scenario}/fact_coh.png")
-        generate_heatmap(fact_val_df, "Language", "Model", "Models Fact Validity scores", f"{GRAPHS_PATH}/{scenario}/fact_val.png")
-        generate_heatmap(fact_df, "Language", "Model", "Models Fact Weight coherence by validity scores", f"{GRAPHS_PATH}/{scenario}/fact_coh_val.png")
-        generate_heatmap(stance_coh_df, "Language", "Model", "Models Stance Coherence scores", f"{GRAPHS_PATH}/{scenario}/stance_coh.png")
-        generate_heatmap(stance_val_df, "Language", "Model", "Models Stance Validity scores", f"{GRAPHS_PATH}/{scenario}/stance_val.png")
-        generate_heatmap(stance_df, "Language", "Model", "Models Stance Weight coherence by validity scores", f"{GRAPHS_PATH}/{scenario}/stance_coh_val.png")
+            df_metric = (
+                df_metric
+                .sort_index(axis=1)
+                .apply(pd.to_numeric, errors="coerce")
+            )
 
+            # Save CSV
+            out_csv = f"{TABLES_PATH}/{MODELS_STATS_PATH}/{scenario}/{m}.csv"
+            df_metric.to_csv(out_csv)
+
+            # Pretty title
+            title_map = {
+                "fact_coh": "Models Fact Coherence scores",
+                "fact_val": "Models Fact Validity scores",
+                "fact_coh_val": "Models Fact Weight coherence by validity scores",
+                "stance_coh": "Models Stance Coherence scores",
+                "stance_val": "Models Stance Validity scores",
+                "stance_coh_val": "Models Stance Weight coherence by validity scores",
+            }
+
+            out_png = f"{GRAPHS_PATH}/{MODELS_STATS_PATH}/{scenario}/{m}.png"
+
+            generate_heatmap(
+                df_metric,
+                "Language",
+                "Model",
+                title_map[m] + f" in {scenario} Scenario",
+                out_png
+            )
+            
 #Back translation Heatmap
-back_translation_heatmap()
+#back_translation_heatmap()
 
 #Weight coherence by validity scores
 coh_val_heatmaps()

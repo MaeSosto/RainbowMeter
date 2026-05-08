@@ -55,6 +55,7 @@ CITIZENSHIP = "citizenships"
 FACT = "Fact"
 SUPPORT = "Support"
 OPPOSITION = "Opposition"
+STANCE = "Stance"
 QUESTION_TYPES = [FACT, SUPPORT, OPPOSITION]
 STANCE = "Stance"
 YES = "yes"
@@ -79,35 +80,12 @@ SCENARIO_LANGUAGE = "language_scenario"
 SCENARIO_NATIONALITY = "nationality_scenario"
 SCENARIO_LAN_NAT = "language_nationality_scenario"
 SCENARIOS = [SCENARIO_LANGUAGE, SCENARIO_NATIONALITY, SCENARIO_LAN_NAT]
+MODELS_STATS_PATH = "models_stats"
 for s in SCENARIOS:
     os.makedirs(f"{RAINBOW_METER_RESULT_PATH}/{s}", exist_ok=True)
     os.makedirs(f"{EVALUATIONS_PATH}/{s}", exist_ok=True)
     os.makedirs(f"{GRAPHS_PATH}/{s}", exist_ok=True)
-    os.makedirs(f"{TABLES_PATH}/{s}", exist_ok=True)
+    os.makedirs(f"{GRAPHS_PATH}/{MODELS_STATS_PATH}/{s}", exist_ok=True)
+    os.makedirs(f"{TABLES_PATH}/{MODELS_STATS_PATH}/{s}", exist_ok=True)
     
 RAINBOW_METER_EN = pd.read_csv(f"{RAINBOW_METER_DATA_PATH}/{SCENARIO_LANGUAGE}/rainbow_meter_en.csv", sep=";", index_col=SUBCATEGORY)
-
-def control_env():
-    err = False
-    var = ""
-    for var in ["HF_TOKEN"]:
-        var = os.getenv(var)
-        if var == "":
-            logger.error(f"⚠️ Local var {var} not found!")
-            err = True
-    return err
-
-control_env()
-
-# def csv_to_json(path_json, path_csv):
-#     csv_file = pd.DataFrame(pd.read_csv(path_csv, sep = ",", header = 0, index_col = False))
-#     csv_file = pd.DataFrame(pd.read_csv(path_csv, sep = ",", header = 0, index_col = False))
-#     csv_file.to_json(path_json, indent = 4, orient = "records", double_precision = 10, force_ascii = True, date_unit = "ms", default_handler = None)
-    
-# def json_to_csv(path_json, path_csv):
-#     df = pd.read_json(path_json)
-#     df.to_csv(path_csv)
-    
-
-
-#csv_to_json("data/rainbow_meter/rainbow_meter_en_.json", "data/rainbow_meter/rainbow_meter_en.csv")

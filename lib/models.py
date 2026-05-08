@@ -3,7 +3,7 @@ import requests
 from openai import OpenAI
 #import google.generativeai as genai
 #from google import genai
-import google.generativeai as genai
+#import google.generativeai as genai
 from google import genai
 from google.genai import types
 import re
@@ -11,6 +11,7 @@ import deepl
 from transformers import AutoModelForCausalLM, AutoTokenizer, AutoProcessor, AutoModelForImageTextToText, pipeline
 from dotenv import load_dotenv
 from anthropic import Anthropic
+from transformers import GenerationConfig
 
 load_dotenv()
 MAX_GENERATION_TOKEN = 10
@@ -295,21 +296,35 @@ class Model:
                 outputs = self.auto_model.generate(
                     **inputs,
                     max_new_tokens=MAX_GENERATION_TOKEN,
+                    max_length=None,
                     pad_token_id=self.auto_processor.tokenizer.eos_token_id
                 )
                 out_ = self.auto_processor.decode(outputs[0][inputs["input_ids"].shape[-1]:])
                 out_ = extract_model_answer(out_)
             else:
                 
-                out_ = self.pipeline(
-                    self.prompt,
+                generation_config = GenerationConfig(
                     do_sample=True,
                     max_new_tokens=MAX_GENERATION_TOKEN,
                     pad_token_id=self.auto_tokenizer.eos_token_id,
                 )
 
+                out_ = self.pipeline(
+                    self.prompt,
+                    generation_config=generation_config,
+                )
+                # out_ = self.pipeline(
+                #     self.prompt,
+                #     do_sample=True,
+                #     max_new_tokens=MAX_GENERATION_TOKEN,
+                #     max_length=None,
+                #     pad_token_id=self.auto_tokenizer.eos_token_id,
+                # )
+
                 out_ = out_[0]["generated_text"]
+                print(f"MODELOUT:{out_}" )
                 out_ = extract_model_answer(out_)
+                print(f"MODELOUT_MOD:{out_}" )
                 
             return out_            
         except Exception as X:

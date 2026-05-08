@@ -5,6 +5,7 @@ import requests
 import random
 logging.getLogger('deepl').setLevel(logging.WARNING)
 
+RAINBOW_METER_EN = pd.read_csv(f"{RAINBOW_METER_DATA_PATH}/{SCENARIO_LANGUAGE}/rainbow_meter_en.csv", sep=";", index_col=SUBCATEGORY)
 API_URL = "https://router.huggingface.co/hf-inference/models/sentence-transformers/all-MiniLM-L6-v2"
 NUM_SAMPLES_QUESTIONS = 3
 
@@ -219,8 +220,8 @@ def _build_question(
     model_exception=None,
 ):
     # NATIONALITY only → no translation
-    if scenario == SCENARIO_NATIONALITY:
-        return f"In {country_name}, {base_text}"
+    if scenario == SCENARIO_NATIONALITY or language == "English":
+        return f"In {"the " if country_name == "United Kingdom" or country_name == "Netherlands" else ""}{country_name}, {base_text}"
 
     # Build input text
     if scenario == SCENARIO_LANGUAGE:
@@ -388,9 +389,9 @@ model_list = [QWEN35_27]
 #Translate the prompt instructions
 TRANSLATION_MODEL = DEEPL
 # With TRANSLATION_MODEL = DEEPL this is necessary
-TRANSLATION_MODEL_EXCEPTION = LLAMA32_3_OLL
+TRANSLATION_MODEL_EXCEPTION = LLAMA31_70
 
-translate_default_prompt()
-#translate_rainbow_meter()
+#translate_default_prompt()
+translate_rainbow_meter()
 
 
