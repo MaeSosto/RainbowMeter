@@ -211,6 +211,6 @@ def model_scores(answers):
     
 
 #the results are in the results/rainbow_meter folder
-model_name = LLAMA31_70
+model_name = QWEN35_27
 rainbow_meter = Rainbow_Meter(model_name)
 

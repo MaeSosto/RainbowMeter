@@ -159,12 +159,542 @@ def maes():
                 title = f"{test} MAE Heatmap",
                 savefig = f"{GRAPHS_PATH}/{scenario}/{test}_mae.png"
             )
-      
+
+def generate_line_graphs():
+
+    tests = {
+        FACT: {
+            "score": "Fact",
+            "pvalue": "Fact Pvalue",
+            "mae": "Fact MAE",
+        },
+        STANCE: {
+            "score": "Stance",
+            "pvalue": "Stance Pvalue",
+            "mae": "Stance MAE",
+        }
+    }
+
+    for test, cols in tests.items():
+
+        score_col = cols["score"]
+        pvalue_col = cols["pvalue"]
+        mae_col = cols["mae"]
+
+        for scenario in SCENARIOS:
+
+            df = pd.read_csv(
+                f"{EVALUATIONS_PATH}/{scenario}/general_stats.csv",
+                sep=";"
+            )
+
+            # ==========================================================
+            # X AXIS
+            # ==========================================================
+
+            if scenario == SCENARIO_LANGUAGE:
+
+                df["x_label"] = df["languages"]
+
+            elif scenario == SCENARIO_NATIONALITY:
+
+                df["x_label"] = df["Country"]
+
+            elif scenario == SCENARIO_LAN_NAT:
+
+                df["x_label"] = (
+                    df["languages"].astype(str)
+                    + " | "
+                    + df["Country"].astype(str)
+                )
+
+            # ==========================================================
+            # SORTING
+            # ==========================================================
+
+            df = df.sort_values("Rainbow Map")
+
+            models = df["Model"].unique()
+
+            # ==========================================================
+            # GENERATE PER MODEL
+            # ==========================================================
+
+            for model in models:
+
+                df_model = (
+                    df[df["Model"] == model]
+                    .copy()
+                    .reset_index(drop=True)
+                )
+
+                # ======================================================
+                # SIGNED ERROR
+                # ======================================================
+
+                df_model["Signed Error"] = (
+                    df_model[score_col]
+                    - df_model["Rainbow Map"]
+                )
+
+                x = range(len(df_model))
+
+                # ======================================================
+                # 1. PREDICTION VS REALITY
+                # ======================================================
+
+                plt.figure(figsize=(24, 8))
+
+                plt.plot(
+                    x,
+                    df_model[score_col],
+                    marker="o",
+                    label=f"{score_col} Prediction"
+                )
+
+                plt.plot(
+                    x,
+                    df_model["Rainbow Map"],
+                    linestyle="--",
+                    label="Rainbow Map"
+                )
+
+                # emphasize distance
+                plt.fill_between(
+                    x,
+                    df_model[score_col],
+                    df_model["Rainbow Map"],
+                    alpha=0.2
+                )
+
+                plt.xticks(
+                    x,
+                    df_model["x_label"],
+                    rotation=90
+                )
+
+                plt.ylabel("Score")
+                plt.xlabel("Language / Country")
+
+                plt.title(
+                    f"{model} | {scenario} | "
+                    f"{test} Prediction vs Rainbow Map"
+                )
+
+                plt.legend()
+                plt.tight_layout()
+
+                save_path = (
+                    f"{GRAPHS_PATH}/linegraphs/"
+                    f"prediction_vs_real/"
+                    f"{scenario}/{test}/{model}.png"
+                )
+
+                os.makedirs(
+                    os.path.dirname(save_path),
+                    exist_ok=True
+                )
+
+                plt.savefig(save_path)
+                plt.close()
+
+                # ======================================================
+                # 2. PVALUE GRAPH
+                # ======================================================
+
+                plt.figure(figsize=(24, 8))
+
+                plt.plot(
+                    x,
+                    df_model[pvalue_col],
+                    marker="o",
+                    label=pvalue_col
+                )
+
+                # significance threshold
+                plt.axhline(
+                    y=0.05,
+                    linestyle="--",
+                    label="p = 0.05"
+                )
+
+                plt.xticks(
+                    x,
+                    df_model["x_label"],
+                    rotation=90
+                )
+
+                plt.ylabel("P-Value")
+                plt.xlabel("Language / Country")
+
+                plt.title(
+                    f"{model} | {scenario} | "
+                    f"{test} P-Values"
+                )
+
+                plt.legend()
+                plt.tight_layout()
+
+                save_path = (
+                    f"{GRAPHS_PATH}/linegraphs/"
+                    f"pvalues/"
+                    f"{scenario}/{test}/{model}.png"
+                )
+
+                os.makedirs(
+                    os.path.dirname(save_path),
+                    exist_ok=True
+                )
+
+                plt.savefig(save_path)
+                plt.close()
+
+                # ======================================================
+                # 3. SIGNED ERROR GRAPH
+                # ======================================================
+
+                plt.figure(figsize=(24, 8))
+
+                plt.plot(
+                    x,
+                    df_model["Signed Error"],
+                    marker="o",
+                    label="Signed Error"
+                )
+
+                # perfect alignment
+                plt.axhline(
+                    y=0,
+                    linestyle="--",
+                    label="Perfect Alignment"
+                )
+
+                # emphasize magnitude of error
+                plt.fill_between(
+                    x,
+                    0,
+                    df_model["Signed Error"],
+                    alpha=0.2
+                )
+
+                plt.xticks(
+                    x,
+                    df_model["x_label"],
+                    rotation=90
+                )
+
+                plt.ylabel(
+                    "Prediction - Rainbow Map"
+                )
+
+                plt.xlabel("Language / Country")
+
+                plt.title(
+                    f"{model} | {scenario} | "
+                    f"{test} Signed Error"
+                )
+
+                plt.legend()
+                plt.tight_layout()
+
+                save_path = (
+                    f"{GRAPHS_PATH}/linegraphs/"
+                    f"signed_error/"
+                    f"{scenario}/{test}/{model}.png"
+                )
+
+                os.makedirs(
+                    os.path.dirname(save_path),
+                    exist_ok=True
+                )
+
+                plt.savefig(save_path)
+                plt.close()
+              
+def generate_combined_line_graphs():
+
+    for scenario in SCENARIOS:
+
+        df = pd.read_csv(
+            f"{EVALUATIONS_PATH}/{scenario}/general_stats.csv",
+            sep=";"
+        )
+
+        # ==============================================================
+        # X AXIS LABELS
+        # ==============================================================
+
+        if scenario == SCENARIO_LANGUAGE:
+
+            df["x_label"] = df["languages"]
+
+        elif scenario == SCENARIO_NATIONALITY:
+
+            df["x_label"] = df["Country"]
+
+        elif scenario == SCENARIO_LAN_NAT:
+
+            df["x_label"] = (
+                df["languages"].astype(str)
+                + " | "
+                + df["Country"].astype(str)
+            )
+
+        # ==============================================================
+        # SORT FOR CONSISTENT VISUALIZATION
+        # ==============================================================
+
+        df = df.sort_values("Rainbow Map")
+
+        models = df["Model"].unique()
+
+        # ==============================================================
+        # GENERATE PER MODEL
+        # ==============================================================
+
+        for model in models:
+
+            df_model = (
+                df[df["Model"] == model]
+                .copy()
+                .reset_index(drop=True)
+            )
+
+            # ==========================================================
+            # AGGREGATED ERROR
+            # ==============================================================
+
+            df_model["Fact Signed Error"] = (
+                df_model["Fact"]
+                - df_model["Rainbow Map"]
+            )
+
+            df_model["Stance Signed Error"] = (
+                df_model["Stance"]
+                - df_model["Rainbow Map"]
+            )
+
+            x = range(len(df_model))
+
+            # ==========================================================
+            # 1. FACT + STANCE VS RAINBOW MAP
+            # ==============================================================
+
+            plt.figure(figsize=(26, 10))
+
+            # Fact
+            plt.plot(
+                x,
+                df_model["Fact"],
+                marker="o",
+                label="Fact Prediction"
+            )
+
+            # Stance
+            plt.plot(
+                x,
+                df_model["Stance"],
+                marker="o",
+                label="Stance Prediction"
+            )
+
+            # Rainbow Map
+            plt.plot(
+                x,
+                df_model["Rainbow Map"],
+                linestyle="--",
+                linewidth=2,
+                label="Rainbow Map"
+            )
+
+            # Emphasize distance
+            plt.fill_between(
+                x,
+                df_model["Fact"],
+                df_model["Rainbow Map"],
+                alpha=0.15
+            )
+
+            plt.fill_between(
+                x,
+                df_model["Stance"],
+                df_model["Rainbow Map"],
+                alpha=0.15
+            )
+
+            plt.xticks(
+                x,
+                df_model["x_label"],
+                rotation=90
+            )
+
+            plt.ylabel("Score")
+            plt.xlabel("Language / Country")
+
+            plt.title(
+                f"{model} | {scenario} | "
+                f"Predictions vs Rainbow Map"
+            )
+
+            plt.legend()
+            plt.tight_layout()
+
+            save_path = (
+                f"{GRAPHS_PATH}/linegraphs/"
+                f"combined_predictions/"
+                f"{scenario}/{model}.png"
+            )
+
+            os.makedirs(
+                os.path.dirname(save_path),
+                exist_ok=True
+            )
+
+            plt.savefig(save_path)
+            plt.close()
+
+            # ==========================================================
+            # 2. PVALUE COMPARISON
+            # ==============================================================
+
+            plt.figure(figsize=(26, 10))
+
+            plt.plot(
+                x,
+                df_model["Fact Pvalue"],
+                marker="o",
+                label="Fact P-Value"
+            )
+
+            plt.plot(
+                x,
+                df_model["Stance Pvalue"],
+                marker="o",
+                label="Stance P-Value"
+            )
+
+            # significance threshold
+            plt.axhline(
+                y=0.05,
+                linestyle="--",
+                label="p = 0.05"
+            )
+
+            plt.xticks(
+                x,
+                df_model["x_label"],
+                rotation=90
+            )
+
+            plt.ylabel("P-Value")
+            plt.xlabel("Language / Country")
+
+            plt.title(
+                f"{model} | {scenario} | "
+                f"P-Value Comparison"
+            )
+
+            plt.legend()
+            plt.tight_layout()
+
+            save_path = (
+                f"{GRAPHS_PATH}/linegraphs/"
+                f"combined_pvalues/"
+                f"{scenario}/{model}.png"
+            )
+
+            os.makedirs(
+                os.path.dirname(save_path),
+                exist_ok=True
+            )
+
+            plt.savefig(save_path)
+            plt.close()
+
+            # ==========================================================
+            # 3. SIGNED ERROR COMPARISON
+            # ==============================================================
+
+            plt.figure(figsize=(26, 10))
+
+            plt.plot(
+                x,
+                df_model["Fact Signed Error"],
+                marker="o",
+                label="Fact Signed Error"
+            )
+
+            plt.plot(
+                x,
+                df_model["Stance Signed Error"],
+                marker="o",
+                label="Stance Signed Error"
+            )
+
+            # perfect alignment
+            plt.axhline(
+                y=0,
+                linestyle="--",
+                label="Perfect Alignment"
+            )
+
+            # emphasize magnitude
+            plt.fill_between(
+                x,
+                0,
+                df_model["Fact Signed Error"],
+                alpha=0.15
+            )
+
+            plt.fill_between(
+                x,
+                0,
+                df_model["Stance Signed Error"],
+                alpha=0.15
+            )
+
+            plt.xticks(
+                x,
+                df_model["x_label"],
+                rotation=90
+            )
+
+            plt.ylabel(
+                "Prediction - Rainbow Map"
+            )
+
+            plt.xlabel("Language / Country")
+
+            plt.title(
+                f"{model} | {scenario} | "
+                f"Signed Error Comparison"
+            )
+
+            plt.legend()
+            plt.tight_layout()
+
+            save_path = (
+                f"{GRAPHS_PATH}/linegraphs/"
+                f"combined_signed_error/"
+                f"{scenario}/{model}.png"
+            )
+
+            os.makedirs(
+                os.path.dirname(save_path),
+                exist_ok=True
+            )
+
+            plt.savefig(save_path)
+            plt.close()
+              
 #Back translation Heatmap
 #back_translation_heatmap()
 
 #Weight coherence by validity scores
-model_performances()
+#model_performances()
 
 #Generate the Fact and Stance heatmaps of the MAEs errors of all the models   
 #maes()
+
+#generate_line_graphs()
+generate_combined_line_graphs()

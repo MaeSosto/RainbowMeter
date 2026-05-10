@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=llama70
+#SBATCH --job-name=qwen27
 #SBATCH --partition=gpu_h100
 #SBATCH --time=00-8:00:00
 #SBATCH --gres=gpu:h100:4
