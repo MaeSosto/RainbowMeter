@@ -1,251 +1,227 @@
 # Create data
 from constants import *
-from models import *
 import scipy.stats as stats
 import numpy as np
 from os import listdir
 from os.path import isfile, join
 import matplotlib.pyplot as plt
+from sklearn.metrics import mean_absolute_error as mae
 
 RAINBOW_MAP = "Rainbow Map"
 COUNTRY = "Country"
 MODEL = "Model"
+WEIGHT_LIST = CRITERIA_WEIGHTS_DF["Weight"].values.astype(float).tolist()
 
-def convert_array(arr):
-    return [
-        float(str(x).replace(",", "."))
-        for x in arr
-    ]
+#Given a lan id, return the language name
+def get_lang_from_lang_code(lang_code = "", count_code = ""):
+    for country_name in COUNTRIES_FILE: 
+        for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
+            if lang_code == COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num] and (count_code == "" or count_code == COUNTRIES_FILE[country_name][ID]):
+                return language, country_name
+            if count_code == COUNTRIES_FILE[country_name][ID] and lang_code == "":
+                return language, country_name
+    return None, None
+
+#Given a scenario and the name of the rainbow meter file, it returns the language/country or both as label for the graph
+def get_label(label, scenario):
+    if scenario == SCENARIO_LANGUAGE:
+        language, _ = get_lang_from_lang_code(label)
+        return language
+    elif scenario == SCENARIO_NATIONALITY:
+        _, country = get_lang_from_lang_code("", label)
+        return country
+    elif scenario == SCENARIO_LAN_NAT:
+        lang_code, country_code = label.split("_")
+        language, country = get_lang_from_lang_code(lang_code, country_code)
+        return f"{language} - {country}"
+    return label
+
+def wilcoxon(group1, group2):
+    return round(stats.wilcoxon(group1, group2).statistic.astype(float),2), round(stats.wilcoxon(group1, group2).pvalue.astype(float), 2)
+
+#Get the full list of scores and adjust them accordingly to the Family category contraints
+def citeria_adjustment(rm_scores):
+    #Exceptions:
+    # - “Universality of prohibition of medical interventions” crtierion can only be awarded when “Prohibition of medical intervention before child is able to give informed consent” is awarded.
+    rm_scores[61] = rm_scores[61] if rm_scores[60] > 0 else 0
+    
+    # - “Existence of effective monitoring mechanism” criterion can only be awarded when “Prohibition of medical intervention before child is able to give informed consent” is awarded
+    rm_scores[62] = rm_scores[62] if rm_scores[60] > 0 else 0
+
+    # - The criteria Marriage equality, Registered partnership (similar rights to marriage), Registered partnership (limited rights), and Cohabitation, from the “Family” category, reflect different decremental levels of support from legislation on the matter of LGBTI partnership. In the Rainbow Meter, as in the Rainbow Map, we consider a single score for the 4 categories, which corresponds to the score of the satisfied criterion with the highest weight. Where Marriage equality has a higher weight and Cohabitation a lower one.
+    family_scores = rm_scores[25:29]
+    family_weights = WEIGHT_LIST[25:29]
+
+    max_score = 0
+    for idx, sco in enumerate(reversed(family_scores)):
+        if sco >= max_score:
+            max_score = sco
+            selected_weight = family_weights[3-idx]
+
+    adjusted_scores = np.concatenate([
+        rm_scores[:25],
+        [max_score],
+        rm_scores[29:]
+    ])
+
+    adjusted_weights = np.concatenate([
+        WEIGHT_LIST[:25],
+        [selected_weight],
+        WEIGHT_LIST[29:]
+    ])
+
+    return np.multiply(adjusted_scores, adjusted_weights).astype(float).tolist()
     
 class Evaluations:
     def __init__(self):
-        self.weights_list = CRITERIA_WEIGHTS_DF["Weight"].values
+        #self.general_stats()
+        self.model_performances()
         
+    
+    def general_stats(self):
         #Iterate on the scenario
-        for scenario in [SCENARIO_LANGUAGE]: #SCENARIOS:
-            self.scenario = scenario
+        for scenario in SCENARIOS: #SCENARIOS:
+            scenario = scenario
             
-            results = {
+            percentage_results = {
                 MODEL: [],
                 COUNTRY: [],
                 LANGUAGES: [],
                 FACT: [],
                 STANCE: [],
                 RAINBOW_MAP: [],
-                #"Error": []
             }
+            for wil in ["Statistics", "Pvalue", "MAE"]:
+                percentage_results[FACT+" "+ wil] = []
+                percentage_results[STANCE+" "+ wil] = []
             
             #Iterate on every model
             for model_name in MODEL_LIST:
-                self.model_name = model_name
                 
                 #Iterate on every country
                 for country_name, country_data in COUNTRIES_FILE.items(): #tqdm.tqdm(
-                    #     COUNTRIES_FILE.items(),
-                    #     total=len(COUNTRIES_FILE),
-                    #     desc=f"🔄 {self.model_name} - {self.scenario}"
-                    # ):
-                    self.country_name = country_name
-                    self.country_id = country_data[ID]
-                    self.citizenship = country_data[CITIZENSHIP]
+                    country_name = country_name
+                    country_id = country_data[ID]
+                    citizenship = country_data[CITIZENSHIP]
                 
                     #Iterate on every language and citizenship 
                     for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
-                        self.language = language
-                        self.language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num]
+                        language = language
+                        language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num]
                     
                         #Retrieve the Rainbow Meter of a specific language (if exist)
-                        self.existent_rm_df = self.get_rainbow_map()
-                        if self.existent_rm_df.empty:  #RM doesn't exist or is incomplete
+                        existent_rm_df = get_rainbow_meter_file_answers(
+                            scenario = scenario,
+                            model_name= model_name,
+                            language_code = language_code,
+                            country_id = country_id
+                        )
+                        if existent_rm_df.empty:  #RM doesn't exist or is incomplete
                             continue
                         
-                        results[MODEL].append(model_name)
-                        results[COUNTRY].append(country_name)
-                        results[LANGUAGES].append(language)
+                        percentage_results[MODEL].append(MODEL_LABEL[model_name])
+                        percentage_results[LANGUAGES].append(language)
+                        percentage_results[COUNTRY].append(country_name)
                         
-                        #Get the Rainbow Map real Scores of that country
-                        rainbow_map_scores = RAINBOW_MAP_DF.loc[self.country_id].drop("country_name").drop("Rank").values.astype(float).tolist()
+                        #Get the Rainbow Map real Scores of that country-lan
+                        rainbow_map_scores = RAINBOW_MAP_DF.loc[country_id].drop("country_name").drop("Rank").values.astype(float).tolist()
+                        rainbow_map_scores = citeria_adjustment(rainbow_map_scores)
+                        percentage_results[RAINBOW_MAP].append(round(float(sum(rainbow_map_scores)), 2))
                         
                         #Get the rainbow Meter scores of that country
-                        rainbow_meter_fact_scores = self.existent_rm_df[FACT].values.astype(float).tolist()
-                        rainbow_meter_supp_scores = self.existent_rm_df[SUPPORT].values.astype(float).tolist()
-                        rainbow_meter_opp_scores = self.existent_rm_df[OPPOSITION].values.astype(float).tolist()
+                        rainbow_meter_fact_scores = existent_rm_df[FACT].values.astype(float).tolist()
+                        rainbow_meter_supp_scores = existent_rm_df[SUPPORT].values.astype(float).tolist()
+                        rainbow_meter_opp_scores = existent_rm_df[OPPOSITION].values.astype(float).tolist()
                         rainbow_meter_stance_scores = [
                             (s + (1 - o)) / 2
                             for s, o in zip(rainbow_meter_supp_scores, rainbow_meter_opp_scores)
                         ]
-                        rainbow_map_scores, rainbow_map_weghts = self.family_workaround(rainbow_map_scores)
-                        rainbow_meter_fact_scores, rainbow_meter_fact_weights = self.family_workaround(rainbow_meter_fact_scores)
-                        rainbow_meter_stance_scores, rainbow_meter_stance_weights = self.family_workaround(rainbow_meter_stance_scores)
+                        rainbow_meter_fact_scores = citeria_adjustment(rainbow_meter_fact_scores)
+                        rainbow_meter_stance_scores = citeria_adjustment(rainbow_meter_stance_scores)
                         
-                        results[RAINBOW_MAP].append(float(sum(np.multiply(rainbow_map_scores, rainbow_map_weghts))))
-                        results[FACT].append(float(sum(np.multiply(rainbow_meter_fact_scores, rainbow_meter_fact_weights))))
-                        results[STANCE].append(float(sum(np.multiply(rainbow_meter_fact_scores, rainbow_meter_stance_weights))))
-                        #results["Error"].append(float(np.linalg.norm(rainbow_map_scores - rainbow_meter_scores, 1)))    
+                        percentage_results[FACT].append(round(sum(rainbow_meter_fact_scores), 2))
+                        percentage_results[STANCE].append(round(sum(rainbow_meter_stance_scores), 2))
+                        wil1, wil2 = wilcoxon(rainbow_meter_fact_scores, rainbow_map_scores)
+                        percentage_results[FACT+" "+ "Statistics"].append(wil1)
+                        percentage_results[FACT+" "+ "Pvalue"].append(wil2)
+                        wil1, wil2 = wilcoxon(rainbow_meter_stance_scores, rainbow_map_scores)
+                        percentage_results[STANCE+" "+ "Statistics"].append(wil1) 
+                        percentage_results[STANCE+" "+ "Pvalue"].append(wil2)
+                        percentage_results[FACT+" MAE"].append(round(mae(rainbow_map_scores, rainbow_meter_fact_scores), 2))
+                        percentage_results[STANCE+" MAE"].append(round(mae(rainbow_map_scores, rainbow_meter_stance_scores), 2))
                             
             #Export Results
-            results_df = pd.DataFrame(results)
-            self.export_result(results_df)
-    
-    #MODEL DETAIL SCENARIO: Compare FACT vs STANCE vs REAL divided by model  
-    def model_det_scores(self, scenario, df):
-        if scenario == SCENARIO_LANGUAGE:
-            df = df.sort_values(by=LANGUAGES)
+            results_df = pd.DataFrame(percentage_results)
+            results_df.to_csv(f"{EVALUATIONS_PATH}/{scenario}/general_stats.csv", sep=";", index=False)
+
+    def model_performances(self):
+        # Define metrics once
+        metrics = {
+            "fact_coh": "Fact Coherence",
+            "fact_val": "Fact Validity",
+            "fact_coh_val": "Fact Weight coherence by validity",
+            "stance_coh": "Stance Coherence",
+            "stance_val": "Stance Validity",
+            "stance_coh_val": "Stance Weight coherence by validity",
+        }
+                #Iterate on the scenario
+        for scenario in SCENARIOS: #SCENARIOS:
+            # metric_name -> {model -> {label -> value}}
+            data = {m: {} for m in metrics}
             
-        df["Country_Lang"] = df[COUNTRY] + " (" + df[LANGUAGES] + ")"
-        x = range(len(df))
-
-        plt.figure(figsize=(14, 6))
-
-        # Plot each metric
-        plt.plot(x, df[FACT], marker='o', label=FACT)
-        plt.plot(x, df[STANCE], marker='o', label=STANCE)
-        plt.plot(x, df[RAINBOW_MAP], marker='o', label=RAINBOW_MAP)
-
-        # X-axis labels
-        plt.xticks(x, df["Country_Lang"], rotation=60, ha='right')
-
-        plt.ylabel("Score")
-        plt.xlabel("Country (Language)")
-        plt.legend()
-        plt.tight_layout()
-        #plt.title(title)
-        plt.xticks(rotation=40, ha='right', fontsize=10)
-        plt.tight_layout()
-        plt.savefig(f"{GRAPHS_PATH}/{self.scenario}/{self.model_name}.png")
-        plt.show()
-
-    #Return True if the results exists, otherwise False
-    def get_rainbow_map(self):
-        result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model_name}/"
-        if self.scenario == SCENARIO_LANGUAGE:
-            scenario_path = f"rm_answers_{self.language_code}.csv"
-        elif self.scenario == SCENARIO_NATIONALITY:
-            scenario_path = f"rm_answers_{self.country_id}.csv"
-        else:
-            scenario_path = f"rm_answers_{self.language_code}_{self.country_id}.csv"
-        if os.path.exists(result_path+scenario_path):
-            df = pd.read_csv(result_path+scenario_path, sep=";", index_col=SUBCATEGORY) 
-            if df.shape[0] == TOT_CRITERIA_NUM:
-                return df
-            else:
-                logger.error(f"⚠️ {result_path+scenario_path} is incomplete")
-        else:
-            logger.error(f"⚠️ {result_path+scenario_path} is missing")
-        return pd.DataFrame()
-
-    
-    #Get the full list of scores and adjust them accordingly to the Family category contraints
-    def family_workaround(self, rm_scores):
-        #Workaround for the marriage criteria
-        family_weight_list = self.weights_list[25:29]
-        family_rm_scores = rm_scores[25:29]
-        max_num = 0
-        for idx, sco in enumerate(reversed(family_rm_scores)):
-            if sco >= max_num:
-                max_num = sco
-                weight_max = family_weight_list[3-idx]
-        
-        tmp1 = np.insert(rm_scores[29:], 0, max_num)
-        tmp2 = np.insert(self.weights_list[29:], 0, weight_max)
-        return np.concatenate([rm_scores[:25], tmp1]), np.concatenate([self.weights_list[:25], tmp2])
+            #Iterate on every model
+            for model_name in MODEL_LIST:
+                model_label = MODEL_LABEL[model_name]
                 
-    #Export and save plain results            
-    def export_result(self, plain_results):
-        result_path = f"{EVALUATIONS_PATH}/{self.scenario}"
-        # if "Qwen" in self.model_name: 
-        #     os.makedirs(f"{result_path}/Qwen", exist_ok=True)
-        # if "meta-llama" in self.model_name: 
-        #     os.makedirs(f"{result_path}/meta-llama", exist_ok=True)
-            
-        # if self.scenario == SCENARIO_LANGUAGE:
-        #     scenario_path = f"plain_results_{self.language_code}.csv"
-        # elif self.scenario == SCENARIO_NATIONALITY:
-        #     scenario_path = f"plain_results_{self.language_code}.csv"
-        # else:
-        #     scenario_path = f"plain_results_{self.language_code}_{self.country_id}.csv"
-        plain_results.to_csv(f"{result_path}/model_comparison.csv", sep=";", index=False)
+                for m in metrics:
+                    data[m][model_label] = {}
+
+                #Iterate on every country
+                for country_name, country_data in COUNTRIES_FILE.items(): #tqdm.tqdm(
+                    country_name = country_name
+                    country_id = country_data[ID]
+                    citizenship = country_data[CITIZENSHIP]
                 
-    
-    def get_rainbow_map_category_score(self):
-        rainbow_map_country = RAINBOW_MAP_DF.loc[self.country_id].drop("country_name").drop("Rank")
-        rainbow_map_scores = [rainbow_map_country[sub] for sub in self.subcat]
-        weights_list = self.weights_list
-        if self.cat == "Family":
-            marriage_scores = rainbow_map_scores[:4]
-            max_num = -1
-            weight_max = -1
-            for idx, sco in enumerate(reversed(marriage_scores)):
-                if sco > max_num:
-                    max_num = np.int64(sco)
-                    weight_max = np.float64(self.weights_list[3-idx])
-            rainbow_map_scores = np.insert(rainbow_map_scores[4:], 0, max_num)
-            weights_list = np.insert(self.weights_list[4:], 0, weight_max)
-        return np.multiply(rainbow_map_scores, weights_list)
+                    #Iterate on every language and citizenship 
+                    for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
+                        language = language
+                        language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num]
+                    
+                        #Retrieve the Rainbow Meter of a specific language (if exist)
+                        existent_rm_df = get_rainbow_meter_file_answers(
+                            scenario = scenario,
+                            model_name= model_name,
+                            language_code = language_code,
+                            country_id = country_id
+                        )
+                        if existent_rm_df.empty:  #RM doesn't exist or is incomplete
+                            continue
 
+                        # compute all means in one go
+                        means = existent_rm_df[list(metrics.values())].mean()
 
-    def calculate_wilcoxon(self):
-        
-        #Scenario Language --> paragono i risultati rainbow meter di scenario language per ogni lingua (e associated country con quella lingua) e i risultati della rainbow map di quello stesso country  
-        #Scenario Nationality --> paragono i risultati rainbow meter di scenario nationality per ogni country e i risultati della rainbow map di quello stesso country
-        #Scenario Nationality --> paragono i risultati rainbow meter di scenario language + nationality per ogni country e i risultati della rainbow map di quello stesso country
-    
+                        if scenario == SCENARIO_LANGUAGE:
+                            label = language
+                        elif scenario == SCENARIO_NATIONALITY:
+                            label = country_name
+                        elif scenario == SCENARIO_LAN_NAT:
+                            label = f"{language} - {country_name}" 
+                            
+                        for m, col in metrics.items():
+                            data[m][model_label][label] = round(means[col], 2)
 
-        #Get the languages of the rainbow meters retreived in the language scenario  
-        path_rainbow_meters = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model_name}/" 
-        rm_lanaguages = list(set([f.split("_")[0] for f in listdir(path_rainbow_meters) if isfile(join(path_rainbow_meters, f))]))
+            # Convert, clean, save, plot
+            for m, metric_data in data.items():
+                df_metric = pd.DataFrame.from_dict(metric_data, orient="index")
 
+                df_metric = (
+                    df_metric
+                    .sort_index(axis=1)
+                    .apply(pd.to_numeric, errors="coerce")
+                )
 
-        #Get the array score of every country, considering only the language now, and compare it to the scores obtained on the rainbow map
-        results = {
-            COUNTRY: [],
-            "country_id": [],
-            "statistics": [], 
-            "pvalue": [] 
-            }
-        
-        
-        for country in COUNTRIES_FILE:
-            print(country.name)
-            rainbow_map_country = RAINBOW_MAP_DF.loc[country.id].drop("country_name").drop("Rank").values.astype(float).tolist()
-            rainbow_map_country = np.multiply(rainbow_map_country, self.weights_list)
-            
-            exist, rainbow_meter = self._get_rainbow_meter_results(country)
-            if not exist:
-                continue
-            
-            rainbow_meter_country = rainbow_meter[FACT].values
-            rainbow_meter_country = np.multiply(rainbow_meter_country, self.weights_list)
-            wilcoxon_s, wilcoxon_pval = self.wilcoxon(rainbow_map_country, rainbow_meter_country)
-            
-            results[COUNTRY].append(country.name)
-            results["country_id"].append(country.id)
-            results["statistics"].append(wilcoxon_s)
-            results["pvalue"].append(wilcoxon_pval)
-            #results.append(row)
-            print(f"{wilcoxon_s}, {wilcoxon_pval}")
-                
-            
-        results = pd.DataFrame(results)
-        print(results)
-        self.export_csv(country, results)
-        
-    def export_csv(self, country, df):
-        result_path = f"{RESULT_PATH}/{EVALUATIONS_PATH}/{self.scenario}/{self.model_name}/"
-        os.makedirs(result_path, exist_ok=True)
-        df.to_csv(f"{result_path}{country.language}_wilcoxon.csv", sep=";", index=False)
+                # Save CSV
+                df_metric.to_csv(f"{EVALUATIONS_PATH}/{MODELS_PERFORMANCES_PATH}/{scenario}/{m}.csv")
 
-        
-    # conduct the Wilcoxon-Signed Rank Test
-    def wilcoxon(group1, group2):
-        return stats.wilcoxon(group1, group2).statistic, stats.wilcoxon(group1, group2).pvalue
-
-    def _get_rainbow_meter_results(self, country):
-        result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model_name}/{country.language}_rainbow_meter.csv"
-        if os.path.exists(result_path):
-            pd_rm = pd.read_csv(result_path, delimiter=";", index_col="Subcategory")
-            if pd_rm.shape[0] == TOT_CRITERIA_NUM:  
-                return True, pd_rm
-        return False, 0
-    
+#the results are in the results/evaluations folder
 evaluations = Evaluations()

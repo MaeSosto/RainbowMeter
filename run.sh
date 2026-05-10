@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=llamas
+#SBATCH --job-name=llama70
 #SBATCH --partition=gpu_h100
-#SBATCH --time=00-4:00:00
+#SBATCH --time=00-8:00:00
 #SBATCH --gres=gpu:h100:4
 #SBATCH --mem=20G
 #SBATCH --output=./slurmout/%x.out

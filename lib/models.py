@@ -21,37 +21,6 @@ URL_LMSTUDIO_LOCAL = "http://localhost:1234"
 URL_DEEPSEEK = "https://api.deepseek.com"
 URL_DEEPSEEK_POST = "https://api.deepseek.com/v1/chat/completions"
 
-
-QWEN35_2 = "Qwen/Qwen3.5-2B" #HF
-QWEN35_9 = "Qwen/Qwen3.5-9B" #HF
-QWEN35_27 = "Qwen/Qwen3.5-27B" #HF
-LLAMA32_3 = "meta-llama/Llama-3.2-3B" #HF
-LLAMA31_8 = "meta-llama/Llama-3.1-8B" #HF
-LLAMA31_70 = "meta-llama/Llama-3.1-70B" #HF
-DEEPSEEKV32 = "deepseek-chat"
-SONNET46 = "claude-sonnet-4-6"
-GPT54 = 'gpt-5.4'
-GPT54_MINI = 'gpt-5.4-mini'
-GEMINI3_FLASH = 'gemini-3-flash-preview'
-DEEPL = "DeepL" 
-
-MODEL_LIST = [QWEN35_2, QWEN35_9, QWEN35_27, LLAMA32_3, LLAMA31_8, LLAMA31_70, DEEPSEEKV32, SONNET46, GPT54, GEMINI3_FLASH]
-
-MODEL_LABEL = {
-    QWEN35_2: "Qwen3.5 2B",
-    QWEN35_9: "Qwen3.5 9B",
-    QWEN35_27: "Qwen3.5 27B",
-    LLAMA32_3: "LlaMa 3.2 3B",
-    LLAMA31_8: "LlaMa 3.1 8B",
-    LLAMA31_70: "LlaMa 3.1 70B",
-    DEEPSEEKV32: "DeepSeek-V3.2",
-    SONNET46: "Sonnet 4.6",
-    DEEPL: "DeepL",
-    GPT54 : 'GPT 5.4',
-    GPT54_MINI : 'GPT 5.4-mini',
-    GEMINI3_FLASH: 'Gemini 3 Flash'
-}
-
 class Model:
     def __init__(self, model_name):
         self.model_name = model_name

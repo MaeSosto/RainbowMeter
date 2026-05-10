@@ -53,11 +53,20 @@ class Rainbow_Meter:
                     
                     #Retrieve the Rainbow Meter of a specific language (if exist)
                     #if self.scenario == SCENARIO_LANGUAGE:
-                    rm_language_exist, complete_rm_language = self.get_rainbow_meter()
+                    rm_language_exist, complete_rm_language = get_rainbow_meter_file_default(
+                        scenario = self.scenario, 
+                        language_code = self.language_code, 
+                        country_id = self.country_id
+                    )
                     if not rm_language_exist: #If the Rainbow Meter questionnaire in doesn't exist in that language than we cannot compare the results
                         continue
                     
-                    rm_existent = self.get_rainbow_map()
+                    rm_existent = get_rainbow_meter_file_answers(
+                        scenario = self.scenario,
+                        model_name= self.model.model_name,
+                        language_code = self.language_code,
+                        country_id = self.country_id
+                    )
                     num_answers = len(rm_existent) #Number of lines in the existent rainbow meter file
                     if num_answers == TOT_CRITERIA_NUM:
                         #logger.info(f"- {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_NATIONALITY else f'{self.country_id} in {self.language_code}'}")
@@ -115,29 +124,6 @@ class Rainbow_Meter:
             scenario_path = f"rm_answers_{self.language_code}_{self.country_id}.csv"
         return os.path.exists(result_path+scenario_path), result_path+scenario_path #If a rainbow meter with the looked characteristics exist
     
-    #Return True if the results exists, otherwise False
-    def get_rainbow_map(self):
-    def get_rainbow_map(self):
-        result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model.model_name}/"
-        if self.scenario == SCENARIO_LANGUAGE:
-            scenario_path = f"rm_answers_{self.language_code}.csv"
-        elif self.scenario == SCENARIO_NATIONALITY:
-            scenario_path = f"rm_answers_{self.country_id}.csv"
-        else:
-            scenario_path = f"rm_answers_{self.language_code}_{self.country_id}.csv"
-        if os.path.exists(result_path+scenario_path):
-            
-            df = pd.read_csv(result_path+scenario_path, sep=";", index_col=SUBCATEGORY) 
-            if df.empty:
-                logger.error(f"The rainbow meter {result_path+scenario_path} is empty")
-                return pd.DataFrame()
-            if df.shape[0] == TOT_CRITERIA_NUM:
-                return df
-            else:
-                logger.error(f"⚠️ {result_path+scenario_path} is incomplete")
-        else:
-            logger.error(f"⚠️ {result_path+scenario_path} is missing")
-        return pd.DataFrame()
     
     #Export and save the Rainbow Meter
     def export_rm_result(self, rainbow_meter):
@@ -150,21 +136,6 @@ class Rainbow_Meter:
             scenario_path = f"rm_answers_{self.language_code}_{self.country_id}.csv"
         os.makedirs(result_path, exist_ok=True)
         rainbow_meter.to_csv(result_path+scenario_path, sep=";", index=False)
-    
-    #Get the Rainbow Meter file based on the scenario
-    def get_rainbow_meter(self):
-        result_path = f"{RAINBOW_METER_DATA_PATH}/{self.scenario}/"
-        if self.scenario == SCENARIO_LANGUAGE:
-            scenario_path = f"rainbow_meter_{self.language_code}.csv"
-        elif self.scenario == SCENARIO_NATIONALITY:
-            scenario_path = f"rainbow_meter_{self.country_id}.csv"
-        else:
-            scenario_path = f"rainbow_meter_{self.language_code}_{self.country_id}.csv"
-        if os.path.exists(result_path+ scenario_path): #If exist
-            df = pd.read_csv(result_path+scenario_path, sep=";", index_col=SUBCATEGORY)
-            return True,  df
-        logger.error(f"⚠️ {result_path+scenario_path} is missing")
-        return False, None
 
     from typing import List, Tuple
     def fill_in_rm(self, rainbow_meter, df):
@@ -239,7 +210,7 @@ def model_scores(answers):
     return coherence, validity, final_score
     
 
-
-for model_name in [LLAMA32_3, LLAMA31_8]:
-    rainbow_meter = Rainbow_Meter(model_name)
+#the results are in the results/rainbow_meter folder
+model_name = LLAMA31_70
+rainbow_meter = Rainbow_Meter(model_name)
 

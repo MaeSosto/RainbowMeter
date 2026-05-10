@@ -1,4 +1,4 @@
-from models import *
+from constants import *
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -32,7 +32,9 @@ def get_label(label, scenario):
     return label
 
 #Generate, show and save an heatmap
-def generate_heatmap(df, xlabel, ylabel, title, savefig):
+def generate_heatmap(df, xlabel, ylabel, title, savefig, annot = False):
+    #df = df.sort_index(axis=1)
+    
     # Plot heatmap
     plt.figure(figsize=(18, 6))
     sns.heatmap(
@@ -42,7 +44,7 @@ def generate_heatmap(df, xlabel, ylabel, title, savefig):
         cmap=CMAP_RG,
         linewidths=0.5,
         linecolor="white",
-        annot=True,
+        annot=annot,
         annot_kws={"fontsize":8},
         fmt=".1f"
     )
@@ -56,9 +58,8 @@ def generate_heatmap(df, xlabel, ylabel, title, savefig):
     #plt.show()
     
 #Generate back translation dataframe and heatmap
-def back_translation_heatmap():
-    csv_path = "data/translation_test/back_translation.csv"
-    df = pd.read_csv(csv_path, sep=";", index_col="model")
+def back_translation():
+    df = pd.read_csv("data/translation_test/back_translation.csv", sep=";", index_col="model")
 
     # Remove avg_score if present
     if "avg_score" in df.columns:
@@ -68,10 +69,9 @@ def back_translation_heatmap():
     df = df.apply(pd.to_numeric, errors="coerce")
     
     generate_heatmap(df, "Language", "Model", "Models Performance in Back Translation Test", f"{GRAPHS_PATH}/back_translation.png")
-    return df
 
-def coh_val_heatmaps():
-    # Define metrics once
+def model_performances():
+
     metrics = {
         "fact_coh": "Fact Coherence",
         "fact_val": "Fact Validity",
@@ -81,74 +81,90 @@ def coh_val_heatmaps():
         "stance_coh_val": "Stance Weight coherence by validity",
     }
 
+    title_map = {
+        "fact_coh": "Models Fact Coherence scores",
+        "fact_val": "Models Fact Validity scores",
+        "fact_coh_val": "Models Fact Weight coherence by validity scores",
+        "stance_coh": "Models Stance Coherence scores",
+        "stance_val": "Models Stance Validity scores",
+        "stance_coh_val": "Models Stance Weight coherence by validity scores",
+    }
+
     for scenario in SCENARIOS:
-        root_dir = f"{RAINBOW_METER_RESULT_PATH}/{scenario}"
 
-        # metric_name -> {model -> {label -> value}}
-        data = {m: {} for m in metrics}
+        output_dir = f"{GRAPHS_PATH}/{MODELS_PERFORMANCES_PATH}/{scenario}"
+        os.makedirs(output_dir, exist_ok=True)
 
-        for model_name in MODEL_LIST:
-            model_path = os.path.join(root_dir, model_name)
-            if not os.path.exists(model_path):
+        for m in metrics.keys():
+
+            file_path = (
+                f"{EVALUATIONS_PATH}/"
+                f"{MODELS_PERFORMANCES_PATH}/"
+                f"{scenario}/{m}.csv"
+            )
+
+            if not os.path.exists(file_path):
                 continue
 
-            model_label = MODEL_LABEL[model_name]
-
-            # initialize model entries
-            for m in metrics:
-                data[m][model_label] = {}
-
-            for file in os.listdir(model_path):
-                if not file.endswith(".csv"):
-                    continue
-
-                raw_label = file.replace("rm_answers_", "").replace(".csv", "")
-                label = get_label(raw_label, scenario)
-
-                df = pd.read_csv(os.path.join(model_path, file), sep=";")
-
-                # compute all means in one go
-                means = df[list(metrics.values())].mean()
-
-                for m, col in metrics.items():
-                    data[m][model_label][label] = means[col]
-
-        # Convert, clean, save, plot
-        for m, metric_data in data.items():
-            df_metric = pd.DataFrame.from_dict(metric_data, orient="index")
-
-            df_metric = (
-                df_metric
-                .sort_index(axis=1)
-                .apply(pd.to_numeric, errors="coerce")
+            # IMPORTANT: first column is the model name index
+            df_metric = pd.read_csv(
+                file_path,
+                sep=",",
+                index_col=0
             )
 
-            # Save CSV
-            out_csv = f"{TABLES_PATH}/{MODELS_STATS_PATH}/{scenario}/{m}.csv"
-            df_metric.to_csv(out_csv)
+            # Convert only data columns to numeric
+            df_metric = df_metric.apply(
+                pd.to_numeric,
+                errors="coerce"
+            )
 
-            # Pretty title
-            title_map = {
-                "fact_coh": "Models Fact Coherence scores",
-                "fact_val": "Models Fact Validity scores",
-                "fact_coh_val": "Models Fact Weight coherence by validity scores",
-                "stance_coh": "Models Stance Coherence scores",
-                "stance_val": "Models Stance Validity scores",
-                "stance_coh_val": "Models Stance Weight coherence by validity scores",
-            }
+            # Keep original model order from CSV
+            # Sort only languages if desired
+            df_metric = df_metric.sort_index(axis=1)
 
-            out_png = f"{GRAPHS_PATH}/{MODELS_STATS_PATH}/{scenario}/{m}.png"
+            save_path = f"{output_dir}/{m}.png"
 
             generate_heatmap(
-                df_metric,
-                "Language",
-                "Model",
-                title_map[m] + f" in {scenario} Scenario",
-                out_png
+                df=df_metric,
+                xlabel="Language",
+                ylabel="Model",
+                title=f"{title_map[m]} in {scenario} Scenario",
+                savefig=save_path,
+                annot=True
             )
+
+            print(f"Saved: {save_path}")
+
+#Calculate the MAEs errors            
+def maes():
+    for test in [FACT, STANCE]:
+        for scenario in SCENARIOS:
+            df = pd.read_csv(f"{EVALUATIONS_PATH}/{scenario}/general_stats.csv", sep=";")
             
+            df["Language - Country"] = (df["languages"].astype(str)+ " | "+ df["Country"].astype(str))
+
+            # Pivot tables
+            fact_pivot = df.pivot_table(
+                index="Model",
+                columns="Language - Country",
+                values=f"{test} MAE"
+            )
+
+            #stance_pivot = stance_pivot.sort_index()
+            generate_heatmap(
+                df = fact_pivot,
+                xlabel = "Language and Country",
+                ylabel = "Model",
+                title = f"{test} MAE Heatmap",
+                savefig = f"{GRAPHS_PATH}/{scenario}/{test}_mae.png"
+            )
+      
 #Back translation Heatmap
 #back_translation_heatmap()
 
 #Weight coherence by validity scores
-coh_val_heatmaps()
+model_performances()
+
+#Generate the Fact and Stance heatmaps of the MAEs errors of all the models   
+#maes()
