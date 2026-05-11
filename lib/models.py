@@ -13,6 +13,9 @@ from dotenv import load_dotenv
 from anthropic import Anthropic
 from transformers import GenerationConfig
 
+os.environ["HF_HUB_DISABLE_XET"] = "1"
+os.environ["HF_HUB_ENABLE_HF_TRANSFER"] = "0"
+
 load_dotenv()
 MAX_GENERATION_TOKEN = 10
 

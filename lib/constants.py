@@ -34,6 +34,7 @@ torch.set_default_device(device)
 logger.info(f"Using device: {device}")
 
 #Rainbow Map
+RAINBOW_MAP = "Rainbow Map"
 CATEGORY = "Category"
 SUBCATEGORY = "Subcategory"
 RAINBOW_MAP_DF = pd.read_csv("data/rainbow_map/rainbow_map.csv", delimiter=";", index_col="country_id")
@@ -77,11 +78,17 @@ SCENARIO_LANGUAGE = "language_scenario"
 SCENARIO_NATIONALITY = "nationality_scenario"
 SCENARIO_LAN_NAT = "language_nationality_scenario"
 SCENARIOS = [SCENARIO_LANGUAGE, SCENARIO_NATIONALITY, SCENARIO_LAN_NAT]
+SCENARIO_LABELS = {
+    SCENARIO_LANGUAGE: "Language Scenario",
+    SCENARIO_NATIONALITY: "Nationality Scenario",
+    SCENARIO_LAN_NAT: "Language-Nationality Scenario"
+}
+
 MODELS_PERFORMANCES_PATH = "models_performances"
 for s in SCENARIOS:
     os.makedirs(f"{RAINBOW_METER_RESULT_PATH}/{s}", exist_ok=True)
     os.makedirs(f"{EVALUATIONS_PATH}/{s}", exist_ok=True)
-    os.makedirs(f"{GRAPHS_PATH}/{s}", exist_ok=True)
+    os.makedirs(f"{GRAPHS_PATH}/MAE/{s}", exist_ok=True)
     os.makedirs(f"{GRAPHS_PATH}/{MODELS_PERFORMANCES_PATH}/{s}", exist_ok=True)
     os.makedirs(f"{EVALUATIONS_PATH}/{MODELS_PERFORMANCES_PATH}/{s}", exist_ok=True)
     
