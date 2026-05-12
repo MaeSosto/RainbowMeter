@@ -1,4 +1,4 @@
-Key;language_scenario_Fact_MAE;language_scenario_Stance_MAE;nationality_scenario_Fact_MAE;nationality_scenario_Stance_MAE;language_nationality_scenario_Fact_MAE;language_nationality_scenario_Stance_MAE
+Key;language_scenario_Fact_MAE;language_scenario_Stance_MAE;country_scenario_Fact_MAE;country_scenario_Stance_MAE;language_country_scenario_Fact_MAE;language_country_scenario_Stance_MAE
 Albania;;;0.57;0.75;;
 Albanian;0.63;0.74;;;;
 Albanian | Albania;;;;;0.57;0.71
@@ -142,12 +142,12 @@ Slovenia;;;0.55;0.67;;
 Spain;;;0.46;0.46;;
 Spanish;0.59;0.52;;;;
 Spanish | Spain;;;;;0.52;0.54
-Sweden;;;0.48;0.51;;
+Sweden;;;0.46;0.52;;
 Swedish;0.61;0.58;;;;
 Swedish | Finland;;;;;0.61;0.63
 Swedish | Sweden;;;;;0.57;0.59
-Switzerland;;;0.52;0.69;;
-Turkey;;;0.37;1.01;;
+Switzerland;;;0.5;0.69;;
+Turkey;;;0.35;0.97;;
 Turkish;0.51;0.89;;;;
 Turkish | Cyprus;;;;;0.5;0.78
 Turkish | Turkey;;;;;0.24;0.9

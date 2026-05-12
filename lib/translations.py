@@ -219,14 +219,14 @@ def _build_question(
     model,
     model_exception=None,
 ):
-    # NATIONALITY only → no translation
-    if scenario == SCENARIO_NATIONALITY or language == "English":
+    # Country only → no translation
+    if scenario == SCENARIO_COUNTRY or language == "English":
         return f"In {"the " if country_name == "United Kingdom" or country_name == "Netherlands" else ""}{country_name}, {base_text}"
 
     # Build input text
     if scenario == SCENARIO_LANGUAGE:
         text = base_text
-    else:  # LANGUAGE + NATIONALITY
+    else:  # LANGUAGE + Country
         text = f"In {country_name}, {base_text}"
 
     # Translation logic
@@ -274,7 +274,7 @@ def translate_rainbow_meter():
                 # Determine output path once
                 if scenario == SCENARIO_LANGUAGE:
                     rm_path = f"{result_path}/rainbow_meter_{language_code}.csv"
-                elif scenario == SCENARIO_NATIONALITY:
+                elif scenario == SCENARIO_COUNTRY:
                     rm_path = f"{result_path}/rainbow_meter_{country_id}.csv"
                 else:
                     rm_path = f"{result_path}/rainbow_meter_{language_code}_{country_id}.csv"
@@ -384,7 +384,7 @@ def translate_default_prompt():
 
 # #Check models ability to support the langauges bit back translation 
 model_list = [QWEN35_27]
-#test_systems_translation_abilities(model_list)
+test_systems_translation_abilities(model_list)
 
 #Translate the prompt instructions
 TRANSLATION_MODEL = DEEPL
@@ -392,6 +392,6 @@ TRANSLATION_MODEL = DEEPL
 TRANSLATION_MODEL_EXCEPTION = LLAMA31_70
 
 #translate_default_prompt()
-translate_rainbow_meter()
+#translate_rainbow_meter()
 
 

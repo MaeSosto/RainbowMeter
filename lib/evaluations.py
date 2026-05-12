@@ -44,7 +44,8 @@ def citeria_adjustment(rm_scores):
     ])
 
     return np.multiply(adjusted_scores, adjusted_weights).astype(float).tolist()
-    
+
+#Creates a table with the model performances in matter of Coherence and Valitidy
 def model_performances():
 
     metrics = {
@@ -94,7 +95,7 @@ def model_performances():
 
                     if scenario == SCENARIO_LANGUAGE:
                         label = language
-                    elif scenario == SCENARIO_NATIONALITY:
+                    elif scenario == SCENARIO_COUNTRY:
                         label = country_name
                     elif scenario == SCENARIO_LAN_NAT:
                         label = f"{language} - {country_name}" 
@@ -115,6 +116,7 @@ def model_performances():
             # Save CSV
             df_metric.to_csv(f"{EVALUATIONS_PATH}/{MODELS_PERFORMANCES_PATH}/{scenario}/{m}.csv")
 
+#Create a table with the grouped scores of MAE and percentages across model-scenario(lan and country) 
 def general_stats():
     #Iterate on the scenario
     percentage_results = {
@@ -194,7 +196,8 @@ def general_stats():
     results_df = pd.DataFrame(percentage_results)
     results_df.to_csv(f"{EVALUATIONS_PATH}/general_stats.csv", sep=";", index=False)
 
-def table_models_mae():
+#Create a table with the MAEs calculated accross models 
+def models_mae():
     csv_path = f"{EVALUATIONS_PATH}/general_stats.csv"
 
     if not os.path.exists(csv_path):
@@ -243,7 +246,7 @@ def table_models_mae():
     merged_df.to_csv(output_path, sep=";", index=False)
     print(f"Saved: {output_path}")
 
-def table_models_percentage():
+def models_percentage():
     csv_path = f"{EVALUATIONS_PATH}/general_stats.csv"
 
     if not os.path.exists(csv_path):
@@ -288,7 +291,8 @@ def table_models_percentage():
     merged_df.to_csv(output_path, sep=";", index=False)
     print(f"Saved: {output_path}")
 
-def table_language_country_mae():
+#Create a table with the MAEs calculated accross language and countries
+def language_country_mae():
     csv_path = f"{EVALUATIONS_PATH}/general_stats.csv"
 
     if not os.path.exists(csv_path):
@@ -306,7 +310,7 @@ def table_language_country_mae():
         if scenario == SCENARIO_LANGUAGE:
             group_col = LANGUAGES
 
-        elif scenario in SCENARIO_NATIONALITY:
+        elif scenario in SCENARIO_COUNTRY:
             group_col = COUNTRY
 
         else:
@@ -351,12 +355,20 @@ def table_language_country_mae():
 
     print(f"Saved: {output_path}")
         
-#the results are in the results/evaluations folder
+#All the results are in the results/evaluations folder
+#Creates a table with the model performances in matter of Coherence and Valitidy
 model_performances()
-#general_stats()
 
-#table_models_mae()
-#table_models_percentage()
-#table_language_country_mae()
+#Create a table with the grouped scores of MAE and percentages across model-scenario(lan and country) 
+general_stats()
+
+#Create a table with the MAEs calculated accross models
+models_mae()
+
+#Create a table with the MAEs calculated accross language and countries
+language_country_mae()
+
+#Create a table with the percentage scores accross language and countries
+models_percentage()
 
 print(f"✅ Evaluations Done")

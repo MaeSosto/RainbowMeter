@@ -80,19 +80,20 @@ RAINBOW_METER_DATA_PATH = "data/rainbow_meter"
 
 
 SCENARIO_LANGUAGE = "language_scenario"
-SCENARIO_NATIONALITY = "nationality_scenario"
-SCENARIO_LAN_NAT = "language_nationality_scenario"
-SCENARIOS = [SCENARIO_LANGUAGE, SCENARIO_NATIONALITY, SCENARIO_LAN_NAT]
+SCENARIO_COUNTRY = "country_scenario"
+SCENARIO_LAN_NAT = "language_country_scenario"
+SCENARIOS = [SCENARIO_LANGUAGE, SCENARIO_COUNTRY, SCENARIO_LAN_NAT]
 SCENARIO_LABELS = {
     SCENARIO_LANGUAGE: "Language Scenario",
-    SCENARIO_NATIONALITY: "Nationality Scenario",
-    SCENARIO_LAN_NAT: "Language-Nationality Scenario"
+    SCENARIO_COUNTRY: "Country Scenario",
+    SCENARIO_LAN_NAT: "Language-Country Scenario"
 }
 
 MODELS_PERFORMANCES_PATH = "models_performances"
 for s in SCENARIOS:
     os.makedirs(f"{RAINBOW_METER_RESULT_PATH}/{s}", exist_ok=True)
     os.makedirs(f"{GRAPHS_PATH}/MAE/{s}", exist_ok=True)
+    os.makedirs(f"{GRAPHS_PATH}/percentage/{s}", exist_ok=True)
     os.makedirs(f"{GRAPHS_PATH}/{MODELS_PERFORMANCES_PATH}/{s}", exist_ok=True)
     os.makedirs(f"{EVALUATIONS_PATH}/{MODELS_PERFORMANCES_PATH}/{s}", exist_ok=True)
     
@@ -134,7 +135,7 @@ def get_rainbow_meter_file_answers(scenario, model_name, language_code = "", cou
     result_path = f"{RAINBOW_METER_RESULT_PATH}/{scenario}/{model_name}/"
     if scenario == SCENARIO_LANGUAGE:
         scenario_path = f"rm_answers_{language_code}.csv"
-    elif scenario == SCENARIO_NATIONALITY:
+    elif scenario == SCENARIO_COUNTRY:
         scenario_path = f"rm_answers_{country_id}.csv"
     else:
         scenario_path = f"rm_answers_{language_code}_{country_id}.csv"
@@ -157,7 +158,7 @@ def get_rainbow_meter_file_default(scenario, language_code, country_id):
     result_path = f"{RAINBOW_METER_DATA_PATH}/{scenario}/"
     if scenario == SCENARIO_LANGUAGE:
         scenario_path = f"rainbow_meter_{language_code}.csv"
-    elif scenario == SCENARIO_NATIONALITY:
+    elif scenario == SCENARIO_COUNTRY:
         scenario_path = f"rainbow_meter_{country_id}.csv"
     else:
         scenario_path = f"rainbow_meter_{language_code}_{country_id}.csv"

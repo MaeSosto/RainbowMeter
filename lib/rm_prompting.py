@@ -69,12 +69,12 @@ class Rainbow_Meter:
                     )
                     num_answers = len(rm_existent) #Number of lines in the existent rainbow meter file
                     if num_answers == TOT_CRITERIA_NUM:
-                        #logger.info(f"- {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_NATIONALITY else f'{self.country_id} in {self.language_code}'}")
+                        #logger.info(f"- {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_country else f'{self.country_id} in {self.language_code}'}")
                         continue
                     rainbow_meter = self.fill_in_rm(rainbow_meter, rm_existent)
                     for subcategory, row in tqdm.tqdm(complete_rm_language[num_answers:].iterrows(), 
                                                     total=len(complete_rm_language[num_answers:]), 
-                                                    desc=f"🔄 {self.model.model_name} - {self.scenario} : {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_NATIONALITY else f'{self.country_id} in {self.language_code}'}",
+                                                    desc=f"🔄 {self.model.model_name} - {self.scenario} : {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_COUNTRY else f'{self.country_id} in {self.language_code}'}",
                                                     leave= False
                                             ):
                         rainbow_meter[CATEGORY].append(row[CATEGORY])
@@ -118,7 +118,7 @@ class Rainbow_Meter:
         result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model.model_name}/"
         if self.scenario == SCENARIO_LANGUAGE:
             scenario_path = f"rm_answers_{self.language_code}.csv"
-        elif self.scenario == SCENARIO_NATIONALITY:
+        elif self.scenario == SCENARIO_COUNTRY:
             scenario_path = f"rm_answers_{self.country_id}.csv"
         else:
             scenario_path = f"rm_answers_{self.language_code}_{self.country_id}.csv"
@@ -130,7 +130,7 @@ class Rainbow_Meter:
         result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model.model_name}/"
         if self.scenario == SCENARIO_LANGUAGE:
             scenario_path = f"rm_answers_{self.language_code}.csv"
-        elif self.scenario == SCENARIO_NATIONALITY:
+        elif self.scenario == SCENARIO_COUNTRY:
             scenario_path = f"rm_answers_{self.country_id}.csv"
         else:
             scenario_path = f"rm_answers_{self.language_code}_{self.country_id}.csv"
@@ -187,7 +187,7 @@ class Rainbow_Meter:
             data = json.load(f)
 
         #The only case where the questions are in english as default
-        language = "English" if self.scenario == SCENARIO_NATIONALITY else self.language
+        language = "English" if self.scenario == SCENARIO_COUNTRY else self.language
         lang_data = data[language]
         
         return f"{criterion}\n{lang_data.get('prompt')}", [lang_data.get(YES), lang_data.get(NO)]
