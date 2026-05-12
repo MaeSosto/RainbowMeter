@@ -61,6 +61,11 @@ STANCE = "Stance"
 YES = "yes"
 NO = "no"
 UNDEFINED = "undefined"
+RAINBOW_MAP = "Rainbow Map"
+COUNTRY = "Country"
+MODEL = "Model"
+SCENARIO = "Scenario"
+
 
 #Create Project Folder Structure
 RESULT_PATH = "results"
@@ -87,7 +92,6 @@ SCENARIO_LABELS = {
 MODELS_PERFORMANCES_PATH = "models_performances"
 for s in SCENARIOS:
     os.makedirs(f"{RAINBOW_METER_RESULT_PATH}/{s}", exist_ok=True)
-    os.makedirs(f"{EVALUATIONS_PATH}/{s}", exist_ok=True)
     os.makedirs(f"{GRAPHS_PATH}/MAE/{s}", exist_ok=True)
     os.makedirs(f"{GRAPHS_PATH}/{MODELS_PERFORMANCES_PATH}/{s}", exist_ok=True)
     os.makedirs(f"{EVALUATIONS_PATH}/{MODELS_PERFORMANCES_PATH}/{s}", exist_ok=True)

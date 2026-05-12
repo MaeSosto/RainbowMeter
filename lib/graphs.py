@@ -1,47 +1,25 @@
 from constants import *
 import pandas as pd
+import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from os import listdir
 from  matplotlib.colors import LinearSegmentedColormap
 
 CMAP_RG=LinearSegmentedColormap.from_list('rg',["r", "y", "g"], N=256) 
-
-#Given a lan id, return the language name
-def get_lang_from_lang_code(lang_code = "", count_code = ""):
-    for country_name in COUNTRIES_FILE: 
-        for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
-            if lang_code == COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num] and (count_code == "" or count_code == COUNTRIES_FILE[country_name][ID]):
-                return language, country_name
-            if count_code == COUNTRIES_FILE[country_name][ID] and lang_code == "":
-                return language, country_name
-    return None, None
-
-#Given a scenario and the name of the rainbow meter file, it returns the language/country or both as label for the graph
-def get_label(label, scenario):
-    if scenario == SCENARIO_LANGUAGE:
-        language, _ = get_lang_from_lang_code(label)
-        return language
-    elif scenario == SCENARIO_NATIONALITY:
-        _, country = get_lang_from_lang_code("", label)
-        return country
-    elif scenario == SCENARIO_LAN_NAT:
-        lang_code, country_code = label.split("_")
-        language, country = get_lang_from_lang_code(lang_code, country_code)
-        return f"{language} - {country}"
-    return label
+CMAP_RG_INVERTED=LinearSegmentedColormap.from_list('rg',["g", "y", "r"], N=256) 
 
 #Generate, show and save an heatmap
-def generate_heatmap(df, xlabel, ylabel, title, savefig, annot = False):
+def generate_heatmap(df, xlabel, ylabel, title, savefig, annot = False, cmap = CMAP_RG):
     #df = df.sort_index(axis=1)
     
     # Plot heatmap
-    plt.figure(figsize=(18, 6))
+    plt.figure(figsize=(16, 6))
     sns.heatmap(
         df,
         vmin=0,
         vmax=1,
-        cmap=CMAP_RG,
+        cmap=cmap,
         linewidths=0.5,
         linecolor="white",
         annot=annot,
@@ -69,7 +47,26 @@ def back_translation():
     # Convert to numeric (in case some values are read as strings)
     df = df.apply(pd.to_numeric, errors="coerce")
     
-    generate_heatmap(df, "Language", "Model", "Models Performance in Back Translation Test", f"{GRAPHS_PATH}/back_translation.png")
+    plt.figure(figsize=(16, 6))
+    sns.heatmap(
+        df,
+        vmin=0,
+        vmax=1,
+        cmap=CMAP_RG,
+        linewidths=0.5,
+        linecolor="white",
+        annot=True,
+        annot_kws={"fontsize":8},
+        fmt=".1f"
+    )
+
+    plt.xlabel("Language")
+    plt.ylabel("Model")
+    plt.title("Models Performance in Back Translation Test")
+    plt.xticks(rotation=40, ha='right', fontsize=10)
+    plt.tight_layout()
+    plt.savefig(f"{GRAPHS_PATH}/back_translation.png")
+    print(f"Saved: {f"{GRAPHS_PATH}/back_translation.png"}")
 
 def model_performances():
 
@@ -93,9 +90,6 @@ def model_performances():
 
     for scenario in SCENARIOS:
 
-        output_dir = f"{GRAPHS_PATH}/{MODELS_PERFORMANCES_PATH}/{scenario}"
-        os.makedirs(output_dir, exist_ok=True)
-
         for m in metrics.keys():
 
             file_path = (
@@ -108,42 +102,53 @@ def model_performances():
                 continue
 
             # IMPORTANT: first column is the model name index
-            df_metric = pd.read_csv(
-                file_path,
-                sep=",",
-                index_col=0
-            )
+            df_metric = pd.read_csv(file_path, sep=",", index_col=0)
 
             # Convert only data columns to numeric
-            df_metric = df_metric.apply(
-                pd.to_numeric,
-                errors="coerce"
-            )
+            df_metric = df_metric.apply(pd.to_numeric, errors="coerce")
 
             # Keep original model order from CSV
             # Sort only languages if desired
             df_metric = df_metric.sort_index(axis=1)
-
-            save_path = f"{output_dir}/{m}.png"
 
             generate_heatmap(
                 df=df_metric,
                 xlabel="Language",
                 ylabel="Model",
                 title=f"{title_map[m]} in {scenario} Scenario",
-                savefig=save_path,
+                savefig=f"{GRAPHS_PATH}/{MODELS_PERFORMANCES_PATH}/{scenario}/{m}.png",
                 annot=True
             )
 
-            print(f"Saved: {save_path}")
-
 #Calculate the MAEs errors            
-def maes():
+def mae_models():
     for test in [FACT, STANCE]:
+        csv_path = f"{EVALUATIONS_PATH}/general_stats.csv"
+
+        if not os.path.exists(csv_path):
+            print(f"Missing file: {csv_path}")
+            return
+
+        df_scenario = pd.read_csv(csv_path, sep=";")
+
+        # Iterate over scenarios contained in the dataframe
         for scenario in SCENARIOS:
-            df = pd.read_csv(f"{EVALUATIONS_PATH}/{scenario}/general_stats.csv", sep=";")
+            df = df_scenario[df_scenario[SCENARIO] == scenario]
             
             df["Language - Country"] = (df["languages"].astype(str)+ " | "+ df["Country"].astype(str))
+            df["Model"] = df["Model"].astype(str).map(MODEL_LABEL)
+            ordered_labels = [
+                MODEL_LABEL.get(model, model)
+                for model in MODEL_LIST
+            ]
+
+            df["Model"] = pd.Categorical(
+                df["Model"],
+                categories=ordered_labels,
+                ordered=True,
+            )
+
+            df = df.sort_values("Model")
 
             # Pivot tables
             fact_pivot = df.pivot_table(
@@ -152,18 +157,27 @@ def maes():
                 values=f"{test} MAE"
             )
 
-            #stance_pivot = stance_pivot.sort_index()
             generate_heatmap(
                 df = fact_pivot,
                 xlabel = "Language and Country",
                 ylabel = "Model",
                 title = f"{test} MAE Heatmap",
-                savefig = f"{GRAPHS_PATH}/MAE/{scenario}/{test}.png"
+                savefig = f"{GRAPHS_PATH}/MAE/{scenario}/{test}_models.png",
+                cmap= CMAP_RG_INVERTED
             )
               
 def line_graphs_percentage_plain():
+    csv_path = f"{EVALUATIONS_PATH}/general_stats.csv"
+
+    if not os.path.exists(csv_path):
+        print(f"Missing file: {csv_path}")
+        return
+
+    df_scenario = pd.read_csv(csv_path, sep=";")
+
+    # Iterate over scenarios contained in the dataframe
     for scenario in SCENARIOS:
-        df = pd.read_csv(f"{EVALUATIONS_PATH}/{scenario}/general_stats.csv", sep=";")
+        df = df_scenario[df_scenario[SCENARIO] == scenario]
 
         if scenario == SCENARIO_LANGUAGE:
             df["x_label"] = df["languages"]
@@ -226,9 +240,132 @@ def line_graphs_percentage_plain():
             print(f"Saved: {save_path}")
             plt.close()
 
+def mae_aggregated_language_nat():
+    csv_path = f"{EVALUATIONS_PATH}/lang_country_mae_summary.csv"
+
+    if not os.path.exists(csv_path):
+        print(f"Missing file: {csv_path}")
+        return
+
+    df = pd.read_csv(csv_path, sep=";")
+
+    for test in [FACT, STANCE]:
+        language_col = f"{SCENARIO_LANGUAGE}_{test}_MAE"
+        nationality_col = f"{SCENARIO_NATIONALITY}_{test}_MAE"
+        lang_nat_col = f"{SCENARIO_LAN_NAT}_{test}_MAE"
+
+        language_rows = (
+            df[df[language_col].notna()][["Key", language_col]]
+            .copy()
+            .rename(columns={
+                "Key": "Language",
+                language_col: "Value"
+            })
+        )
+
+        country_rows = (
+            df[df[nationality_col].notna()][["Key", nationality_col]]
+            .copy()
+            .rename(columns={
+                "Key": "Country",
+                nationality_col: "Value"
+            })
+        )
+
+        lang_country_rows = (
+            df[df[lang_nat_col].notna()][["Key", lang_nat_col]]
+            .copy()
+        )
+
+        lang_country_rows[["Language", "Country"]] = (
+            lang_country_rows["Key"]
+            .str.split(r"\s*\|\s*", expand=True)
+        )
+
+        lang_country_rows.rename(columns={
+            lang_nat_col: "Value"
+        }, inplace=True)
+
+        languages = sorted(
+            set(language_rows["Language"].dropna())
+            | set(lang_country_rows["Language"].dropna())
+        )
+
+        countries = sorted(
+            set(country_rows["Country"].dropna())
+            | set(lang_country_rows["Country"].dropna())
+        )
+
+        full_rows =  languages + [SCENARIO_LABELS[SCENARIO_NATIONALITY]]
+        full_columns = [SCENARIO_LABELS[SCENARIO_LANGUAGE]] + countries
+
+        matrix = pd.DataFrame(
+            np.nan,
+            index=full_rows,
+            columns=full_columns,
+        )
+
+        for _, row in language_rows.iterrows():
+
+            matrix.loc[
+                row["Language"],
+                SCENARIO_LABELS[SCENARIO_LANGUAGE]
+            ] = row["Value"]
+
+        for _, row in country_rows.iterrows():
+
+            matrix.loc[
+                SCENARIO_LABELS[SCENARIO_NATIONALITY],
+                row["Country"]
+            ] = row["Value"]
+
+        for _, row in lang_country_rows.iterrows():
+
+            matrix.loc[
+                row["Language"],
+                row["Country"]
+            ] = row["Value"]
+
+        plt.figure(
+            figsize=(
+                max(14, len(matrix.columns) * 0.45),
+                max(12, len(matrix.index) * 0.35),
+            )
+        )
+
+        sns.heatmap(
+            matrix,
+            annot=True,
+            fmt=".2f",
+            linewidths=0.5,
+            linecolor="grey",
+            square=False,
+            cbar_kws={"label": "MAE"},
+        )
+
+        plt.title(f"{test} MAE Heatmap")
+        plt.xlabel("Countries")
+        plt.ylabel("Languages")
+        plt.xticks(rotation=40, ha='right', fontsize=15)
+        plt.yticks(rotation=0)
+        plt.tight_layout()
+        output_png = (f"{GRAPHS_PATH}/MAE/{test}_mae.png")
+        plt.savefig(output_png, dpi=300, bbox_inches="tight")
+        plt.close()
+        print(f"Saved: {output_png}")
+        
 def line_graphs_percentage_difference():
+    csv_path = f"{EVALUATIONS_PATH}/general_stats.csv"
+
+    if not os.path.exists(csv_path):
+        print(f"Missing file: {csv_path}")
+        return
+
+    df_scenario = pd.read_csv(csv_path, sep=";")
+
+    # Iterate over scenarios contained in the dataframe
     for scenario in SCENARIOS:
-        df = pd.read_csv(f"{EVALUATIONS_PATH}/{scenario}/general_stats.csv", sep=";")
+        df = df_scenario[df_scenario[SCENARIO] == scenario]
 
         if scenario == SCENARIO_LANGUAGE:
             df["x_label"] = df["languages"]
@@ -290,8 +427,17 @@ def line_graphs_percentage_difference():
             plt.close()
 
 def line_graphs_pvalue():
+    csv_path = f"{EVALUATIONS_PATH}/general_stats.csv"
+
+    if not os.path.exists(csv_path):
+        print(f"Missing file: {csv_path}")
+        return
+
+    df_scenario = pd.read_csv(csv_path, sep=";")
+
+    # Iterate over scenarios contained in the dataframe
     for scenario in SCENARIOS:
-        df = pd.read_csv(f"{EVALUATIONS_PATH}/{scenario}/general_stats.csv", sep=";")
+        df = df_scenario[df_scenario[SCENARIO] == scenario]
 
         if scenario == SCENARIO_LANGUAGE:
             df["x_label"] = df["languages"]
@@ -324,12 +470,7 @@ def line_graphs_pvalue():
                 label="p = 0.05"
             )
 
-            plt.xticks(
-                x,
-                df_model["x_label"],
-                rotation=90
-            )
-
+            plt.xticks(x, df_model["x_label"], rotation=90)
             plt.ylabel("P-Value")
             plt.xlabel("Language / Country")
             plt.title(f"{model} | {scenario} | P-Value Comparison")
@@ -341,17 +482,21 @@ def line_graphs_pvalue():
             plt.savefig(save_path)
             print(f"Saved: {save_path}")
             plt.close()
-              
+        
+        
 #Back translation Heatmap
-#back_translation_heatmap()
+#back_translation()
 
 #Weight coherence by validity scores
-#model_performances()
+model_performances()
 
 #Generate the Fact and Stance heatmaps of the MAEs errors of all the models   
-#maes()
+mae_models()
+#mae_aggregated_language_nat()
 
-#generate_line_graphs()
-line_graphs_percentage_plain()
-line_graphs_percentage_difference()
-line_graphs_pvalue()
+#Create the line graphs 
+#line_graphs_percentage_plain()
+#line_graphs_percentage_difference()
+#line_graphs_pvalue()
+
+print(f"✅ Graphs Generated")
