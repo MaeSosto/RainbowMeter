@@ -9,36 +9,10 @@ from  matplotlib.colors import LinearSegmentedColormap
 CMAP_RG=LinearSegmentedColormap.from_list('rg',["r", "y", "g"], N=256) 
 CMAP_RG_INVERTED=LinearSegmentedColormap.from_list('rg',["g", "y", "r"], N=256) 
 
-#Generate, show and save an heatmap
-def generate_heatmap(df, xlabel, ylabel, title, savefig, annot = False, cmap = CMAP_RG):
-    #df = df.sort_index(axis=1)
-    
-    # Plot heatmap
-    plt.figure(figsize=(16, 6))
-    sns.heatmap(
-        df,
-        vmin=0,
-        vmax=1,
-        cmap=cmap,
-        linewidths=0.5,
-        linecolor="white",
-        annot=annot,
-        annot_kws={"fontsize":8},
-        fmt=".1f"
-    )
-
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    plt.title(title)
-    plt.xticks(rotation=40, ha='right', fontsize=10)
-    plt.tight_layout()
-    plt.savefig(savefig)
-    print(f"Saved: {savefig}")
-    #plt.show()
     
 #Generate back translation dataframe and heatmap
 def back_translation():
-    df = pd.read_csv("data/translation_test/back_translation.csv", sep=";", index_col="model")
+    df = pd.read_csv(f"{EVALUATIONS_PATH}/back_translation.csv", sep=";", index_col="model")
 
     # Remove avg_score if present
     if "avg_score" in df.columns:
@@ -62,12 +36,44 @@ def back_translation():
 
     plt.xlabel("Language")
     plt.ylabel("Model")
-    plt.title("Models Performance in Back Translation Test")
+    #plt.title("Models Performance in Back Translation Test")
     plt.xticks(rotation=40, ha='right', fontsize=10)
     plt.tight_layout()
-    plt.savefig(f"{GRAPHS_PATH}/back_translation.png")
+    plt.savefig(f"{GRAPHS_PATH}/back_translation.png", bbox_inches="tight", pad_inches=0.1)
     print(f"Saved: {f"{GRAPHS_PATH}/back_translation.png"}")
 
+#Generate, show and save an heatmap
+def generate_heatmap(df, xlabel, ylabel, savefig, annot = False, cmap = CMAP_RG):
+    # Plot heatmap
+    fig, ax = plt.subplots(figsize=(12, 5))
+
+    sns.heatmap(
+        df,
+        vmin=0,
+        vmax=1,
+        cmap=cmap,
+        linewidths=0.5,
+        linecolor="white",
+        # annot=True,
+        # annot_kws={"fontsize": 8},
+        fmt=".1f",
+        ax=ax
+    )
+
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+
+    ax.set_xticklabels(
+        ax.get_xticklabels(),
+        rotation=40,
+        ha="right",
+        fontsize=10
+    )
+
+    fig.tight_layout()
+    plt.savefig(savefig, bbox_inches="tight", pad_inches=0.1)
+    print(f"Saved: {savefig}")
+    
 #Weight coherence by validity scores
 def model_performances():
 
@@ -78,15 +84,6 @@ def model_performances():
         "stance_coh": "Stance Coherence",
         "stance_val": "Stance Validity",
         "stance_coh_val": "Stance Weight coherence by validity",
-    }
-
-    title_map = {
-        "fact_coh": "Models Fact Coherence scores",
-        "fact_val": "Models Fact Validity scores",
-        "fact_coh_val": "Models Fact Weight coherence by validity scores",
-        "stance_coh": "Models Stance Coherence scores",
-        "stance_val": "Models Stance Validity scores",
-        "stance_coh_val": "Models Stance Weight coherence by validity scores",
     }
 
     for scenario in SCENARIOS:
@@ -112,13 +109,13 @@ def model_performances():
             # Sort only languages if desired
             df_metric = df_metric.sort_index(axis=1)
 
+            xlabel = "Language" if scenario == SCENARIO_LANGUAGE else "Country" if scenario == SCENARIO_COUNTRY else "Lanaguage - Country" 
+            
             generate_heatmap(
                 df=df_metric,
-                xlabel="Language",
+                xlabel=xlabel,
                 ylabel="Model",
-                title=f"{title_map[m]} in {scenario} Scenario",
                 savefig=f"{GRAPHS_PATH}/{MODELS_PERFORMANCES_PATH}/{scenario}/{m}.png",
-                annot=True
             )
 
 #Generate the Fact and Stance heatmaps of the MAEs errors of all the models           
@@ -158,14 +155,27 @@ def mae_models():
                 values=f"{test} MAE"
             )
 
-            generate_heatmap(
-                df = fact_pivot,
-                xlabel = "Language and Country",
-                ylabel = "Model",
-                title = f"{test} MAE Heatmap",
-                savefig = f"{GRAPHS_PATH}/MAE/{scenario}/{test}_models.png",
-                cmap= CMAP_RG_INVERTED
+            # Plot heatmap
+            plt.figure(figsize=(16, 6))
+            sns.heatmap(
+                fact_pivot,
+                vmin=0,
+                vmax=1,
+                cmap=CMAP_RG_INVERTED,
+                linewidths=0.5,
+                linecolor="white",
+                annot=True,
+                annot_kws={"fontsize":8},
+                fmt=".1f"
             )
+
+            plt.xlabel("Language and Country")
+            plt.ylabel("Model")
+            plt.title(f"{test} MAE Heatmap")
+            plt.xticks(rotation=40, ha='right', fontsize=10)
+            plt.tight_layout()
+            plt.savefig(f"{GRAPHS_PATH}/MAE/{scenario}/{test}_models.png")
+            print(f"Saved: {f"{GRAPHS_PATH}/MAE/{scenario}/{test}_models.png"}")
             
 #Create the line graphs per each model of the average percentage score accross countries              
 def line_graphs_percentage_plain():
@@ -722,24 +732,24 @@ back_translation()
 model_performances()
 
 #Generate the Fact and Stance heatmaps of the MAEs errors of all the models   
-mae_models()
+#mae_models()
 
 #Generate the Fact and Stance heatmaps of the MAEs errors of all languages and countries
-heatmap_language_nat_mae()
+#heatmap_language_nat_mae()
 
 #Generate a Fact and Stance lineplots of the MAEs errors accross scenarios and countries
-lineplot_scenario_comparison_mae()
+#lineplot_scenario_comparison_mae()
 
 #Generate a lineplots of the percentage errors accross scenarios and countries
-lineplot_scenario_comparison_percentage()
+#lineplot_scenario_comparison_percentage()
 
 #Create the line graphs per each model of the average percentage score accross countries
-line_graphs_percentage_plain()
+#line_graphs_percentage_plain()
 
 #Create the line graphs per each model of the difference in percentage score accross countries
-line_graphs_percentage_difference()
+#line_graphs_percentage_difference()
 
 #Create the line graphs per each model of the pvalue score accross countries
-line_graphs_pvalue()
+#line_graphs_pvalue()
 
 print(f"✅ Graphs Generated")

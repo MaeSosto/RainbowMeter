@@ -1,13 +1,13 @@
 Key;language_scenario_Fact_MAE;language_scenario_Stance_MAE;country_scenario_Fact_MAE;country_scenario_Stance_MAE;language_country_scenario_Fact_MAE;language_country_scenario_Stance_MAE
 Albania;;;0.57;0.75;;
 Albanian;0.63;0.74;;;;
-Albanian | Albania;;;;;0.57;0.71
+Albanian | Albania;;;;;0.55;0.72
 Albanian | Kosovo;;;;;0.55;0.69
 Albanian | North Macedonia;;;;;0.55;0.73
 Andorra;;;0.46;0.72;;
 Armenia;;;0.35;1.0;;
 Armenian;0.63;0.92;;;;
-Armenian | Armenia;;;;;0.43;0.87
+Armenian | Armenia;;;;;0.46;0.86
 Austria;;;0.62;0.65;;
 Azerbaijan;;;0.37;0.86;;
 Azerbaijani;0.55;0.91;;;;
@@ -83,7 +83,7 @@ Irish;0.63;0.63;;;;
 Irish | Ireland;;;;;0.62;0.63
 Italian;0.7;0.85;;;;
 Italian | Italy;;;;;0.56;0.86
-Italian | San Marino;;;;;0.61;0.91
+Italian | San Marino;;;;;0.62;0.88
 Italian | Switzerland;;;;;0.56;0.69
 Italy;;;0.56;0.92;;
 Kosovo;;;0.53;0.78;;
@@ -151,7 +151,7 @@ Turkey;;;0.35;0.97;;
 Turkish;0.51;0.89;;;;
 Turkish | Cyprus;;;;;0.5;0.78
 Turkish | Turkey;;;;;0.24;0.9
-Ukraine;;;0.53;0.93;;
+Ukraine;;;0.5;0.9;;
 Ukrainian;0.62;0.92;;;;
 Ukrainian | Ukraine;;;;;0.52;0.86
-United Kingdom;;;0.54;0.68;;
+United Kingdom;;;0.53;0.68;;
