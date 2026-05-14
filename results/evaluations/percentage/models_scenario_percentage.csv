@@ -1,0 +1,11 @@
+Model;language_scenario_Fact;language_scenario_Stance;country_scenario_Fact;country_scenario_Stance;language_country_scenario_Fact;language_country_scenario_Stance
+Qwen3.5 2B;50;62;82;74;48;62
+Qwen3.5 9B;50;75;43;82;45;72
+Qwen3.5 27B;50;80;36;89;42;76
+LlaMa 3.2 3B;25;53;52;72;27;53
+LlaMa 3.1 8B;46;61;56;73;49;60
+LlaMa 3.1 70B;53;74;47;66;50;50
+DeepSeek-V3.2;52;79;48;83;45;77
+Sonnet 4.6;37;81;33;84;37;76
+GPT 5.4;73;83;54;91;51;84
+Gemini 3 Flash;58;57;50;52;55;55

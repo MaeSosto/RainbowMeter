@@ -5,7 +5,7 @@ import numpy as np
 MAX_NUM_ANSWERS = 5 #Num answer we want for each criterion-stance
 COHERENCE = "Coherence"
 VALIDITY = "Validity"
-COH_VAL_SCORE = "Weight coherence by validity"
+COH_VAL_SCORE = "Weight coherence by validity" 
 
 class Rainbow_Meter:
     #Return True if the Rainbow map is complete, otherwise return False (and therefore needs to be calculated)

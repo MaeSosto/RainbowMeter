@@ -66,19 +66,6 @@ COUNTRY = "Country"
 MODEL = "Model"
 SCENARIO = "Scenario"
 
-
-#Create Project Folder Structure
-RESULT_PATH = "results"
-os.makedirs(RESULT_PATH, exist_ok=True)
-RAINBOW_METER_RESULT_PATH = f"{RESULT_PATH}/rainbow_meter"
-os.makedirs(RAINBOW_METER_RESULT_PATH, exist_ok=True)
-EVALUATIONS_PATH = f"{RESULT_PATH}/evaluations"
-os.makedirs(EVALUATIONS_PATH, exist_ok=True)
-GRAPHS_PATH = f"graphs"
-os.makedirs(GRAPHS_PATH, exist_ok=True)
-RAINBOW_METER_DATA_PATH = "data/rainbow_meter"
-
-
 SCENARIO_LANGUAGE = "language_scenario"
 SCENARIO_COUNTRY = "country_scenario"
 SCENARIO_LAN_NAT = "language_country_scenario"
@@ -89,14 +76,15 @@ SCENARIO_LABELS = {
     SCENARIO_LAN_NAT: "Language-Country Scenario"
 }
 
-MODELS_PERFORMANCES_PATH = "models_performances"
+#Create Project Folder Structure
+RESULT_PATH = "results"
+os.makedirs(RESULT_PATH, exist_ok=True)
+RAINBOW_METER_RESULT_PATH = f"{RESULT_PATH}/rainbow_meter"
+os.makedirs(RAINBOW_METER_RESULT_PATH, exist_ok=True)
 for s in SCENARIOS:
     os.makedirs(f"{RAINBOW_METER_RESULT_PATH}/{s}", exist_ok=True)
-    os.makedirs(f"{GRAPHS_PATH}/MAE/{s}", exist_ok=True)
-    os.makedirs(f"{GRAPHS_PATH}/percentage/{s}", exist_ok=True)
-    os.makedirs(f"{GRAPHS_PATH}/{MODELS_PERFORMANCES_PATH}/{s}", exist_ok=True)
-    os.makedirs(f"{EVALUATIONS_PATH}/{MODELS_PERFORMANCES_PATH}/{s}", exist_ok=True)
-    
+
+RAINBOW_METER_DATA_PATH = "data/rainbow_meter"
 RAINBOW_METER_EN = pd.read_csv(f"{RAINBOW_METER_DATA_PATH}/{SCENARIO_LANGUAGE}/rainbow_meter_en.csv", sep=";", index_col=SUBCATEGORY)
 
 ### MODEL LIST ###

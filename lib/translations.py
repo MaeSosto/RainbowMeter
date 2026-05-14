@@ -127,7 +127,7 @@ def test_system_translation(model, question_list, language):
 #Create the back_translation file, which contatins the average scores of back translation similarity test of every model in every language
 def test_systems_translation_abilities(model_list):
     #Get the file
-    csv_path = f"{EVALUATIONS_PATH}/back_translation.csv"
+    csv_path = f"data/back_translation.csv"
 
     languages_list = []
     seen_languages = set()
