@@ -34,11 +34,12 @@ torch.set_default_device(device)
 logger.info(f"Using device: {device}")
 
 #Rainbow Map
+CRITERION_ID = "criterion_id"
 RAINBOW_MAP = "Rainbow Map"
 CATEGORY = "Category"
 SUBCATEGORY = "Subcategory"
 RAINBOW_MAP_DF = pd.read_csv("data/rainbow_map/rainbow_map.csv", delimiter=";", index_col="country_id")
-CRITERIA_WEIGHTS_DF = pd.read_csv("data/rainbow_map/criteria_weights.csv", delimiter=";", index_col=SUBCATEGORY)
+CRITERIA_WEIGHTS_DF = pd.read_csv("data/rainbow_map/criteria_weights.csv", delimiter=";", index_col=CRITERION_ID)
 RAINBOW_MAP_CATEGORIES = ["Equality & non-discrimination", "Family", "Hate crime & hate speech", "Legal gender recognition", "Intersex bodily integrity", "Civil society space", "Asylum"]
 with open("data/countries.json") as f:
     COUNTRIES_FILE = json.load(f)
@@ -85,7 +86,7 @@ for s in SCENARIOS:
     os.makedirs(f"{RAINBOW_METER_RESULT_PATH}/{s}", exist_ok=True)
 
 RAINBOW_METER_DATA_PATH = "data/rainbow_meter"
-RAINBOW_METER_EN = pd.read_csv(f"{RAINBOW_METER_DATA_PATH}/{SCENARIO_LANGUAGE}/rainbow_meter_en.csv", sep=";", index_col=SUBCATEGORY)
+RAINBOW_METER_EN = pd.read_csv(f"{RAINBOW_METER_DATA_PATH}/{SCENARIO_LANGUAGE}/rainbow_meter_en.csv", sep=";", index_col=CRITERION_ID)
 
 ### MODEL LIST ###
 QWEN35_2 = "Qwen/Qwen3.5-2B" #HF
@@ -129,7 +130,7 @@ def get_rainbow_meter_file_answers(scenario, model_name, language_code = "", cou
         scenario_path = f"rm_answers_{language_code}_{country_id}.csv"
     if os.path.exists(result_path+scenario_path):
         
-        df = pd.read_csv(result_path+scenario_path, sep=";", index_col=SUBCATEGORY) 
+        df = pd.read_csv(result_path+scenario_path, sep=";", index_col=CRITERION_ID)
         if df.empty:
             logger.error(f"The rainbow meter {result_path+scenario_path} is empty")
             return pd.DataFrame()
@@ -151,7 +152,8 @@ def get_rainbow_meter_file_default(scenario, language_code, country_id):
     else:
         scenario_path = f"rainbow_meter_{language_code}_{country_id}.csv"
     if os.path.exists(result_path+ scenario_path): #If exist
-        df = pd.read_csv(result_path+scenario_path, sep=";", index_col=SUBCATEGORY)
+        df = pd.read_csv(result_path+scenario_path, sep=";")
+        print(f"read: {result_path+ scenario_path}")
         return True,  df
     logger.error(f"⚠️ {result_path+scenario_path} is missing")
     return False, None

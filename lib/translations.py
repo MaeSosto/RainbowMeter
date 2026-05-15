@@ -5,7 +5,7 @@ import requests
 import random
 logging.getLogger('deepl').setLevel(logging.WARNING)
 
-RAINBOW_METER_EN = pd.read_csv(f"{RAINBOW_METER_DATA_PATH}/{SCENARIO_LANGUAGE}/rainbow_meter_en.csv", sep=";", index_col=SUBCATEGORY)
+RAINBOW_METER_EN = pd.read_csv(f"{RAINBOW_METER_DATA_PATH}/{SCENARIO_LANGUAGE}/rainbow_meter_en.csv", sep=";", index_col=CRITERION_ID)
 API_URL = "https://router.huggingface.co/hf-inference/models/sentence-transformers/all-MiniLM-L6-v2"
 NUM_SAMPLES_QUESTIONS = 3
 
@@ -264,8 +264,9 @@ def translate_rainbow_meter():
 
                 # Initialize per-file data
                 rainbow_meter = {
-                    CATEGORY: [],
-                    SUBCATEGORY: [],
+                    CRITERION_ID: []
+                    # CATEGORY: [],
+                    # SUBCATEGORY: [],
                     **{q_type: [] for q_type in QUESTION_TYPES},
                 }
 
@@ -282,8 +283,9 @@ def translate_rainbow_meter():
                     continue
 
                 for subcategory, row in RAINBOW_METER_EN.iterrows():
-                    rainbow_meter[SUBCATEGORY].append(subcategory)
-                    rainbow_meter[CATEGORY].append(row[CATEGORY])
+                    rainbow_meter[CRITERION_ID].append(CRITERION_ID)
+                    # rainbow_meter[CATEGORY].append(row[CATEGORY])
+                    # rainbow_meter[SUBCATEGORY].append(subcategory)
 
                     for q_type in QUESTION_TYPES:
                         base_text = row[q_type].lower()

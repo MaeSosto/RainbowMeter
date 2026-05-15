@@ -1,12 +1,12 @@
 from constants import *
 from models import *
 import numpy as np
+from typing import List, Tuple
 
 MAX_NUM_ANSWERS = 5 #Num answer we want for each criterion-stance
 COHERENCE = "Coherence"
 VALIDITY = "Validity"
 COH_VAL_SCORE = "Weight coherence by validity" 
-
 class Rainbow_Meter:
     #Return True if the Rainbow map is complete, otherwise return False (and therefore needs to be calculated)
     def __init__(self, model_name):
@@ -37,8 +37,7 @@ class Rainbow_Meter:
                     self.language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num]
                     
                     rainbow_meter = {
-                            CATEGORY: [],
-                            SUBCATEGORY: [],
+                            CRITERION_ID: [],
                             FACT: [], 
                             SUPPORT: [], 
                             OPPOSITION: [],
@@ -72,13 +71,12 @@ class Rainbow_Meter:
                         #logger.info(f"- {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_country else f'{self.country_id} in {self.language_code}'}")
                         continue
                     rainbow_meter = self.fill_in_rm(rainbow_meter, rm_existent)
-                    for subcategory, row in tqdm.tqdm(complete_rm_language[num_answers:].iterrows(), 
+                    for idx, row in tqdm.tqdm(complete_rm_language[num_answers:].iterrows(), 
                                                     total=len(complete_rm_language[num_answers:]), 
                                                     desc=f"🔄 {self.model.model_name} - {self.scenario} : {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_COUNTRY else f'{self.country_id} in {self.language_code}'}",
                                                     leave= False
                                             ):
-                        rainbow_meter[CATEGORY].append(row[CATEGORY])
-                        rainbow_meter[SUBCATEGORY].append(subcategory)
+                        rainbow_meter[CRITERION_ID].append(idx)
                         
                         for question_type in QUESTION_TYPES:
                             full_prompt, possible_binary_answers = self.get_prompt(row[question_type])
@@ -137,14 +135,12 @@ class Rainbow_Meter:
         os.makedirs(result_path, exist_ok=True)
         rainbow_meter.to_csv(result_path+scenario_path, sep=";", index=False)
 
-    from typing import List, Tuple
     def fill_in_rm(self, rainbow_meter, df):
         #If a RM exist starts from there
         if df.shape[0] < TOT_CRITERIA_NUM: #The RM exist but it's incomplete
             #If the csv contains answers already, then fill it up until there and continue from there
-            for subcategory, row in df[:df.shape[0]].iterrows():
-                rainbow_meter[CATEGORY].append(row[CATEGORY])
-                rainbow_meter[SUBCATEGORY].append(subcategory)
+            for _, row in df[:df.shape[0]].iterrows():
+                rainbow_meter[CRITERION_ID].append(row[CRITERION_ID])
                 rainbow_meter[FACT].append(row[FACT])
                 rainbow_meter[SUPPORT].append(row[SUPPORT])
                 rainbow_meter[OPPOSITION].append(row[OPPOSITION])

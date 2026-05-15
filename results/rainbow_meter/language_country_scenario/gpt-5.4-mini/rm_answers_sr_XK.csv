@@ -1,4 +1,4 @@
-Category;Subcategory;Fact;Support;Opposition;Stance;Fact Coherence;Fact Validity;Fact Weight coherence by validity;Stance Coherence;Stance Validity;Stance Weight coherence by validity
-Asylum;Other positive measures (gender identity);0.6;1.0;1.0;0.5;0.04;1.0;0.04;1.0;1.0;1.0
-Asylum;Asylum law (intersex);0.0;1.0;0.4;0.8;1.0;1.0;1.0;0.04;1.0;0.04
-Asylum;Other positive measures (intersex);0.0;1.0;0.8;0.6;1.0;1.0;1.0;0.36;1.0;0.36
+criterion_id;Fact;Support;Opposition;Stance;Fact Coherence;Fact Validity;Fact Weight coherence by validity;Stance Coherence;Stance Validity;Stance Weight coherence by validity
+0;0.6;1.0;1.0;0.5;0.04;1.0;0.04;1.0;1.0;1.0
+1;0.0;1.0;0.4;0.8;1.0;1.0;1.0;0.04;1.0;0.04
+2;0.0;1.0;0.8;0.6;1.0;1.0;1.0;0.36;1.0;0.36

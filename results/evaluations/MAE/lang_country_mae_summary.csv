@@ -1,59 +1,59 @@
 Key;language_scenario_Fact_MAE;language_scenario_Stance_MAE;country_scenario_Fact_MAE;country_scenario_Stance_MAE;language_country_scenario_Fact_MAE;language_country_scenario_Stance_MAE
-Albania;;;0.57;0.75;;
-Albanian;0.63;0.74;;;;
-Albanian | Albania;;;;;0.55;0.72
+Albania;;;0.53;0.68;;
+Albanian;0.62;0.72;;;;
+Albanian | Albania;;;;;0.53;0.67
 Albanian | Kosovo;;;;;0.55;0.69
 Albanian | North Macedonia;;;;;0.55;0.73
 Andorra;;;0.46;0.72;;
 Armenia;;;0.35;1.0;;
 Armenian;0.63;0.92;;;;
 Armenian | Armenia;;;;;0.46;0.86
-Austria;;;0.62;0.65;;
+Austria;;;0.61;0.64;;
 Azerbaijan;;;0.37;0.86;;
 Azerbaijani;0.55;0.91;;;;
 Azerbaijani | Azerbaijan;;;;;0.36;0.85
-Belarus;;;0.27;0.92;;
-Belarusian;0.65;0.9;;;;
-Belarusian | Belarus;;;;;0.37;0.78
+Belarus;;;0.26;0.93;;
+Belarusian;0.66;0.92;;;;
+Belarusian | Belarus;;;;;0.38;0.78
 Belgium;;;0.45;0.45;;
 Bokmål;0.63;0.64;;;;
 Bokmål | Norway;;;;;0.62;0.62
-Bosnia & Herzegovina;;;0.49;0.68;;
-Bosnian;0.55;0.68;;;;
-Bosnian | Bosnia & Herzegovina;;;;;0.49;0.67
-Bulgaria;;;0.46;0.88;;
+Bosnia & Herzegovina;;;0.49;0.72;;
+Bosnian;0.56;0.71;;;;
+Bosnian | Bosnia & Herzegovina;;;;;0.48;0.7
+Bulgaria;;;0.45;0.89;;
 Bulgarian;0.6;0.79;;;;
 Bulgarian | Bulgaria;;;;;0.52;0.79
 Catalan;0.65;0.78;;;;
 Catalan | Andorra;;;;;0.6;0.8
-Croatia;;;0.52;0.67;;
-Croatian;0.56;0.69;;;;
-Croatian | Bosnia & Herzegovina;;;;;0.46;0.68
+Croatia;;;0.52;0.66;;
+Croatian;0.58;0.71;;;;
+Croatian | Bosnia & Herzegovina;;;;;0.46;0.7
 Croatian | Croatia;;;;;0.54;0.7
 Cyprus;;;0.6;0.82;;
-Czech;0.59;0.79;;;;
-Czech | Czechia;;;;;0.54;0.75
-Czechia;;;0.57;0.81;;
-Danish;0.55;0.51;;;;
-Danish | Denmark;;;;;0.61;0.57
-Denmark;;;0.36;0.38;;
+Czech;0.63;0.78;;;;
+Czech | Czechia;;;;;0.57;0.74
+Czechia;;;0.56;0.78;;
+Danish;0.6;0.49;;;;
+Danish | Denmark;;;;;0.65;0.56
+Denmark;;;0.41;0.34;;
 Dutch;0.61;0.6;;;;
 Dutch | Belgium;;;;;0.57;0.55
 Dutch | Netherlands;;;;;0.6;0.64
-English;0.63;0.53;;;;
-English | Ireland;;;;;0.47;0.58
-English | Malta;;;;;0.49;0.36
-English | United Kingdom;;;;;0.57;0.68
-Estonia;;;0.52;0.73;;
-Estonian;0.58;0.71;;;;
-Estonian | Estonia;;;;;0.57;0.71
+English;0.63;0.54;;;;
+English | Ireland;;;;;0.45;0.59
+English | Malta;;;;;0.49;0.37
+English | United Kingdom;;;;;0.56;0.69
+Estonia;;;0.51;0.72;;
+Estonian;0.56;0.7;;;;
+Estonian | Estonia;;;;;0.55;0.7
 Finland;;;0.4;0.48;;
 Finnish;0.62;0.58;;;;
 Finnish | Finland;;;;;0.61;0.6
-France;;;0.45;0.57;;
-French;0.65;0.7;;;;
+France;;;0.48;0.59;;
+French;0.65;0.71;;;;
 French | Belgium;;;;;0.64;0.55
-French | France;;;;;0.58;0.69
+French | France;;;;;0.59;0.7
 French | Luxembourg;;;;;0.62;0.63
 French | Monaco;;;;;0.33;0.87
 French | Switzerland;;;;;0.56;0.77
@@ -67,23 +67,23 @@ German | Germany;;;;;0.55;0.55
 German | Liechtenstein;;;;;0.57;0.8
 German | Luxembourg;;;;;0.54;0.57
 German | Switzerland;;;;;0.57;0.67
-Germany;;;0.46;0.52;;
+Germany;;;0.47;0.52;;
 Greece;;;0.52;0.46;;
 Greek;0.68;0.69;;;;
 Greek | Cyprus;;;;;0.66;0.79
 Greek | Greece;;;;;0.59;0.55
 Hungarian;0.66;0.76;;;;
-Hungarian | Hungary;;;;;0.59;0.73
+Hungarian | Hungary;;;;;0.57;0.72
 Hungary;;;0.53;0.81;;
-Iceland;;;0.46;0.46;;
-Icelandic;0.64;0.57;;;;
-Icelandic | Iceland;;;;;0.56;0.52
+Iceland;;;0.45;0.45;;
+Icelandic;0.63;0.57;;;;
+Icelandic | Iceland;;;;;0.54;0.52
 Ireland;;;0.48;0.6;;
 Irish;0.63;0.63;;;;
-Irish | Ireland;;;;;0.62;0.63
-Italian;0.7;0.85;;;;
-Italian | Italy;;;;;0.56;0.86
-Italian | San Marino;;;;;0.62;0.88
+Irish | Ireland;;;;;0.6;0.63
+Italian;0.71;0.84;;;;
+Italian | Italy;;;;;0.54;0.84
+Italian | San Marino;;;;;0.64;0.84
 Italian | Switzerland;;;;;0.56;0.69
 Italy;;;0.56;0.92;;
 Kosovo;;;0.53;0.78;;
@@ -99,23 +99,23 @@ Luxembourgish;0.54;0.59;;;;
 Luxembourgish | Luxembourg;;;;;0.47;0.56
 Macedonian;0.63;0.78;;;;
 Macedonian | North Macedonia;;;;;0.55;0.73
-Malta;;;0.46;0.36;;
-Maltese;0.74;0.57;;;;
-Maltese | Malta;;;;;0.68;0.6
+Malta;;;0.46;0.38;;
+Maltese;0.73;0.58;;;;
+Maltese | Malta;;;;;0.68;0.61
 Modern Greek;0.68;0.69;;;;
 Modern Greek | Cyprus;;;;;0.66;0.79
 Modern Greek | Greece;;;;;0.59;0.55
 Moldova;;;0.54;0.74;;
 Monaco;;;0.48;0.91;;
 Montenegrin;0.67;0.67;;;;
-Montenegrin | Montenegro;;;;;0.67;0.66
-Montenegro;;;0.57;0.62;;
+Montenegrin | Montenegro;;;;;0.67;0.67
+Montenegro;;;0.55;0.59;;
 Netherlands;;;0.54;0.58;;
 North Macedonia;;;0.56;0.8;;
 Norway;;;0.44;0.52;;
 Poland;;;0.55;0.89;;
-Polish;0.61;0.89;;;;
-Polish | Poland;;;;;0.46;0.87
+Polish;0.62;0.89;;;;
+Polish | Poland;;;;;0.47;0.87
 Portugal;;;0.45;0.54;;
 Portuguese;0.58;0.57;;;;
 Portuguese | Portugal;;;;;0.54;0.56
@@ -124,28 +124,28 @@ Romanian;0.65;0.81;;;;
 Romanian | Moldova;;;;;0.63;0.73
 Romanian | Romania;;;;;0.6;0.89
 Russia;;;0.39;0.87;;
-Russian;0.64;0.96;;;;
-Russian | Belarus;;;;;0.39;0.83
+Russian;0.65;0.97;;;;
+Russian | Belarus;;;;;0.38;0.85
 Russian | Russia;;;;;0.42;0.85
-San Marino;;;0.54;0.93;;
-Serbia;;;0.48;0.72;;
-Serbian;0.6;0.73;;;;
-Serbian | Bosnia & Herzegovina;;;;;0.49;0.64
+San Marino;;;0.58;0.83;;
+Serbia;;;0.47;0.72;;
+Serbian;0.61;0.75;;;;
+Serbian | Bosnia & Herzegovina;;;;;0.49;0.67
 Serbian | Kosovo;;;;;0.6;0.73
 Serbian | Serbia;;;;;0.52;0.7
-Slovak;0.59;0.76;;;;
-Slovak | Slovakia;;;;;0.48;0.73
-Slovakia;;;0.52;0.8;;
-Slovene;0.64;0.68;;;;
-Slovene | Slovenia;;;;;0.59;0.65
-Slovenia;;;0.55;0.67;;
-Spain;;;0.46;0.46;;
-Spanish;0.59;0.52;;;;
-Spanish | Spain;;;;;0.52;0.54
-Sweden;;;0.46;0.52;;
-Swedish;0.61;0.58;;;;
+Slovak;0.6;0.77;;;;
+Slovak | Slovakia;;;;;0.49;0.72
+Slovakia;;;0.53;0.82;;
+Slovene;0.65;0.67;;;;
+Slovene | Slovenia;;;;;0.6;0.65
+Slovenia;;;0.55;0.65;;
+Spain;;;0.44;0.37;;
+Spanish;0.61;0.46;;;;
+Spanish | Spain;;;;;0.53;0.47
+Sweden;;;0.45;0.5;;
+Swedish;0.62;0.58;;;;
 Swedish | Finland;;;;;0.59;0.64
-Swedish | Sweden;;;;;0.57;0.59
+Swedish | Sweden;;;;;0.57;0.58
 Switzerland;;;0.5;0.69;;
 Turkey;;;0.35;0.97;;
 Turkish;0.51;0.89;;;;
@@ -154,4 +154,4 @@ Turkish | Turkey;;;;;0.24;0.9
 Ukraine;;;0.5;0.9;;
 Ukrainian;0.62;0.92;;;;
 Ukrainian | Ukraine;;;;;0.52;0.86
-United Kingdom;;;0.53;0.68;;
+United Kingdom;;;0.53;0.69;;
