@@ -1,12 +1,12 @@
 from constants import *
 from models import *
 import numpy as np
-from typing import List, Tuple
 
 MAX_NUM_ANSWERS = 5 #Num answer we want for each criterion-stance
 COHERENCE = "Coherence"
 VALIDITY = "Validity"
 COH_VAL_SCORE = "Weight coherence by validity" 
+
 class Rainbow_Meter:
     #Return True if the Rainbow map is complete, otherwise return False (and therefore needs to be calculated)
     def __init__(self, model_name):
@@ -113,7 +113,7 @@ class Rainbow_Meter:
     
     #Return True if the results exists, otherwise False
     def rm_result_exist(self):
-        result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model.model_name}/"
+        result_path = f"{RAINBOW_METER}/{self.scenario}/{self.model.model_name}/"
         if self.scenario == SCENARIO_LANGUAGE:
             scenario_path = f"rm_answers_{self.language_code}.csv"
         elif self.scenario == SCENARIO_COUNTRY:
@@ -125,7 +125,7 @@ class Rainbow_Meter:
     
     #Export and save the Rainbow Meter
     def export_rm_result(self, rainbow_meter):
-        result_path = f"{RAINBOW_METER_RESULT_PATH}/{self.scenario}/{self.model.model_name}/"
+        result_path = f"{RAINBOW_METER}/{self.scenario}/{self.model.model_name}/"
         if self.scenario == SCENARIO_LANGUAGE:
             scenario_path = f"rm_answers_{self.language_code}.csv"
         elif self.scenario == SCENARIO_COUNTRY:

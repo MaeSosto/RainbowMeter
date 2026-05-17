@@ -78,12 +78,10 @@ SCENARIO_LABELS = {
 }
 
 #Create Project Folder Structure
-RESULT_PATH = "results"
-os.makedirs(RESULT_PATH, exist_ok=True)
-RAINBOW_METER_RESULT_PATH = f"{RESULT_PATH}/rainbow_meter"
-os.makedirs(RAINBOW_METER_RESULT_PATH, exist_ok=True)
+RAINBOW_METER = "rainbow_meter"
+os.makedirs(RAINBOW_METER, exist_ok=True)
 for s in SCENARIOS:
-    os.makedirs(f"{RAINBOW_METER_RESULT_PATH}/{s}", exist_ok=True)
+    os.makedirs(f"{RAINBOW_METER}/{s}", exist_ok=True)
 
 RAINBOW_METER_DATA_PATH = "data/rainbow_meter"
 RAINBOW_METER_EN = pd.read_csv(f"{RAINBOW_METER_DATA_PATH}/{SCENARIO_LANGUAGE}/rainbow_meter_en.csv", sep=";", index_col=CRITERION_ID)
@@ -121,7 +119,7 @@ MODEL_LABEL = {
 
 #Return True if the results exists, otherwise False
 def get_rainbow_meter_file_answers(scenario, model_name, language_code = "", country_id = ""):
-    result_path = f"{RAINBOW_METER_RESULT_PATH}/{scenario}/{model_name}/"
+    result_path = f"{RAINBOW_METER}/{scenario}/{model_name}/"
     if scenario == SCENARIO_LANGUAGE:
         scenario_path = f"rm_answers_{language_code}.csv"
     elif scenario == SCENARIO_COUNTRY:

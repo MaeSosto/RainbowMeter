@@ -282,10 +282,8 @@ def translate_rainbow_meter():
                     #logger.info(f"Skipping existing file: {rm_path}")
                     continue
 
-                for subcategory, row in RAINBOW_METER_EN.iterrows():
-                    rainbow_meter[CRITERION_ID].append(CRITERION_ID)
-                    # rainbow_meter[CATEGORY].append(row[CATEGORY])
-                    # rainbow_meter[SUBCATEGORY].append(subcategory)
+                for idx, row in RAINBOW_METER_EN.iterrows():
+                    rainbow_meter[CRITERION_ID].append(idx)
 
                     for q_type in QUESTION_TYPES:
                         base_text = row[q_type].lower()

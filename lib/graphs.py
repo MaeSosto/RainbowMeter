@@ -9,11 +9,11 @@ from  matplotlib.colors import LinearSegmentedColormap
 CMAP_RG=LinearSegmentedColormap.from_list('rg',["r", "y", "g"], N=256) 
 CMAP_RG_INVERTED=LinearSegmentedColormap.from_list('rg',["g", "y", "r"], N=256) 
 
-EVALUATIONS_PATH = f"{RESULT_PATH}/evaluations"
+EVALUATIONS_PATH = "evaluations"
 MODELS_PERFORMANCES_PATH = "models_performances"
 MAE = "MAE"
 PERCENTAGE = "percentage"
-GRAPHS_PATH = f"graphs"
+GRAPHS_PATH = "graphs"
 os.makedirs(GRAPHS_PATH, exist_ok=True)
 MAE_PATH =f"{GRAPHS_PATH}/{MAE}/"
 os.makedirs(MAE_PATH, exist_ok=True)
@@ -180,7 +180,8 @@ def mae_models():
             pivot = df.pivot_table(
                 index="Model",
                 columns="x_label",
-                values=f"{test} MAE"
+                values=f"{test} MAE",
+                observed=False
             )
 
             plt.figure(figsize=(16, 6))
