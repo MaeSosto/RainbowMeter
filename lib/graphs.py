@@ -159,7 +159,7 @@ def model_performances():
 
     for scenario in SCENARIOS:
 
-        for m in metrics.keys():
+        for m, title in metrics.items():
 
             file_path = (
                 f"{EVALUATIONS_PATH}/"
@@ -175,7 +175,12 @@ def model_performances():
 
             # Convert only data columns to numeric
             df_metric = df_metric.apply(pd.to_numeric, errors="coerce")
+            
+            avg_col = f"{title.split(' ')[0]} Average"
 
+            if avg_col in df_metric.columns:
+                df_metric = df_metric.drop(columns=[avg_col])
+                
             # Keep original model order from CSV
             # Sort only languages if desired
             df_metric = df_metric.sort_index(axis=1)
@@ -1053,13 +1058,13 @@ def line_graphs_pvalue():
 
 
 #Back translation Heatmap
-#back_translation()
+back_translation()
 
 #Weight coherence by validity scores
-#model_performances()
+model_performances()
 
 #Generate the Fact and Stance heatmaps of the MAEs errors of all the models   
-#mae_models()
+mae_models()
 
 #Generate the Fact and Stance heatmaps of the MAEs errors of all languages and countries
 heatmap_language_country_mae()

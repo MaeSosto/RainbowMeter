@@ -2,9 +2,7 @@
 from constants import *
 import scipy.stats as stats
 import numpy as np
-from os import listdir
-from os.path import isfile, join
-import matplotlib.pyplot as plt
+from collections import defaultdict
 from sklearn.metrics import mean_absolute_error as mae
 
 WEIGHT_LIST = CRITERIA_WEIGHTS_DF["Weight"].values.astype(float).tolist()
@@ -68,56 +66,68 @@ def model_performances():
         "stance_val": "Stance Validity",
         "stance_coh_val": "Stance Weight coherence by validity",
     }
-    
-    #Iterate on the scenario
-    for scenario in SCENARIOS: 
-        # metric_name -> {model -> {label -> value}}
-        data = {m: {} for m in metrics}
-        
-        #Iterate on every model
+
+    for scenario in SCENARIOS:
+
+        # metric -> model -> label -> value
+        data = {
+            metric: defaultdict(dict)
+            for metric in metrics
+        }
+
+        # Iterate over models
         for model_name in MODEL_LIST:
+
             model_label = MODEL_LABEL[model_name]
-            
-            for m in metrics:
-                data[m][model_label] = {}
 
-            #Iterate on every country
-            for country_name, country_data in COUNTRIES_FILE.items(): #tqdm.tqdm(
-                country_name = country_name
+            # Iterate over countries
+            for country_name, country_data in COUNTRIES_FILE.items():
+
                 country_id = country_data[ID]
-            
-                #Iterate on every language and citizenship 
-                for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
-                    language = language
-                    language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num]
-                
-                    #Retrieve the Rainbow Meter of a specific language (if exist)
-                    existent_rm_df = get_rainbow_meter_file_answers(
-                        scenario = scenario,
-                        model_name= model_name,
-                        language_code = language_code,
-                        country_id = country_id
-                    )
-                    if existent_rm_df.empty:  #RM doesn't exist or is incomplete
-                        continue
-                    
-                    # compute all means in one go
-                    metric_values = list(metrics.values())
-                    means = existent_rm_df[metric_values].mean()
 
+                for idx, language in enumerate(country_data[LANGUAGES]):
+
+                    language_code = country_data[LANGUAGES_CODE][idx]
+
+                    existent_rm_df = get_rainbow_meter_file_answers(
+                        scenario=scenario,
+                        model_name=model_name,
+                        language_code=language_code,
+                        country_id=country_id
+                    )
+
+                    if existent_rm_df.empty:
+                        continue
+
+                    means = existent_rm_df[
+                        list(metrics.values())
+                    ].mean()
+
+                    # Label according to scenario
                     if scenario == SCENARIO_LANGUAGE:
                         label = language
+
                     elif scenario == SCENARIO_COUNTRY:
                         label = country_name
-                    elif scenario == SCENARIO_LAN_NAT:
-                        label = f"{language} - {country_name}" 
-                        
-                    for m, col in metrics.items():
-                        data[m][model_label][label] = round(means[col], 2)
 
-        # Convert, clean, save, plot
-        for m, metric_data in data.items():
-            df_metric = pd.DataFrame.from_dict(metric_data, orient="index")
+                    else:
+                        label = f"{language} - {country_name}"
+
+                    # Store metric values
+                    for metric_key, metric_col in metrics.items():
+                        data[metric_key][model_label][label] = round(
+                            means[metric_col],
+                            2
+                        )
+
+        # Save metric tables
+        for metric_key, metric_data in data.items():
+
+            # Convert, clean
+            df_metric = pd.DataFrame.from_dict(
+                metric_data,
+                orient="index"
+            )
 
             df_metric = (
                 df_metric
@@ -125,9 +135,22 @@ def model_performances():
                 .apply(pd.to_numeric, errors="coerce")
             )
 
-            # Save CSV
-            df_metric.to_csv(f"{EVALUATIONS_PATH}/{MODELS_PERFORMANCES_PATH}/{scenario}/{m}.csv")
+            # Add average column
+            if "fact" in metric_key.lower():
+                avg_col = "Fact Average"
+            else:
+                avg_col = "Stance Average"
 
+            df_metric[avg_col] = (
+                df_metric.mean(axis=1)
+                .round(2)
+            )
+
+            # Save CSV
+            df_metric.to_csv(
+                f"{EVALUATIONS_PATH}/{MODELS_PERFORMANCES_PATH}/{scenario}/{metric_key}.csv"
+            )
+            
 #Create a table with the grouped scores of MAE and percentages across model-scenario(lan and country) 
 def general_stats():
     #Iterate on the scenario
