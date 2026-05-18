@@ -54,36 +54,95 @@ def back_translation():
     plt.savefig(f"{GRAPHS_PATH}/back_translation.png", bbox_inches="tight", pad_inches=0.1)
     print(f"Saved: {f"{GRAPHS_PATH}/back_translation.png"}")
 
-#Generate, show and save an heatmap
-def generate_heatmap(df, xlabel, ylabel, savefig, annot = False, cmap = CMAP_RG):
-    # Plot heatmap
-    fig, ax = plt.subplots(figsize=(12, 5))
+def generate_heatmap(
+    df,
+    xlabel,
+    ylabel,
+    savefig,
+    annot=False,
+    cmap=CMAP_RG,
+    transpose = False
+):
+    # Transpose
+    if transpose:
+        df = df.T
+        xlabel, ylabel = ylabel, xlabel
+    
+    df = df.fillna(0)
+
+    n_rows, n_cols = df.shape
+
+    # Smaller cells
+    cell_width = 0.25
+    cell_height = 0.25
+
+    fig_width = max(8, n_cols * cell_width)
+    fig_height = max(5, n_rows * cell_height)
+
+    fig, ax = plt.subplots(figsize=(fig_width, fig_height))
 
     sns.heatmap(
         df,
         vmin=0,
         vmax=1,
         cmap=cmap,
-        linewidths=0.5,
+        linewidths=0.2,
         linecolor="white",
-        # annot=True,
-        # annot_kws={"fontsize": 8},
+        annot=annot,
+        annot_kws={"fontsize": 7},
         fmt=".1f",
+
+        # Thinner color bar
+        cbar_kws={
+            "shrink": 0.8,
+            "aspect": 40,      # larger → thinner
+            "fraction": 0.03,  # width of colorbar
+            "pad": 0.02
+        },
+
         ax=ax
     )
 
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
+    if transpose:
+        rotation = 30
+        fontsize = 14
+    rotation = 50
+    fontsize = 12
+    
+    ax.set_xlabel(xlabel, fontsize=fontsize)
+    ax.set_ylabel(ylabel, fontsize=fontsize)
 
+    
+    # Bigger labels
     ax.set_xticklabels(
         ax.get_xticklabels(),
-        rotation=40,
+        rotation=rotation,
+        fontsize=fontsize,
         ha="right",
-        fontsize=10
+    )
+    
+    ax.set_yticklabels(
+        ax.get_yticklabels(),
+        rotation=30,
+        fontsize=fontsize,
+        ha="right",      # horizontal alignment
+        va="center",     # vertical alignment
+        rotation_mode="anchor"
+    )
+    
+    ax.tick_params(axis='both', length=0)
+
+    plt.tight_layout()
+
+    plt.savefig(
+        savefig,
+        dpi=300,
+        bbox_inches="tight",
+        pad_inches=0.03
     )
 
-    fig.tight_layout()
-    plt.savefig(savefig, bbox_inches="tight", pad_inches=0.1)
+    plt.close()
+
     print(f"Saved: {savefig}")
     
 #Weight coherence by validity scores
@@ -128,6 +187,8 @@ def model_performances():
                 xlabel=xlabel,
                 ylabel="Model",
                 savefig=f"{GRAPHS_PATH}/{MODELS_PERFORMANCES_PATH}/{scenario}/{m}.png",
+                #transpose=True,
+                annot=True
             )
             print(f"Saved: {f"{GRAPHS_PATH}/{MODELS_PERFORMANCES_PATH}/{scenario}/{m}.png"}")
 
@@ -193,7 +254,6 @@ def mae_models():
                 cmap=CMAP_RG_INVERTED,
                 linewidths=0.5,
                 linecolor="white",
-
                 fmt=".2f"
             )
 
@@ -206,8 +266,9 @@ def mae_models():
             )
 
             plt.ylabel("Model")
-            plt.title(f"{test} MAE Heatmap")
-            plt.xticks(rotation=40, ha="right", fontsize=10)
+            #plt.title(f"{test} MAE Heatmap")
+            plt.xticks(rotation=40, ha="right", fontsize=14)
+            plt.yticks(fontsize=14)
             plt.tight_layout()
             output_path = (f"{GRAPHS_PATH}/{MAE}/{test}_models.png")
             plt.savefig(output_path)
@@ -409,7 +470,7 @@ def mae_models():
 
 # Generate the Fact and Stance heatmaps of the MAEs errors
 # of all languages and countries
-def heatmap_language_nat_mae():
+def heatmap_language_country_mae():
 
     csv_path = f"{EVALUATIONS_PATH}/{MAE}/lang_country_mae_summary.csv"
 
@@ -504,18 +565,36 @@ def heatmap_language_nat_mae():
             ] = row["Value"]
 
 
-        # Sort by average MAE
-        row_order = (
-            matrix.mean(axis=1)
-            .sort_values()
-            .index
-        )
+        # -----------------------------
+        # ROW ORDER (Languages + Country Scenario row included)
+        # -----------------------------
+        row_scores = []
 
-        col_order = (
-            matrix.mean(axis=0)
-            .sort_values()
-            .index
-        )
+        for r in matrix.index:
+            row = matrix.loc[r].dropna()
+
+            # score = how "extreme" row is relative to others
+            score = row.mean()
+
+            row_scores.append((r, score))
+
+        row_order = [r for r, _ in sorted(row_scores, key=lambda x: x[1])]
+
+
+        # -----------------------------
+        # COLUMN ORDER (Countries + Language Scenario column included)
+        # -----------------------------
+        col_scores = []
+
+        for c in matrix.columns:
+            col = matrix[c].dropna()
+
+            score = col.mean()
+
+            col_scores.append((c, score))
+
+        col_order = [c for c, _ in sorted(col_scores, key=lambda x: x[1])]
+
 
         matrix = matrix.loc[row_order, col_order]
 
@@ -535,13 +614,16 @@ def heatmap_language_nat_mae():
             annot=True,
             fmt=".2f",
             annot_kws={
-                "fontsize": 8
+                "fontsize": 10
             },
             linewidths=0.3,
             linecolor="grey",
             cbar_kws={
                 "label": "MAE",
-                "shrink": 0.8
+                "shrink": 0.8,
+                "aspect": 40,      # larger → thinner
+                "fraction": 0.03,  # width of colorbar
+                "pad": 0.02
             },
         )
 
@@ -562,10 +644,11 @@ def heatmap_language_nat_mae():
             linewidth=2
         )
 
-        plt.xlabel("Countries", fontsize=14)
-        plt.ylabel("Languages", fontsize=14)
-        plt.xticks(rotation=45, ha="right", fontsize=10)
-        plt.yticks(rotation=0, fontsize=10)
+        fontsize = 20
+        plt.xlabel("Countries", fontsize=fontsize)
+        plt.ylabel("Languages", fontsize=fontsize)
+        plt.xticks(rotation=45, ha="right", fontsize=fontsize)
+        plt.yticks(rotation=0, fontsize=fontsize)
         plt.tight_layout()
         output_png = (f"{GRAPHS_PATH}/MAE/language_country_{test}_mae.png")
         plt.savefig(output_png, dpi=300, bbox_inches="tight")
@@ -970,16 +1053,16 @@ def line_graphs_pvalue():
 
 
 #Back translation Heatmap
-back_translation()
+#back_translation()
 
 #Weight coherence by validity scores
-model_performances()
+#model_performances()
 
 #Generate the Fact and Stance heatmaps of the MAEs errors of all the models   
-mae_models()
+#mae_models()
 
 #Generate the Fact and Stance heatmaps of the MAEs errors of all languages and countries
-heatmap_language_nat_mae()
+heatmap_language_country_mae()
 
 #Generate a Fact and Stance lineplots of the MAEs errors accross scenarios and countries
 #lineplot_scenario_comparison_mae()

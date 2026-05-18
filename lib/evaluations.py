@@ -249,7 +249,7 @@ def models_mae():
                     continue
 
                 mae = round(scenario_df[mae_col].mean(), 2)
-                sig = (scenario_df[pvalue_col] > 0.05).sum()
+                sig = (scenario_df[pvalue_col] < 0.05).sum()
                 n = len(scenario_df)
                 row[scenario] = f"{mae} ({sig}/{n})"
 
