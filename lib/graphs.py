@@ -660,118 +660,6 @@ def heatmap_language_country_mae():
         plt.close()
         print(f"Saved: {output_png}")
 
-#Generate a Fact and Stance lineplots of the MAEs errors accross scenarios and countries  
-# def lineplot_scenario_comparison_mae():
-#     csv_path = f"{EVALUATIONS_PATH}/general_stats.csv"
-
-#     if not os.path.exists(csv_path):
-#         print(f"Missing file: {csv_path}")
-#         return
-
-#     df_all = pd.read_csv(csv_path, sep=";")
-
-#     output_dir = (f"{GRAPHS_PATH}/MAE")
-
-#     for test in [FACT, STANCE]:
-#         mae_col = f"{test} MAE"
-
-#         df_language = df_all[
-#             df_all[SCENARIO] == SCENARIO_LANGUAGE
-#         ].copy()
-
-#         df_country = df_all[
-#             df_all[SCENARIO] == SCENARIO_COUNTRY
-#         ].copy()
-
-#         df_lang_nat = df_all[
-#             df_all[SCENARIO]
-#             == SCENARIO_LAN_NAT
-#         ].copy()
-
-#         language_agg = (
-#             df_language.groupby(
-#                 ["Country", "languages"]
-#             )[mae_col]
-#             .mean()
-#             .reset_index()
-#             .rename(columns={
-#                 mae_col: "language_scenario_mae"
-#             })
-#         )
-
-#         country_agg = (
-#             df_country.groupby(
-#                 ["Country"]
-#             )[mae_col]
-#             .mean()
-#             .reset_index()
-#             .rename(columns={
-#                 mae_col: "country_scenario_mae"
-#             })
-#         )
-
-#         lang_nat_agg = (
-#             df_lang_nat.groupby(
-#                 ["Country", "languages"]
-#             )[mae_col]
-#             .mean()
-#             .reset_index()
-#             .rename(columns={
-#                 mae_col:
-#                     "language_country_scenario_mae"
-#             })
-#         )
-
-#         merged = language_agg.merge(
-#             country_agg,
-#             on="Country",
-#             how="left",
-#         )
-
-#         merged = merged.merge(
-#             lang_nat_agg,
-#             on=["Country", "languages"],
-#             how="left",
-#         )
-
-#         merged = merged.sort_values("Country")
-
-#         plt.figure(figsize=(20, 8))
-#         sns.lineplot(
-#             data=merged,
-#             x="Country",
-#             y="language_scenario_mae",
-#             marker="o",
-#             label=SCENARIO_LABELS[SCENARIO_LANGUAGE],
-#         )
-        
-#         sns.lineplot(
-#             data=merged,
-#             x="Country",
-#             y="country_scenario_mae",
-#             marker="o",
-#             label=SCENARIO_LABELS[SCENARIO_COUNTRY],
-#         )
-
-#         sns.lineplot(
-#             data=merged,
-#             x="Country",
-#             y="language_country_scenario_mae",
-#             marker="o",
-#             label=SCENARIO_LABELS[SCENARIO_LAN_NAT],
-#         )
-
-#         plt.title(f"{test} MAE Across Scenarios")
-#         plt.xlabel("Country")
-#         plt.ylabel("MAE")
-#         plt.xticks(rotation=90, fontsize=8)
-#         plt.legend()
-#         plt.tight_layout()
-
-#         output_path = (f"{output_dir}/scenario_comparison_{test}_mae.png")
-#         plt.savefig(output_path, dpi=300, bbox_inches="tight",)
-#         plt.close()
-#         print(f"Saved: {output_path}")
 
 # Generate lineplots of the percentage scores across scenarios and countries
 def lineplot_scenario_comparison_percentage():
@@ -912,7 +800,7 @@ def lineplot_scenario_comparison_percentage():
         plt.tight_layout()
 
         output_path = (
-            f"{GRAPHS_PATH}/percentage/scenario_comparison_{test}_percentage.png"
+            f"{GRAPHS_PATH}/percentage/country_scenario_{test}_percentage.png"
         )
 
         plt.savefig(
@@ -924,79 +812,84 @@ def lineplot_scenario_comparison_percentage():
         plt.close()
 
         print(f"Saved: {output_path}")
+        
 
-#Create the line graphs per each model of the difference in percentage score accross countries
-# def line_graphs_percentage_difference():
-#     csv_path = f"{EVALUATIONS_PATH}/general_stats.csv"
+def heatmap_country_models_percentage_distance():
 
-#     if not os.path.exists(csv_path):
-#         print(f"Missing file: {csv_path}")
-#         return
+    for test in [FACT, STANCE]:
 
-#     df_scenario = pd.read_csv(csv_path, sep=";")
+        csv_path = f"{EVALUATIONS_PATH}/percentage/country_model_{test}_distance.csv"
 
-#     # Iterate over scenarios contained in the dataframe
-#     for scenario in SCENARIOS:
-#         df = df_scenario[df_scenario[SCENARIO] == scenario]
+        if not os.path.exists(csv_path):
+            print(f"Missing file: {csv_path}")
+            continue
 
-#         if scenario == SCENARIO_LANGUAGE:
-#             df["x_label"] = df["languages"]
-#         elif scenario == SCENARIO_COUNTRY:
-#             df["x_label"] = df["Country"]
-#         elif scenario == SCENARIO_LAN_NAT:
-#             df["x_label"] = (df["languages"].astype(str) + " | "+ df["Country"].astype(str))
+        df = pd.read_csv(csv_path, sep=";", index_col=0)
 
-#         df = df.sort_values("x_label")
-#         models = df["Model"].unique()
+        #df = df[df.index != "tot_distance"]
+        df = df.drop('avg_distance', axis=1)
 
-#         for model in models:
-#             df_model = (df[df["Model"] == model].copy().reset_index(drop=True))
 
-#             x = range(len(df_model))
-#             plt.figure(figsize=(26, 10))
-            
-#             for test in [FACT, STANCE]:
-#                 df_model[f"{test} Percentage Difference" ] = (df_model[test] - df_model[RAINBOW_MAP])
+        fig, ax = plt.subplots(figsize=(max(8, df.shape[1] * 0.25), max(5, df.shape[0] * 0.25)))
 
-#                 plt.plot(
-#                     x,
-#                     df_model[f"{test} Percentage Difference"],
-#                     marker="o",
-#                     label=f"{test} Percentage Difference" 
-#                 )
+        sns.heatmap(
 
-#                 plt.fill_between(
-#                     x,
-#                     0,
-#                     df_model[f"{test} Percentage Difference" ],
-#                     alpha=0.15
-#                 )
+            df,
+            vmin=0,
+            vmax=100,
+            cmap=CMAP_RG_INVERTED,
+            linewidths=0.2,
+            linecolor="white",
+            annot=True,
+            annot_kws={"fontsize":7},
+            fmt='.0f',
+            cbar_kws={
+                "shrink": 0.8,
+                "aspect": 40,      # larger → thinner
+                "fraction": 0.03,  # width of colorbar
+                "pad": 0.02
+            },
+        ax=ax
+        )
+        
+        rotation = 50
+        fontsize = 14
+        ylabel, xlabel = "Countries", "Models"
+        
+        ax.set_xlabel(xlabel, fontsize=fontsize)
+        ax.set_ylabel(ylabel, fontsize=fontsize)
 
-#             # perfect alignment
-#             plt.axhline(
-#                 y=0,
-#                 linestyle="--",
-#                 label="Perfect Alignment"
-#             )
+        
+        # Bigger labels
+        ax.set_xticklabels(
+            ax.get_xticklabels(),
+            rotation=rotation,
+            fontsize=fontsize,
+            ha="right",
+        )
+        
+        ax.set_yticklabels(
+            ax.get_yticklabels(),
+            rotation=rotation,
+            fontsize=fontsize,
+            ha="right",      # horizontal alignment
+            va="center",     # vertical alignment
+            rotation_mode="anchor"
+        )
+        
+        ax.tick_params(axis='both', length=0)
+        plt.tight_layout()
 
-#             plt.xticks(
-#                 x,
-#                 df_model["x_label"],
-#                 rotation=90
-#             )
-
-#             plt.ylabel("Prediction - Rainbow Map")
-#             plt.xlabel("Language / Country")
-#             plt.title(f"{model} | {scenario} | Score Difference in %")
-
-#             plt.legend()
-#             plt.tight_layout()
-
-#             save_path = (f"{GRAPHS_PATH}/percentage/{scenario}/difference_{model}.png")
-#             os.makedirs(os.path.dirname(save_path), exist_ok=True)
-#             plt.savefig(save_path)
-#             print(f"Saved: {save_path}")
-#             plt.close()
+        savefig = f"{GRAPHS_PATH}/percentage/country_models_{test}_percentage_distance.png"
+        plt.savefig(
+            savefig,
+            dpi=300,
+            bbox_inches="tight",
+            pad_inches=0.03
+        )
+        plt.close()
+        print(f"Saved: {savefig}")
+    
 
 #Create the line graphs per each model of the pvalue score accross countries
 def line_graphs_pvalue():
@@ -1058,30 +951,20 @@ def line_graphs_pvalue():
 
 
 #Back translation Heatmap
-back_translation()
+#back_translation()
 
 #Weight coherence by validity scores
-model_performances()
+#model_performances()
 
 #Generate the Fact and Stance heatmaps of the MAEs errors of all the models   
-mae_models()
+#mae_models()
 
 #Generate the Fact and Stance heatmaps of the MAEs errors of all languages and countries
-heatmap_language_country_mae()
-
-#Generate a Fact and Stance lineplots of the MAEs errors accross scenarios and countries
-#lineplot_scenario_comparison_mae()
+#heatmap_language_country_mae()
 
 #Generate a lineplots of the percentage errors accross scenarios and countries
 lineplot_scenario_comparison_percentage()
+heatmap_country_models_percentage_distance()
 
-#Create the line graphs per each model of the average percentage score accross countries
-#line_graphs_percentage_plain()
-
-#Create the line graphs per each model of the difference in percentage score accross countries
-#line_graphs_percentage_difference()
-
-#Create the line graphs per each model of the pvalue score accross countries
-#line_graphs_pvalue()
 
 print(f"✅ Graphs Generated")

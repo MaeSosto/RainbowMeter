@@ -392,13 +392,21 @@ def models_scenario_percentage():
     df = pd.read_csv(csv_path, sep=";")
     merged_df = None
 
+    # Ordered model names
+    ordered_models = [
+        MODEL_LABEL.get(model, model)
+        for model in MODEL_LIST
+    ]
+
     # Iterate over scenarios contained in the dataframe
     for scenario in SCENARIOS:
-        scenario_df = df[df[SCENARIO] == scenario]
+        scenario_df = df[df[SCENARIO] == scenario].copy()
 
         # Replace model names with labels
-        scenario_df["Model"] = scenario_df["Model"].map(lambda x: MODEL_LABEL.get(x, x))
-        
+        scenario_df["Model"] = scenario_df["Model"].map(
+            lambda x: MODEL_LABEL.get(x, x)
+        )
+
         # Aggregate per model
         aggregated = (
             scenario_df.groupby("Model")[["Fact", "Stance"]]
@@ -407,9 +415,6 @@ def models_scenario_percentage():
             .astype("Int64")
             .reset_index()
         )
-        
-        # Ordered model names
-        ordered_models = [MODEL_LABEL.get(model, model) for model in MODEL_LIST]
 
         # Rename columns to include scenario
         aggregated.rename(
@@ -429,7 +434,25 @@ def models_scenario_percentage():
                 on="Model",
                 how="outer"
             )
-        
+
+    # Compute averages across all scenarios
+    fact_cols = [c for c in merged_df.columns if c.endswith("_Fact")]
+    stance_cols = [c for c in merged_df.columns if c.endswith("_Stance")]
+
+    merged_df["Fact_Average"] = (
+        merged_df[fact_cols]
+        .mean(axis=1)
+        .round(0)
+        .astype("Int64")
+    )
+
+    merged_df["Stance_Average"] = (
+        merged_df[stance_cols]
+        .mean(axis=1)
+        .round(0)
+        .astype("Int64")
+    )
+
     # Preserve ordering
     merged_df["Model"] = pd.Categorical(
         merged_df["Model"],
@@ -439,8 +462,13 @@ def models_scenario_percentage():
 
     merged_df = merged_df.sort_values("Model")
 
-    output_path = f"{EVALUATIONS_PATH}/{PERCENTAGE}/models_scenario_percentage.csv"
+    output_path = (
+        f"{EVALUATIONS_PATH}/{PERCENTAGE}/"
+        f"models_scenario_percentage.csv"
+    )
+
     merged_df.to_csv(output_path, sep=";", index=False)
+
     print(f"Saved: {output_path}")
 
 #Create a table with the MAEs calculated accross language and countries
@@ -506,7 +534,32 @@ def language_country_mae():
     merged_df.to_csv(output_path, sep=";", index=False)
 
     print(f"Saved: {output_path}")
-        
+
+def evaluate_country_model_distance():
+    for test in [FACT, STANCE]:
+        csv_path = f"{EVALUATIONS_PATH}/percentage/country_model_{test}.csv"
+
+        if not os.path.exists(csv_path):
+            print(f"Missing file: {csv_path}")
+            continue
+
+        df = pd.read_csv(csv_path, sep=";")
+
+        model_cols = [c for c in df.columns if c not in ["Country", "Rainbow Map"]]
+
+        diff_df = df.copy()
+        for col in model_cols:
+            diff_df[col] = (df[col] - df["Rainbow Map"]).abs()
+
+        model_matrix = diff_df.set_index("Country")[model_cols].T
+
+        #model_matrix["tot_distance"] = model_matrix.sum(axis=1)
+        model_matrix["avg_distance"] = model_matrix.iloc[:, :-1].mean(axis=1)
+        out_path = f"{EVALUATIONS_PATH}/percentage/country_model_{test}_distance.csv"
+        model_matrix.to_csv(out_path, sep=";")
+
+        print(f"Saved evaluation: {out_path}")
+
 #All the results are in the results/evaluations folder
 #Creates a table with the model performances in matter of Coherence and Valitidy
 model_performances()
@@ -525,5 +578,8 @@ models_scenario_percentage()
 
 #Create a table with the percentage scores accross countries and models
 model_country_percentage()
+
+#Create a table with the distances (Rainbow Map - RM scores) in percentages across models and countries
+evaluate_country_model_distance()
 
 print(f"✅ Evaluations Done")
