@@ -482,56 +482,118 @@ def language_country_mae():
     df = pd.read_csv(csv_path, sep=";")
     merged_df = None
 
-    # Iterate over scenarios contained in the dataframe
     for scenario in SCENARIOS:
-        scenario_df = df[df[SCENARIO] == scenario]
+        scenario_df = df[
+            df[SCENARIO] == scenario
+        ].copy()
 
-        # ---- Decide grouping depending on scenario ----
         if scenario == SCENARIO_LANGUAGE:
-            group_col = LANGUAGES
+            grouped = (
+                scenario_df.groupby(LANGUAGES)[
+                    ["Fact MAE", "Stance MAE"]
+                ]
+                .mean()
+                .reset_index()
+            )
+            # map language → all countries it appears in
+            lang_country_map = df[
+                [LANGUAGES, COUNTRY]
+            ].drop_duplicates()
+            aggregated = grouped.merge(
+                lang_country_map,
+                on=LANGUAGES,
+                how="left"
+            )
 
-        elif scenario in SCENARIO_COUNTRY:
-            group_col = COUNTRY
+        elif scenario == SCENARIO_COUNTRY:
+            grouped = (
+                scenario_df.groupby(COUNTRY)[
+                    ["Fact MAE", "Stance MAE"]
+                ]
+                .mean()
+                .reset_index()
+            )
+            country_lang_map = df[
+                [LANGUAGES, COUNTRY]
+            ].drop_duplicates()
+            aggregated = grouped.merge(
+                country_lang_map,
+                on=COUNTRY,
+                how="left"
+            )
 
         else:
-            # fallback: keep full resolution
-            scenario_df["Lang_Country"] = scenario_df["languages"].astype(str) + " | " + scenario_df["Country"].astype(str)
-            group_col = "Lang_Country"
+            aggregated = (
+                scenario_df.groupby(
+                    [LANGUAGES, COUNTRY]
+                )[
+                    ["Fact MAE", "Stance MAE"]
+                ]
+                .mean()
+                .reset_index()
+            )
 
-        # ---- Aggregate (this enforces equality constraint) ----
-        aggregated = (
-            scenario_df.groupby(group_col)[["Fact MAE", "Stance MAE"]]
-            .mean()
-            .round(2)
-            .reset_index()
-        )
-
-        # ---- Rename columns ----
-        aggregated.rename(
+        aggregated = aggregated.rename(
             columns={
-                group_col: "Key",
+                LANGUAGES: "language",
+                COUNTRY: "country",
                 "Fact MAE": f"{scenario}_Fact_MAE",
                 "Stance MAE": f"{scenario}_Stance_MAE",
-            },
-            inplace=True
+            }
         )
 
-        # ---- Merge across scenarios ----
+        aggregated = aggregated[
+            [
+                "language",
+                "country",
+                f"{scenario}_Fact_MAE",
+                f"{scenario}_Stance_MAE",
+            ]
+        ]
+
         if merged_df is None:
             merged_df = aggregated
         else:
             merged_df = merged_df.merge(
                 aggregated,
-                on="Key",
+                on=["language", "country"],
                 how="outer"
             )
 
-    # ---- Final rounding ----
-    numeric_cols = merged_df.select_dtypes(include="number").columns
-    merged_df[numeric_cols] = merged_df[numeric_cols].round(2)
-    
-    output_path = f"{EVALUATIONS_PATH}/{MAE}/lang_country_mae_summary.csv"
-    merged_df.to_csv(output_path, sep=";", index=False)
+    # ---- Round numeric columns ----
+    numeric_cols = merged_df.select_dtypes(
+        include="number"
+    ).columns
+
+    merged_df[numeric_cols] = (
+        merged_df[numeric_cols]
+        .round(2)
+    )
+
+    # ---- Final column order ----
+    final_cols = [
+        "language",
+        "country",
+        "language_scenario_Fact_MAE",
+        "language_scenario_Stance_MAE",
+        "country_scenario_Fact_MAE",
+        "country_scenario_Stance_MAE",
+        "language_country_scenario_Fact_MAE",
+        "language_country_scenario_Stance_MAE"
+    ]
+
+    merged_df = merged_df[final_cols]
+
+    output_path = (
+        f"{EVALUATIONS_PATH}/{MAE}/"
+        f"lang_country_mae_summary.csv"
+    )
+
+    merged_df.to_csv(
+        output_path,
+        sep=";",
+        index=False
+    )
 
     print(f"Saved: {output_path}")
 

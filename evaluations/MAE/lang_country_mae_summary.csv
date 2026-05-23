@@ -1,157 +1,67 @@
-Key;language_scenario_Fact_MAE;language_scenario_Stance_MAE;country_scenario_Fact_MAE;country_scenario_Stance_MAE;language_country_scenario_Fact_MAE;language_country_scenario_Stance_MAE
-Albania;;;0.53;0.68;;
-Albanian;0.62;0.72;;;;
-Albanian | Albania;;;;;0.53;0.67
-Albanian | Kosovo;;;;;0.53;0.69
-Albanian | North Macedonia;;;;;0.54;0.73
-Andorra;;;0.46;0.72;;
-Armenia;;;0.35;1.0;;
-Armenian;0.63;0.92;;;;
-Armenian | Armenia;;;;;0.46;0.86
-Austria;;;0.61;0.64;;
-Azerbaijan;;;0.37;0.86;;
-Azerbaijani;0.55;0.91;;;;
-Azerbaijani | Azerbaijan;;;;;0.36;0.85
-Belarus;;;0.26;0.93;;
-Belarusian;0.66;0.92;;;;
-Belarusian | Belarus;;;;;0.38;0.78
-Belgium;;;0.45;0.45;;
-Bokmål;0.63;0.64;;;;
-Bokmål | Norway;;;;;0.6;0.63
-Bosnia & Herzegovina;;;0.49;0.72;;
-Bosnian;0.56;0.71;;;;
-Bosnian | Bosnia & Herzegovina;;;;;0.48;0.7
-Bulgaria;;;0.45;0.89;;
-Bulgarian;0.6;0.79;;;;
-Bulgarian | Bulgaria;;;;;0.52;0.79
-Catalan;0.65;0.78;;;;
-Catalan | Andorra;;;;;0.6;0.8
-Croatia;;;0.52;0.66;;
-Croatian;0.58;0.71;;;;
-Croatian | Bosnia & Herzegovina;;;;;0.46;0.7
-Croatian | Croatia;;;;;0.54;0.7
-Cyprus;;;0.6;0.82;;
-Czech;0.63;0.78;;;;
-Czech | Czechia;;;;;0.57;0.74
-Czechia;;;0.56;0.78;;
-Danish;0.6;0.49;;;;
-Danish | Denmark;;;;;0.65;0.56
-Denmark;;;0.41;0.34;;
-Dutch;0.61;0.6;;;;
-Dutch | Belgium;;;;;0.57;0.55
-Dutch | Netherlands;;;;;0.59;0.64
-English;0.63;0.54;;;;
-English | Ireland;;;;;0.45;0.59
-English | Malta;;;;;0.47;0.4
-English | United Kingdom;;;;;0.55;0.68
-Estonia;;;0.51;0.72;;
-Estonian;0.56;0.7;;;;
-Estonian | Estonia;;;;;0.55;0.7
-Finland;;;0.4;0.48;;
-Finnish;0.62;0.58;;;;
-Finnish | Finland;;;;;0.61;0.6
-France;;;0.48;0.59;;
-French;0.65;0.71;;;;
-French | Belgium;;;;;0.64;0.55
-French | France;;;;;0.59;0.7
-French | Luxembourg;;;;;0.6;0.63
-French | Monaco;;;;;0.32;0.86
-French | Switzerland;;;;;0.55;0.76
-Georgia;;;0.5;0.99;;
-Georgian;0.6;0.85;;;;
-Georgian | Georgia;;;;;0.49;0.79
-German;0.63;0.64;;;;
-German | Austria;;;;;0.62;0.66
-German | Belgium;;;;;0.52;0.5
-German | Germany;;;;;0.55;0.55
-German | Liechtenstein;;;;;0.56;0.79
-German | Luxembourg;;;;;0.52;0.58
-German | Switzerland;;;;;0.56;0.67
-Germany;;;0.47;0.52;;
-Greece;;;0.52;0.46;;
-Greek;0.68;0.69;;;;
-Greek | Cyprus;;;;;0.66;0.79
-Greek | Greece;;;;;0.59;0.55
-Hungarian;0.66;0.76;;;;
-Hungarian | Hungary;;;;;0.57;0.72
-Hungary;;;0.53;0.81;;
-Iceland;;;0.45;0.45;;
-Icelandic;0.63;0.57;;;;
-Icelandic | Iceland;;;;;0.54;0.52
-Ireland;;;0.48;0.6;;
-Irish;0.63;0.63;;;;
-Irish | Ireland;;;;;0.6;0.63
-Italian;0.71;0.84;;;;
-Italian | Italy;;;;;0.54;0.84
-Italian | San Marino;;;;;0.62;0.84
-Italian | Switzerland;;;;;0.54;0.68
-Italy;;;0.56;0.92;;
-Kosovo;;;0.53;0.78;;
-Latvia;;;0.58;0.81;;
-Latvian;0.61;0.83;;;;
-Latvian | Latvia;;;;;0.53;0.78
-Liechtenstein;;;0.57;0.8;;
-Lithuania;;;0.54;0.86;;
-Lithuanian;0.67;0.86;;;;
-Lithuanian | Lithuania;;;;;0.57;0.81
-Luxembourg;;;0.43;0.55;;
-Luxembourgish;0.54;0.59;;;;
-Luxembourgish | Luxembourg;;;;;0.46;0.56
-Macedonian;0.63;0.78;;;;
-Macedonian | North Macedonia;;;;;0.55;0.73
-Malta;;;0.46;0.38;;
-Maltese;0.73;0.58;;;;
-Maltese | Malta;;;;;0.64;0.59
-Modern Greek;0.68;0.69;;;;
-Modern Greek | Cyprus;;;;;0.66;0.79
-Modern Greek | Greece;;;;;0.59;0.55
-Moldova;;;0.54;0.74;;
-Monaco;;;0.48;0.91;;
-Montenegrin;0.67;0.67;;;;
-Montenegrin | Montenegro;;;;;0.67;0.66
-Montenegro;;;0.55;0.59;;
-Netherlands;;;0.54;0.58;;
-North Macedonia;;;0.56;0.8;;
-Norway;;;0.44;0.52;;
-Poland;;;0.55;0.89;;
-Polish;0.62;0.89;;;;
-Polish | Poland;;;;;0.46;0.85
-Portugal;;;0.45;0.54;;
-Portuguese;0.58;0.57;;;;
-Portuguese | Portugal;;;;;0.53;0.56
-Romania;;;0.51;0.89;;
-Romanian;0.65;0.81;;;;
-Romanian | Moldova;;;;;0.61;0.73
-Romanian | Romania;;;;;0.58;0.88
-Russia;;;0.39;0.87;;
-Russian;0.65;0.97;;;;
-Russian | Belarus;;;;;0.38;0.85
-Russian | Russia;;;;;0.4;0.84
-San Marino;;;0.58;0.83;;
-Serbia;;;0.47;0.72;;
-Serbian;0.61;0.75;;;;
-Serbian | Bosnia & Herzegovina;;;;;0.49;0.67
-Serbian | Kosovo;;;;;0.59;0.73
-Serbian | Serbia;;;;;0.51;0.7
-Slovak;0.6;0.77;;;;
-Slovak | Slovakia;;;;;0.47;0.72
-Slovakia;;;0.53;0.82;;
-Slovene;0.65;0.67;;;;
-Slovene | Slovenia;;;;;0.58;0.65
-Slovenia;;;0.55;0.65;;
-Spain;;;0.44;0.37;;
-Spanish;0.61;0.46;;;;
-Spanish | Spain;;;;;0.51;0.49
-Sweden;;;0.45;0.5;;
-Swedish;0.62;0.58;;;;
-Swedish | Finland;;;;;0.59;0.64
-Swedish | Sweden;;;;;0.55;0.58
-Switzerland;;;0.5;0.69;;
-Turkey;;;0.35;0.97;;
-Turkish;0.51;0.89;;;;
-Turkish | Cyprus;;;;;0.5;0.77
-Turkish | Turkey;;;;;0.24;0.88
-Ukraine;;;0.5;0.9;;
-Ukrainian;0.62;0.92;;;;
-Ukrainian | Ukraine;;;;;0.52;0.84
-United Kingdom;;;0.53;0.69;;
+language;country;language_scenario_Fact_MAE;language_scenario_Stance_MAE;country_scenario_Fact_MAE;country_scenario_Stance_MAE;language_country_scenario_Fact_MAE;language_country_scenario_Stance_MAE
+Albanian;Albania;0.62;0.72;0.53;0.68;0.53;0.67
+Albanian;Kosovo;0.62;0.72;0.53;0.78;0.53;0.69
+Albanian;North Macedonia;0.62;0.72;0.56;0.8;0.54;0.73
+Armenian;Armenia;0.63;0.92;0.35;1.0;0.46;0.86
+Azerbaijani;Azerbaijan;0.55;0.91;0.37;0.86;0.36;0.85
+Belarusian;Belarus;0.66;0.92;0.26;0.93;0.38;0.78
+Bokmål;Norway;0.63;0.64;0.44;0.52;0.6;0.63
+Bosnian;Bosnia & Herzegovina;0.56;0.71;0.49;0.72;0.48;0.7
+Bulgarian;Bulgaria;0.6;0.79;0.45;0.89;0.52;0.79
+Catalan;Andorra;0.65;0.78;0.46;0.72;0.6;0.8
+Croatian;Bosnia & Herzegovina;0.58;0.71;0.49;0.72;0.46;0.7
+Croatian;Croatia;0.58;0.71;0.52;0.66;0.54;0.7
+Czech;Czechia;0.63;0.78;0.56;0.78;0.57;0.74
+Danish;Denmark;0.6;0.49;0.41;0.34;0.65;0.56
+Dutch;Belgium;0.61;0.6;0.45;0.45;0.57;0.55
+Dutch;Netherlands;0.61;0.6;0.54;0.58;0.59;0.64
+English;Ireland;0.63;0.54;0.48;0.6;0.45;0.59
+English;Malta;0.63;0.54;0.46;0.38;0.47;0.4
+English;United Kingdom;0.63;0.54;0.53;0.69;0.55;0.68
+Estonian;Estonia;0.56;0.7;0.51;0.72;0.55;0.7
+Finnish;Finland;0.62;0.58;0.4;0.48;0.61;0.6
+French;Belgium;0.65;0.71;0.45;0.45;0.64;0.55
+French;France;0.65;0.71;0.48;0.59;0.59;0.7
+French;Luxembourg;0.65;0.71;0.43;0.55;0.6;0.63
+French;Monaco;0.65;0.71;0.48;0.91;0.32;0.86
+French;Switzerland;0.65;0.71;0.5;0.69;0.55;0.76
+Georgian;Georgia;0.6;0.85;0.5;0.99;0.49;0.79
+German;Austria;0.63;0.64;0.61;0.64;0.62;0.66
+German;Belgium;0.63;0.64;0.45;0.45;0.52;0.5
+German;Germany;0.63;0.64;0.47;0.52;0.55;0.55
+German;Liechtenstein;0.63;0.64;0.57;0.8;0.56;0.79
+German;Luxembourg;0.63;0.64;0.43;0.55;0.52;0.58
+German;Switzerland;0.63;0.64;0.5;0.69;0.56;0.67
+Greek;Cyprus;0.68;0.69;0.6;0.82;0.66;0.79
+Greek;Greece;0.68;0.69;0.52;0.46;0.59;0.55
+Hungarian;Hungary;0.66;0.76;0.53;0.81;0.57;0.72
+Icelandic;Iceland;0.63;0.57;0.45;0.45;0.54;0.52
+Irish;Ireland;0.63;0.63;0.48;0.6;0.6;0.63
+Italian;Italy;0.71;0.84;0.56;0.92;0.54;0.84
+Italian;San Marino;0.71;0.84;0.58;0.83;0.62;0.84
+Italian;Switzerland;0.71;0.84;0.5;0.69;0.54;0.68
+Latvian;Latvia;0.61;0.83;0.58;0.81;0.53;0.78
+Lithuanian;Lithuania;0.67;0.86;0.54;0.86;0.57;0.81
+Luxembourgish;Luxembourg;0.54;0.59;0.43;0.55;0.46;0.56
+Macedonian;North Macedonia;0.63;0.78;0.56;0.8;0.55;0.73
+Maltese;Malta;0.73;0.58;0.46;0.38;0.64;0.59
+Modern Greek;Cyprus;0.68;0.69;0.6;0.82;0.66;0.79
+Modern Greek;Greece;0.68;0.69;0.52;0.46;0.59;0.55
+Montenegrin;Montenegro;0.67;0.67;0.55;0.59;0.67;0.66
+Polish;Poland;0.62;0.89;0.55;0.89;0.46;0.85
+Portuguese;Portugal;0.58;0.57;0.45;0.54;0.53;0.56
+Romanian;Moldova;0.65;0.81;0.54;0.74;0.61;0.73
+Romanian;Romania;0.65;0.81;0.51;0.89;0.58;0.88
+Russian;Belarus;0.65;0.97;0.26;0.93;0.38;0.85
+Russian;Russia;0.65;0.97;0.39;0.87;0.4;0.84
+Serbian;Bosnia & Herzegovina;0.61;0.75;0.49;0.72;0.49;0.67
+Serbian;Kosovo;0.61;0.75;0.53;0.78;0.59;0.73
+Serbian;Serbia;0.61;0.75;0.47;0.72;0.51;0.7
+Slovak;Slovakia;0.6;0.77;0.53;0.82;0.47;0.72
+Slovene;Slovenia;0.65;0.67;0.55;0.65;0.58;0.65
+Spanish;Spain;0.61;0.46;0.44;0.37;0.51;0.49
+Swedish;Finland;0.62;0.58;0.4;0.48;0.59;0.64
+Swedish;Sweden;0.62;0.58;0.45;0.5;0.55;0.58
+Turkish;Cyprus;0.51;0.89;0.6;0.82;0.5;0.77
+Turkish;Turkey;0.51;0.89;0.35;0.97;0.24;0.88
+Ukrainian;Ukraine;0.62;0.92;0.5;0.9;0.52;0.84
