@@ -75,6 +75,8 @@ for result in results["results"]["bindings"]:
         language = result["languageLabel"]["value"]
         if language == "Romansh" or language == "Mirandese" or language == "Abkhaz" or language == "Nynorsk" or language == "Norwegian": #Languages spoken by < 1% of the population
             continue
+        if language == "Modern Greek":
+            language = "Greek"
         
         count_languages.append(result["languageCode"]["value"])
 

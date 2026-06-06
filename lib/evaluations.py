@@ -22,6 +22,10 @@ for s in SCENARIOS:
 def wilcoxon(group1, group2):
     return round(stats.wilcoxon(group1, group2).statistic.astype(float),2), round(stats.wilcoxon(group1, group2).pvalue.astype(float), 2)
 
+def get_country_id(country_name):
+    country_info = COUNTRIES_FILE.get(country_name)
+    return country_info.get("country_id")
+
 #Get the full list of scores and adjust them accordingly to the Family category contraints
 def citeria_adjustment(rm_scores):
     #Exceptions:
@@ -274,7 +278,7 @@ def models_mae():
                 mae = round(scenario_df[mae_col].mean(), 2)
                 sig = (scenario_df[pvalue_col] < 0.05).sum()
                 n = len(scenario_df)
-                row[scenario] = f"{mae} ({sig}/{n})"
+                row[scenario] = f"{mae} {round(float(sig/n)*100, 0)}\\%"
 
                 total_sig += sig
                 total_n += n
@@ -282,7 +286,7 @@ def models_mae():
 
             # Average column
             avg_mae = round(np.mean(maes), 2)
-            row["Average"] = (f"{avg_mae} ({total_sig}/{total_n})")
+            row["Average"] = (f"{avg_mae} {round(float(total_sig/total_n)*100, 0)}\\%")
             rows.append(row)
 
         # Create dataframe

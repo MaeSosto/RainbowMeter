@@ -692,16 +692,9 @@ def heatmap_language_country_mae():
             col_order
         ]
 
-        figsize = (
-            max(
-                12,
-                len(matrix.columns) * 0.55
-            ),
-            max(
-                10,
-                len(matrix.index) * 0.42
-            ),
-        )
+        print(len(matrix.columns) * 0.55, len(matrix.index) * 0.42)
+        figsize = (20,14)
+        fontsize = 18
 
         plt.figure(figsize=figsize)
 
@@ -714,7 +707,7 @@ def heatmap_language_country_mae():
             annot=True,
             fmt=".2f",
             annot_kws={
-                "fontsize":10
+                "fontsize":5
             },
             linewidths=0.3,
             linecolor="grey",
@@ -750,8 +743,6 @@ def heatmap_language_country_mae():
             colors="black",
             linewidth=2
         )
-
-        fontsize = 20
 
         plt.xlabel(
             "Countries",
@@ -885,8 +876,9 @@ def lineplot_scenario_comparison_mae():
         # -------------------------
         # Plot
         # -------------------------
-        plt.figure(figsize=(16, 6))
-
+        plt.figure(figsize=(14, 5))
+        fontsize = 14
+        
         sns.lineplot(
             data=merged,
             x="Country",
@@ -917,7 +909,7 @@ def lineplot_scenario_comparison_mae():
         plt.xticks(
             rotation=45,
             ha="right",
-            fontsize=10
+            fontsize=fontsize
         )
 
         plt.legend()
@@ -1075,6 +1067,7 @@ def lineplot_scenario_comparison_percentage():
 
         # Plot
         plt.figure(figsize=(16, 6))
+        fontsize = 16
 
         sns.lineplot(
             data=merged,
@@ -1111,12 +1104,12 @@ def lineplot_scenario_comparison_percentage():
         )
 
         #plt.title(f"{test} Rainbow Meter Score (%) Across Scenarios")
-        plt.xlabel("Country")
-        plt.ylabel("Rainbow Meter Score (%)")
+        plt.xlabel("Country", fontsize= fontsize)
+        plt.ylabel("Rainbow Meter Score (%)", fontsize= fontsize)
 
-        plt.xticks(rotation=45, ha="right", fontsize=10)
-
-        plt.legend()
+        plt.xticks(rotation=45, ha="right", fontsize=fontsize)
+        plt.yticks(fontsize=fontsize)
+        plt.legend(fontsize= fontsize)
         plt.tight_layout()
 
         output_path = (
@@ -1149,8 +1142,9 @@ def heatmap_country_models_percentage_distance():
         #df = df[df.index != "tot_distance"]
         df = df.drop('avg_distance', axis=1)
 
-
-        fig, ax = plt.subplots(figsize=(max(8, df.shape[1] * 0.25), max(5, df.shape[0] * 0.25)))
+        print(max(8, df.shape[1] * 0.25), max(5, df.shape[0] * 0.25))
+        figsize = (max(8, df.shape[1] * 0.25), max(5, df.shape[0] * 0.25))
+        fig, ax = plt.subplots(figsize=figsize)
 
         sns.heatmap(
 
@@ -1173,8 +1167,8 @@ def heatmap_country_models_percentage_distance():
         )
         
         rotation = 50
-        fontsize = 14
-        ylabel, xlabel = "Countries", "Models"
+        fontsize = 12
+        ylabel, xlabel = "Models", "Countries"
         
         ax.set_xlabel(xlabel, fontsize=fontsize)
         ax.set_ylabel(ylabel, fontsize=fontsize)
@@ -1271,19 +1265,19 @@ def line_graphs_pvalue():
 
 
 #Back translation Heatmap
-#back_translation()
+back_translation()
 
 #Weight coherence by validity scores
-#model_performances()
+model_performances()
 
 #Generate the Fact and Stance heatmaps of the MAEs errors of all the models   
-#mae_models()
+mae_models()
 
 #Generate the Fact and Stance heatmaps of the MAEs errors of all languages and countries
 heatmap_language_country_mae()
 plot_fact_shift_alignment()
 
-#lineplot_scenario_comparison_mae()
+lineplot_scenario_comparison_mae()
 
 #Generate a lineplots of the percentage errors accross scenarios and countries
 lineplot_scenario_comparison_percentage()

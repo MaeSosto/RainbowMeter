@@ -113,12 +113,10 @@
         "country_id": "CY",
         "citizenships": "Cypriot",
         "languages": [
-            "Modern Greek",
             "Greek",
             "Turkish"
         ],
         "languages_code": [
-            "el",
             "el",
             "tr"
         ]
@@ -199,11 +197,9 @@
         "country_id": "GR",
         "citizenships": "Greek",
         "languages": [
-            "Modern Greek",
             "Greek"
         ],
         "languages_code": [
-            "el",
             "el"
         ]
     },
