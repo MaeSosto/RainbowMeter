@@ -72,9 +72,9 @@ SCENARIO_COUNTRY = "country_scenario"
 SCENARIO_LAN_NAT = "language_country_scenario"
 SCENARIOS = [SCENARIO_LANGUAGE, SCENARIO_COUNTRY, SCENARIO_LAN_NAT]
 SCENARIO_LABELS = {
-    SCENARIO_LANGUAGE: "Language Scenario",
-    SCENARIO_COUNTRY: "Country Scenario",
-    SCENARIO_LAN_NAT: "Language-Country Scenario"
+    SCENARIO_LANGUAGE: "Language",
+    SCENARIO_COUNTRY: "Country",
+    SCENARIO_LAN_NAT: "Language-Country"
 }
 
 #Create Project Folder Structure
@@ -96,7 +96,6 @@ LLAMA31_70 = "meta-llama/Llama-3.1-70B" #HF
 DEEPSEEKV32 = "deepseek-chat"
 SONNET46 = "claude-sonnet-4-6"
 GPT54 = 'gpt-5.4'
-GPT54_MINI = 'gpt-5.4-mini'
 GEMINI3_FLASH = 'gemini-3-flash-preview'
 DEEPL = "DeepL" 
 
@@ -106,14 +105,13 @@ MODEL_LABEL = {
     QWEN35_2: "Qwen3.5 2B",
     QWEN35_9: "Qwen3.5 9B",
     QWEN35_27: "Qwen3.5 27B",
-    LLAMA32_3: "LlaMa 3.2 3B",
-    LLAMA31_8: "LlaMa 3.1 8B",
-    LLAMA31_70: "LlaMa 3.1 70B",
+    LLAMA32_3: "LlaMA 3.2 3B",
+    LLAMA31_8: "LlaMA 3.1 8B",
+    LLAMA31_70: "LlaMA 3.1 70B",
     DEEPSEEKV32: "DeepSeek-V3.2",
     SONNET46: "Sonnet 4.6",
     DEEPL: "DeepL",
     GPT54 : 'GPT 5.4',
-    GPT54_MINI : 'GPT 5.4-mini',
     GEMINI3_FLASH: 'Gemini 3 Flash'
 }
 
