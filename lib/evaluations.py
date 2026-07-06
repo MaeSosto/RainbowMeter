@@ -7,7 +7,7 @@ from sklearn.metrics import mean_absolute_error as mae
 
 WEIGHT_LIST = CRITERIA_WEIGHTS_DF["Weight"].values.astype(float).tolist()
 
-MODELS_PERFORMANCES_PATH = "models_performances"
+MODEL_PERFORMANCES_PATH = "model_performances"
 MAE = "MAE"
 PERCENTAGE = "percentage"
 EVALUATIONS_PATH = f"evaluations"
@@ -17,7 +17,7 @@ os.makedirs(MAE_PATH, exist_ok=True)
 PERCENTAGE_PATH = f"{EVALUATIONS_PATH}/{PERCENTAGE}/" 
 os.makedirs(PERCENTAGE_PATH, exist_ok=True)
 for s in SCENARIOS:
-    os.makedirs(f"{EVALUATIONS_PATH}/{MODELS_PERFORMANCES_PATH}/{s}", exist_ok=True)
+    os.makedirs(f"{EVALUATIONS_PATH}/{MODEL_PERFORMANCES_PATH}/{s}", exist_ok=True)
     
 def wilcoxon(group1, group2):
     return round(stats.wilcoxon(group1, group2).statistic.astype(float),2), round(stats.wilcoxon(group1, group2).pvalue.astype(float), 2)
@@ -152,7 +152,7 @@ def model_performances():
 
             # Save CSV
             df_metric.to_csv(
-                f"{EVALUATIONS_PATH}/{MODELS_PERFORMANCES_PATH}/{scenario}/{metric_key}.csv"
+                f"{EVALUATIONS_PATH}/{MODEL_PERFORMANCES_PATH}/{scenario}/{metric_key}.csv"
             )
             
 #Create a table with the grouped scores of MAE and percentages across model-scenario(lan and country) 

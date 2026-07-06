@@ -10,7 +10,7 @@ CMAP_RG=LinearSegmentedColormap.from_list('rg',["r", "y", "g"], N=256)
 CMAP_RG_INVERTED=LinearSegmentedColormap.from_list('rg',["g", "y", "r"], N=256) 
 
 EVALUATIONS_PATH = "evaluations"
-MODELS_PERFORMANCES_PATH = "models_performances"
+MODEL_PERFORMANCES_PATH = "model_performances"
 MAE = "MAE"
 PERCENTAGE = "percentage"
 GRAPHS_PATH = "graphs"
@@ -20,7 +20,7 @@ os.makedirs(MAE_PATH, exist_ok=True)
 PERCENTAGE_PATH = f"{GRAPHS_PATH}/{PERCENTAGE}/" 
 os.makedirs(PERCENTAGE_PATH, exist_ok=True)
 for s in SCENARIOS:
-    os.makedirs(f"{GRAPHS_PATH}/{MODELS_PERFORMANCES_PATH}/{s}", exist_ok=True)
+    os.makedirs(f"{GRAPHS_PATH}/{MODEL_PERFORMANCES_PATH}/{s}", exist_ok=True)
 
 #Generate back translation dataframe and heatmap
 def back_translation():
@@ -33,8 +33,10 @@ def back_translation():
     # Convert to numeric (in case some values are read as strings)
     df = df.apply(pd.to_numeric, errors="coerce")
     
-    figsize = (13, 5)
-    fontsize = 11
+    figsize = (16, 4)
+    fontsize = 13
+    rotation = 35
+    
     plt.figure(figsize=figsize)
     sns.heatmap(
         df,
@@ -58,11 +60,12 @@ def back_translation():
     # plt.ylabel("Model")
     plt.ylabel(None)
     #plt.title("Models Performance in Back Translation Test")
-    plt.yticks(rotation=45, fontsize=fontsize, ha='right', va='center', rotation_mode='anchor')
-    plt.xticks(rotation=40, ha='right', fontsize=fontsize)
+    plt.yticks(rotation=rotation, fontsize=fontsize, ha='right', va='center', rotation_mode='anchor')
+    plt.xticks(rotation=rotation, ha='right', fontsize=fontsize)
     plt.tight_layout()
-    plt.savefig(f"{GRAPHS_PATH}/back_translation.png", bbox_inches="tight", pad_inches=0.1)
-    print(f"Saved: {f"{GRAPHS_PATH}/back_translation.png"}")
+    path_file = f"{GRAPHS_PATH}/back_translation.png"
+    plt.savefig(path_file, bbox_inches="tight", pad_inches=0.1)
+    print(f"Saved: {path_file}")
 
 def generate_heatmap(
     df,
@@ -80,13 +83,19 @@ def generate_heatmap(
     n_rows, n_cols = df.shape
 
     # Smaller cells
-    cell_width = 0.25
-    cell_height = 0.25
+    cell_width = 0.4
+    cell_height = 0.5
 
-    fig_width = max(12, n_cols * cell_width)
-    fig_height = max(5, n_rows * cell_height)
+    fig_width = max(16, n_cols * cell_width)
+    fig_height = fig_width / 3.3 #max(5, n_rows * cell_height)
     figsize=(fig_width, fig_height)
-    print(figsize)
+    if transpose:
+        rotation = 30
+        fontsize = 14
+    rotation = 35
+    fontsize = 15
+    
+    #print(figsize)
     fig, ax = plt.subplots(figsize=figsize)
 
     sns.heatmap(
@@ -97,7 +106,7 @@ def generate_heatmap(
         linewidths=0.2,
         linecolor="white",
         annot=annot,
-        annot_kws={"fontsize": 7},
+        annot_kws={"fontsize": 10},
         fmt=".1f",
 
         # Thinner color bar
@@ -110,12 +119,6 @@ def generate_heatmap(
 
         ax=ax
     )
-
-    if transpose:
-        rotation = 30
-        fontsize = 14
-    rotation = 50
-    fontsize = 11
     
     #ax.set_xlabel(xlabel, fontsize=fontsize)
     #ax.set_ylabel(ylabel, fontsize=fontsize)
@@ -160,7 +163,7 @@ def model_performances():
     for scenario in SCENARIOS:
         for m, title in metrics.items():
 
-            file_path = (f"{EVALUATIONS_PATH}/{MODELS_PERFORMANCES_PATH}/{scenario}/{m}.csv")
+            file_path = (f"{EVALUATIONS_PATH}/{MODEL_PERFORMANCES_PATH}/{scenario}/{m}.csv")
             if not os.path.exists(file_path):
                 continue
 
@@ -180,14 +183,14 @@ def model_performances():
             
             generate_heatmap(
                 df=df_metric,
-                savefig=f"{GRAPHS_PATH}/{MODELS_PERFORMANCES_PATH}/{scenario}/{m}.png",
+                savefig=f"{GRAPHS_PATH}/{MODEL_PERFORMANCES_PATH}/{scenario}/{m}.png",
                 #transpose=True,
                 annot=True
             )
-            print(f"Saved: {f"{GRAPHS_PATH}/{MODELS_PERFORMANCES_PATH}/{scenario}/{m}.png"}")
+            
 
 #Generate the Fact and Stance heatmaps of the MAEs errors of all the models           
-def mae_models():
+def mae_model_country():
     for test in [FACT, STANCE]:
         csv_path = f"{EVALUATIONS_PATH}/general_stats.csv"
 
@@ -264,15 +267,13 @@ def mae_models():
             plt.xticks(rotation=40, ha="right", fontsize=14)
             plt.yticks(fontsize=14)
             plt.tight_layout()
-            output_path = (f"{GRAPHS_PATH}/{MAE}/{test}_models.png")
+            output_path = (f"{GRAPHS_PATH}/{MAE}/model_country_{test}.png")
             plt.savefig(output_path)
             plt.close()
             print(f"Saved: {output_path}")
             
-
-# Generate the Fact and Stance heatmaps of the MAEs errors
-# of all languages and countries
-def heatmap_language_country_mae():
+# Generate the Fact and Stance heatmaps of the MAEs errors of all languages and countries
+def mae_country_language():
 
     csv_path = f"{EVALUATIONS_PATH}/{MAE}/lang_country_mae_summary.csv"
 
@@ -337,8 +338,8 @@ def heatmap_language_country_mae():
         # Unique labels
         languages = sorted(set(language_rows["Language"].dropna())|set(lang_country_rows["Language"].dropna()))
         countries = sorted(set(country_rows["Country"].dropna())|set(lang_country_rows["Country"].dropna()))
-        aggregate_row = (SCENARIO_LABELS[SCENARIO_COUNTRY])
-        aggregate_col = (SCENARIO_LABELS[SCENARIO_LANGUAGE])
+        aggregate_row = ("No Country")#SCENARIO_LABELS[SCENARIO_COUNTRY])
+        aggregate_col = ("English") #SCENARIO_LABELS[SCENARIO_LANGUAGE])
         full_rows = (languages + [aggregate_row])
         full_columns = ([aggregate_col] + countries)
 
@@ -428,9 +429,10 @@ def heatmap_language_country_mae():
         # Multiply by 100
         matrix = matrix * 100
         
-        figsize = (12,9)
-        fontsize = 11
-
+        figsize = (16,9)
+        fontsize = 13
+        rotation = 35
+        
         plt.figure(figsize=figsize)
 
         ax = sns.heatmap(
@@ -481,18 +483,17 @@ def heatmap_language_country_mae():
         # plt.xlabel("Countries", fontsize=fontsize)
         # plt.ylabel("Languages", fontsize=fontsize)
 
-        plt.yticks(rotation=40, fontsize=fontsize, ha='right', va='center', rotation_mode='anchor')
-        plt.xticks(rotation=45,ha="right",fontsize=fontsize)
+        plt.yticks(rotation=rotation, fontsize=fontsize, ha='right', va='center', rotation_mode='anchor')
+        plt.xticks(rotation=rotation,ha="right",fontsize=fontsize)
         plt.tight_layout()
 
-        output_png = (f"{GRAPHS_PATH}/MAE/language_country_{test}_mae.png")
+        output_png = (f"{GRAPHS_PATH}/MAE/country_language_{test}.png")
         plt.savefig(output_png, dpi=300, bbox_inches="tight")
         plt.close()
         print(f"Saved: {output_png}")
 
 # Generate lineplots of MAE scores across scenarios and countries
-def lineplot_scenario_comparison_mae():
-
+def mae_scenario_country():
     csv_path = (f"{EVALUATIONS_PATH}/{MAE}/lang_country_mae_summary.csv")
     if not os.path.exists(csv_path):
         print(f"Missing file: {csv_path}")
@@ -555,9 +556,9 @@ def lineplot_scenario_comparison_mae():
         merged = merged.sort_values("Country")
 
         # Plot
-        figsize = (14, 4)
+        figsize = (16, 4)
         plt.figure(figsize=figsize)
-        fontsize = 11
+        fontsize = 13
         
         sns.lineplot(
             data=merged,
@@ -585,19 +586,22 @@ def lineplot_scenario_comparison_mae():
 
         #plt.xlabel("Country")
         plt.margins(x=0.01) # Remove left/right spacing on x-axis
+        #plt.ylim(0, 1)
         plt.xlabel(None)
         plt.ylabel("MAE")
-        plt.xticks(rotation=30, ha="right", fontsize=fontsize)
+        plt.xticks(rotation=35, ha="right", fontsize=fontsize)
+        plt.yticks(fontsize=fontsize)
         plt.grid(axis='x', color='gray', linestyle='--', linewidth=0.5)
-        plt.legend()
+        #plt.legend(fontsize = fontsize, bbox_to_anchor=[0.5, 1.2], loc='center', ncol = 3)
+        plt.legend(fontsize = fontsize)
         plt.tight_layout()
-        output_path = f"{GRAPHS_PATH}/MAE/country_scenario_{test}_mae.png"
+        output_path = f"{GRAPHS_PATH}/MAE/scenario_country_{test}.png"
         plt.savefig(output_path, dpi=300, bbox_inches="tight")
         plt.close()
         print(f"Saved: {output_path}")
 
-
-def plot_fact_shift_alignment():
+#Shows a line plot of the RM scores and the MAE scores per each country
+def mae_rm_country():
     csv_path = f"{EVALUATIONS_PATH}/general_stats.csv"
     if not os.path.exists(csv_path):
         print(f"Missing file: {csv_path}")
@@ -616,16 +620,18 @@ def plot_fact_shift_alignment():
         rainbow = agg["Rainbow Map"]
         mae = agg[f"{test} MAE"]
         
-        figsize = (14, 4)
-        fontsize = 11
+        figsize = (16, 4)
+        fontsize = 13
+        rotation = 35
+        
         fig, ax1 = plt.subplots(figsize=figsize)
 
         # Rainbow Map bars
         ax1.bar(countries, rainbow, alpha=0.6, label="Rainbow Map")
-        ax1.set_ylabel("Rainbow Map score")
-        ax1.tick_params(axis="x", rotation=45)
+        ax1.set_ylabel("Rainbow Meter Score (%)")
+        ax1.tick_params(axis="x", rotation=rotation)
         ax1.set_xticks(range(len(countries)))
-        ax1.set_xticklabels(countries, rotation=45, ha="right", fontsize=fontsize)
+        ax1.set_xticklabels(countries, rotation=rotation, ha="right", fontsize=fontsize)
         ax2 = ax1.twinx()
         ax2.plot(countries, mae, color="red", marker="o", linewidth=2, label=f"{test} MAE")
         ax2.set_ylabel(f"{test} MAE")
@@ -637,12 +643,12 @@ def plot_fact_shift_alignment():
         plt.yticks(fontsize=fontsize)
         plt.grid(axis='y', color='gray', linestyle='--', linewidth=0.5)
         plt.tight_layout()
-        output_path = f"{GRAPHS_PATH}/MAE/rainbow_map_comparison_{test}.png"
+        output_path = f"{GRAPHS_PATH}/MAE/mae_rm_country_{test}.png"
         plt.savefig(output_path, dpi=300)
 
     
 # Generate lineplots of the percentage scores across scenarios and countries
-def lineplot_scenario_comparison_percentage():
+def percentage_scenario_country():
     csv_path = f"{EVALUATIONS_PATH}/general_stats.csv"
 
     if not os.path.exists(csv_path):
@@ -733,9 +739,11 @@ def lineplot_scenario_comparison_percentage():
 
         merged = merged.sort_values("rainbow_map_score")
 
+        merged.to_csv(f"{EVALUATIONS_PATH}/percentage/scenario_country_{test}.csv")
+        
         # Plot
-        figsize = (14, 4)
-        fontsize = 11
+        figsize = (16, 4)
+        fontsize = 13
         plt.figure(figsize=figsize)
 
         sns.lineplot(
@@ -783,9 +791,7 @@ def lineplot_scenario_comparison_percentage():
         plt.legend(fontsize=fontsize)
         plt.tight_layout()
 
-        output_path = (
-            f"{GRAPHS_PATH}/percentage/country_scenario_{test}_percentage.png"
-        )
+        output_path = (f"{GRAPHS_PATH}/percentage/scenario_country_{test}.png")
 
         plt.savefig(
             output_path,
@@ -797,13 +803,9 @@ def lineplot_scenario_comparison_percentage():
 
         print(f"Saved: {output_path}")
         
-
-def heatmap_country_models_percentage_distance():
-
+def percentage_model_country_distance():
     for test in [FACT, STANCE]:
-
         csv_path = f"{EVALUATIONS_PATH}/percentage/country_model_{test}_distance.csv"
-
         if not os.path.exists(csv_path):
             print(f"Missing file: {csv_path}")
             continue
@@ -813,12 +815,14 @@ def heatmap_country_models_percentage_distance():
         #df = df[df.index != "tot_distance"]
         df = df.drop('avg_distance', axis=1)
 
-        figsize = (13, 5)
-        print(figsize)
+        figsize = (16, 4)
+        rotation = 35
+        fontsize = 13
+        
+        #print(figsize)
         fig, ax = plt.subplots(figsize=figsize)
 
         sns.heatmap(
-
             df,
             vmin=0,
             vmax=100,
@@ -837,8 +841,6 @@ def heatmap_country_models_percentage_distance():
         ax=ax
         )
         
-        rotation = 50
-        fontsize = 11
         # ylabel, xlabel = "Models", "Countries"
         
         # ax.set_xlabel(xlabel, fontsize=fontsize)
@@ -865,7 +867,7 @@ def heatmap_country_models_percentage_distance():
         ax.tick_params(axis='both', length=0)
         plt.tight_layout()
 
-        savefig = f"{GRAPHS_PATH}/percentage/country_models_{test}_percentage_distance.png"
+        savefig = f"{GRAPHS_PATH}/percentage/model_country_distance_{test}.png"
         plt.savefig(
             savefig,
             dpi=300,
@@ -883,17 +885,14 @@ back_translation()
 model_performances()
 
 #Generate the Fact and Stance heatmaps of the MAEs errors of all the models   
-mae_models()
-
-#Generate the Fact and Stance heatmaps of the MAEs errors of all languages and countries
-heatmap_language_country_mae()
-plot_fact_shift_alignment()
-
-lineplot_scenario_comparison_mae()
+#mae_model_country()
+mae_country_language()
+mae_rm_country()
+mae_scenario_country()
 
 #Generate a lineplots of the percentage errors accross scenarios and countries
-lineplot_scenario_comparison_percentage()
-heatmap_country_models_percentage_distance()
+percentage_scenario_country()
+percentage_model_country_distance()
 
 
 print(f"✅ Graphs Generated")
