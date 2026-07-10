@@ -1,0 +1,154 @@
+language;country;value
+Albanian;No Country;0.72
+Armenian;No Country;0.92
+Azerbaijani;No Country;0.91
+Belarusian;No Country;0.92
+Bokmål;No Country;0.64
+Bosnian;No Country;0.71
+Bulgarian;No Country;0.79
+Catalan;No Country;0.78
+Croatian;No Country;0.71
+Czech;No Country;0.78
+Danish;No Country;0.49
+Dutch;No Country;0.59
+English;No Country;0.54
+Estonian;No Country;0.7
+Finnish;No Country;0.58
+French;No Country;0.71
+Georgian;No Country;0.85
+German;No Country;0.64
+Greek;No Country;0.69
+Hungarian;No Country;0.76
+Icelandic;No Country;0.57
+Irish;No Country;0.63
+Italian;No Country;0.84
+Latvian;No Country;0.83
+Lithuanian;No Country;0.86
+Luxembourgish;No Country;0.59
+Macedonian;No Country;0.78
+Maltese;No Country;0.58
+Montenegrin;No Country;0.67
+Polish;No Country;0.89
+Portuguese;No Country;0.57
+Romanian;No Country;0.81
+Russian;No Country;0.97
+Serbian;No Country;0.75
+Slovak;No Country;0.77
+Slovene;No Country;0.67
+Spanish;No Country;0.46
+Swedish;No Country;0.58
+Turkish;No Country;0.89
+Ukrainian;No Country;0.92
+English;Albania;0.68
+English;Andorra;0.72
+English;Armenia;1.0
+English;Austria;0.65
+English;Azerbaijan;0.86
+English;Belarus;0.93
+English;Belgium;0.45
+English;Bosnia & Herzegovina;0.72
+English;Bulgaria;0.89
+English;Croatia;0.66
+English;Cyprus;0.82
+English;Czechia;0.78
+English;Denmark;0.34
+English;Estonia;0.72
+English;Finland;0.48
+English;France;0.59
+English;Georgia;0.99
+English;Germany;0.52
+English;Greece;0.46
+English;Hungary;0.81
+English;Iceland;0.45
+English;Ireland;0.6
+English;Italy;0.92
+English;Kosovo;0.78
+English;Latvia;0.81
+English;Liechtenstein;0.8
+English;Lithuania;0.86
+English;Luxembourg;0.55
+English;Malta;0.38
+English;Moldova;0.74
+English;Monaco;0.91
+English;Montenegro;0.59
+English;Netherlands;0.58
+English;North Macedonia;0.8
+English;Norway;0.52
+English;Poland;0.89
+English;Portugal;0.54
+English;Romania;0.89
+English;Russia;0.87
+English;San Marino;0.83
+English;Serbia;0.72
+English;Slovakia;0.82
+English;Slovenia;0.65
+English;Spain;0.37
+English;Sweden;0.5
+English;Switzerland;0.69
+English;Turkey;0.97
+English;Ukraine;0.9
+English;United Kingdom;0.69
+Albanian;Albania;0.67
+Albanian;Kosovo;0.69
+Albanian;North Macedonia;0.73
+Armenian;Armenia;0.86
+Azerbaijani;Azerbaijan;0.85
+Belarusian;Belarus;0.78
+Bokmål;Norway;0.63
+Bosnian;Bosnia & Herzegovina;0.7
+Bulgarian;Bulgaria;0.79
+Catalan;Andorra;0.8
+Croatian;Bosnia & Herzegovina;0.7
+Croatian;Croatia;0.7
+Czech;Czechia;0.74
+Danish;Denmark;0.56
+Dutch;Belgium;0.55
+Dutch;Netherlands;0.64
+English;Ireland;0.59
+English;Malta;0.4
+English;United Kingdom;0.68
+Estonian;Estonia;0.7
+Finnish;Finland;0.6
+French;Belgium;0.55
+French;France;0.7
+French;Luxembourg;0.63
+French;Monaco;0.86
+French;Switzerland;0.76
+Georgian;Georgia;0.79
+German;Austria;0.66
+German;Belgium;0.5
+German;Germany;0.55
+German;Liechtenstein;0.79
+German;Luxembourg;0.58
+German;Switzerland;0.67
+Greek;Cyprus;0.79
+Greek;Greece;0.55
+Hungarian;Hungary;0.72
+Icelandic;Iceland;0.52
+Irish;Ireland;0.63
+Italian;Italy;0.84
+Italian;San Marino;0.84
+Italian;Switzerland;0.68
+Latvian;Latvia;0.78
+Lithuanian;Lithuania;0.81
+Luxembourgish;Luxembourg;0.56
+Macedonian;North Macedonia;0.73
+Maltese;Malta;0.59
+Montenegrin;Montenegro;0.67
+Polish;Poland;0.85
+Portuguese;Portugal;0.56
+Romanian;Moldova;0.73
+Romanian;Romania;0.88
+Russian;Belarus;0.85
+Russian;Russia;0.84
+Serbian;Bosnia & Herzegovina;0.67
+Serbian;Kosovo;0.73
+Serbian;Serbia;0.7
+Slovak;Slovakia;0.72
+Slovene;Slovenia;0.65
+Spanish;Spain;0.49
+Swedish;Finland;0.64
+Swedish;Sweden;0.58
+Turkish;Cyprus;0.77
+Turkish;Turkey;0.88
+Ukrainian;Ukraine;0.84

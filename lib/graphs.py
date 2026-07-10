@@ -46,7 +46,7 @@ def back_translation():
         linewidths=0.5,
         linecolor="white",
         annot=True,
-        annot_kws={"fontsize":7},
+        annot_kws={"fontsize":10},
         fmt=".1f",
         cbar_kws={
                 #"shrink": 0.8,
@@ -185,7 +185,7 @@ def model_performances():
                 df=df_metric,
                 savefig=f"{GRAPHS_PATH}/{MODEL_PERFORMANCES_PATH}/{scenario}/{m}.png",
                 #transpose=True,
-                annot=True
+                annot=False
             )
             
 
@@ -273,228 +273,212 @@ def mae_model_country():
             print(f"Saved: {output_path}")
             
 # Generate the Fact and Stance heatmaps of the MAEs errors of all languages and countries
-def mae_country_language():
+# def mae_country_language():
 
-    csv_path = f"{EVALUATIONS_PATH}/{MAE}/lang_country_mae_summary.csv"
+#     csv_path = f"{EVALUATIONS_PATH}/{MAE}/lang_country_mae_summary.csv"
 
-    if not os.path.exists(csv_path):
-        print(f"Missing file: {csv_path}")
-        return
+#     if not os.path.exists(csv_path):
+#         print(f"Missing file: {csv_path}")
+#         return
 
-    df = pd.read_csv(csv_path, sep=";")
+#     df = pd.read_csv(csv_path, sep=";")
 
-    for test in [FACT, STANCE]:
-        language_col = (f"{SCENARIO_LANGUAGE}_{test}_MAE")
-        country_col = (f"{SCENARIO_COUNTRY}_{test}_MAE")
-        lang_nat_col = (f"{SCENARIO_LAN_NAT}_{test}_MAE")
+#     for test in [FACT, STANCE]:
+#         language_col = (f"{SCENARIO_LANGUAGE}_{test}_MAE")
+#         country_col = (f"{SCENARIO_COUNTRY}_{test}_MAE")
+#         lang_nat_col = (f"{SCENARIO_LAN_NAT}_{test}_MAE")
 
-        # Language scenario rows
-        language_rows = (
-            df[
-                df[language_col].notna()
-            ][
-                ["language", language_col]
-            ]
-            .copy()
-            .rename(columns={
-                "language": "Language",
-                language_col: "Value"
-            })
-        )
+#         # Language scenario rows
+#         language_rows = (
+#             df[
+#                 df[language_col].notna()
+#             ][
+#                 ["language", language_col]
+#             ]
+#             .copy()
+#             .rename(columns={
+#                 "language": "Language",
+#                 language_col: "Value"
+#             })
+#         )
 
-        # Country scenario rows
-        country_rows = (
-            df[
-                df[country_col].notna()
-            ][
-                ["country", country_col]
-            ]
-            .copy()
-            .rename(columns={
-                "country": "Country",
-                country_col: "Value"
-            })
-        )
+#         # Country scenario rows
+#         country_rows = (
+#             df[
+#                 df[country_col].notna()
+#             ][
+#                 ["country", country_col]
+#             ]
+#             .copy()
+#             .rename(columns={
+#                 "country": "Country",
+#                 country_col: "Value"
+#             })
+#         )
 
-        # Language-country rows
-        lang_country_rows = (
-            df[
-                df[lang_nat_col].notna()
-            ][
-                [
-                    "language",
-                    "country",
-                    lang_nat_col
-                ]
-            ]
-            .copy()
-            .rename(columns={
-                "language": "Language",
-                "country": "Country",
-                lang_nat_col: "Value"
-            })
-        )
+#         # Language-country rows
+#         lang_country_rows = (
+#             df[
+#                 df[lang_nat_col].notna()
+#             ][
+#                 [
+#                     "language",
+#                     "country",
+#                     lang_nat_col
+#                 ]
+#             ]
+#             .copy()
+#             .rename(columns={
+#                 "language": "Language",
+#                 "country": "Country",
+#                 lang_nat_col: "Value"
+#             })
+#         )
 
-        # Unique labels
-        languages = sorted(set(language_rows["Language"].dropna())|set(lang_country_rows["Language"].dropna()))
-        countries = sorted(set(country_rows["Country"].dropna())|set(lang_country_rows["Country"].dropna()))
-        aggregate_row = ("No Country")#SCENARIO_LABELS[SCENARIO_COUNTRY])
-        aggregate_col = ("English") #SCENARIO_LABELS[SCENARIO_LANGUAGE])
-        full_rows = (languages + [aggregate_row])
-        full_columns = ([aggregate_col] + countries)
+#         # Unique labels
+#         languages = sorted(set(language_rows["Language"].dropna())|set(lang_country_rows["Language"].dropna()))
+#         countries = sorted(set(country_rows["Country"].dropna())|set(lang_country_rows["Country"].dropna()))
+#         aggregate_row = ("English")#SCENARIO_LABELS[SCENARIO_COUNTRY])
+#         aggregate_col = ("English") #SCENARIO_LABELS[SCENARIO_LANGUAGE])
+#         full_rows = (languages + [aggregate_row])
+#         full_columns = ([aggregate_col] + countries)
 
-        matrix = pd.DataFrame(
-            np.nan,
-            index=full_rows,
-            columns=full_columns
-        )
+#         matrix = pd.DataFrame(np.nan, index=full_rows, columns=full_columns)
 
-        # Fill language averages
-        for _, row in language_rows.iterrows():
+#         # Fill language averages
+#         for _, row in language_rows.iterrows():
+#             matrix.loc[row["Language"], aggregate_col] = row["Value"]
 
-            matrix.loc[
-                row["Language"],
-                aggregate_col
-            ] = row["Value"]
+#         # Fill country averages
+#         for _, row in country_rows.iterrows():
+#             matrix.loc[aggregate_row, row["Country"]] = row["Value"]
 
-        # Fill country averages
-        for _, row in country_rows.iterrows():
+#         # Fill language-country values
+#         for _, row in lang_country_rows.iterrows():
+#             matrix.loc[row["Language"], row["Country"]] = row["Value"]
 
-            matrix.loc[
-                aggregate_row,
-                row["Country"]
-            ] = row["Value"]
+#         # Row ordering
+#         row_scores = []
 
-        # Fill language-country values
-        for _, row in lang_country_rows.iterrows():
+#         for r in matrix.index:
 
-            matrix.loc[
-                row["Language"],
-                row["Country"]
-            ] = row["Value"]
+#             row = (
+#                 matrix.loc[r]
+#                 .dropna()
+#             )
 
-        # Row ordering
-        row_scores = []
+#             score = row.mean()
 
-        for r in matrix.index:
+#             row_scores.append(
+#                 (r, score)
+#             )
 
-            row = (
-                matrix.loc[r]
-                .dropna()
-            )
+#         row_order = [
+#             r for r, _
+#             in sorted(
+#                 row_scores,
+#                 key=lambda x: x[1]
+#             )
+#         ]
 
-            score = row.mean()
+#         # Column ordering
+#         col_scores = []
 
-            row_scores.append(
-                (r, score)
-            )
+#         for c in matrix.columns:
 
-        row_order = [
-            r for r, _
-            in sorted(
-                row_scores,
-                key=lambda x: x[1]
-            )
-        ]
+#             col = (
+#                 matrix[c]
+#                 .dropna()
+#             )
 
-        # Column ordering
-        col_scores = []
+#             score = col.mean()
 
-        for c in matrix.columns:
+#             col_scores.append(
+#                 (c, score)
+#             )
 
-            col = (
-                matrix[c]
-                .dropna()
-            )
+#         col_order = [
+#             c for c, _
+#             in sorted(
+#                 col_scores,
+#                 key=lambda x: x[1]
+#             )
+#         ]
 
-            score = col.mean()
+#         matrix = matrix.loc[
+#             row_order,
+#             col_order
+#         ]
 
-            col_scores.append(
-                (c, score)
-            )
-
-        col_order = [
-            c for c, _
-            in sorted(
-                col_scores,
-                key=lambda x: x[1]
-            )
-        ]
-
-        matrix = matrix.loc[
-            row_order,
-            col_order
-        ]
-
-        # Multiply by 100
-        matrix = matrix * 100
+#         # Multiply by 100
+#         matrix = matrix * 100
         
-        figsize = (16,9)
-        fontsize = 13
-        rotation = 35
+#         figsize = (16,9)
+#         fontsize = 13
+#         rotation = 35
         
-        plt.figure(figsize=figsize)
+#         plt.figure(figsize=figsize)
 
-        ax = sns.heatmap(
-            matrix,
-            mask=matrix.isna(),
-            #vmin=0,
-            #vmax=100,
-            cmap=CMAP_RG_INVERTED,
-            annot=True,
-            #fmt=".2f",
-            annot_kws={
-                "fontsize":7
-            },
-            linewidths=0.3,
-            linecolor="grey",
-            cbar_kws={
-                "aspect": 40,      
-                "fraction": 0.03, 
-                "pad": 0.01
-            }
-        )
+#         ax = sns.heatmap(
+#             matrix,
+#             mask=matrix.isna(),
+#             #vmin=0,
+#             #vmax=100,
+#             cmap=CMAP_RG_INVERTED,
+#             annot=True,
+#             #fmt=".2f",
+#             annot_kws={
+#                 "fontsize":10
+#             },
+#             linewidths=0.3,
+#             linecolor="grey",
+#             cbar_kws={
+#                 "aspect": 40,      
+#                 "fraction": 0.03, 
+#                 "pad": 0.01
+#             }
+#         )
 
-        aggregate_row_idx = (
-            list(matrix.index)
-            .index(aggregate_row)
-        )
+#         aggregate_row_idx = (
+#             list(matrix.index)
+#             .index(aggregate_row)
+#         )
 
-        aggregate_col_idx = (
-            list(matrix.columns)
-            .index(aggregate_col)
-        )
+#         aggregate_col_idx = (
+#             list(matrix.columns)
+#             .index(aggregate_col)
+#         )
 
-        ax.hlines(
-            aggregate_row_idx,
-            *ax.get_xlim(),
-            colors="grey",
-            linewidth=2
-        )
+#         ax.hlines(
+#             aggregate_row_idx,
+#             *ax.get_xlim(),
+#             colors="grey",
+#             linewidth=2
+#         )
 
-        ax.vlines(
-            aggregate_col_idx + 1,
-            *ax.get_ylim(),
-            colors="grey",
-            linewidth=2
-        )
+#         ax.vlines(
+#             aggregate_col_idx + 1,
+#             *ax.get_ylim(),
+#             colors="grey",
+#             linewidth=2
+#         )
 
-        ax.set_xlim(0, len(matrix.columns))
-        # plt.xlabel("Countries", fontsize=fontsize)
-        # plt.ylabel("Languages", fontsize=fontsize)
+#         ax.set_xlim(0, len(matrix.columns))
+#         # plt.xlabel("Countries", fontsize=fontsize)
+#         # plt.ylabel("Languages", fontsize=fontsize)
 
-        plt.yticks(rotation=rotation, fontsize=fontsize, ha='right', va='center', rotation_mode='anchor')
-        plt.xticks(rotation=rotation,ha="right",fontsize=fontsize)
-        plt.tight_layout()
+#         plt.yticks(rotation=rotation, fontsize=fontsize, ha='right', va='center', rotation_mode='anchor')
+#         plt.xticks(rotation=rotation,ha="right",fontsize=fontsize)
+#         plt.tight_layout()
 
-        output_png = (f"{GRAPHS_PATH}/MAE/country_language_{test}.png")
-        plt.savefig(output_png, dpi=300, bbox_inches="tight")
-        plt.close()
-        print(f"Saved: {output_png}")
+#         output_png = (f"{GRAPHS_PATH}/MAE/country_language_{test}.png")
+#         plt.savefig(output_png, dpi=300, bbox_inches="tight")
+#         plt.close()
+#         print(f"Saved: {output_png}")
 
 # Generate lineplots of MAE scores across scenarios and countries
 def mae_scenario_country():
-    csv_path = (f"{EVALUATIONS_PATH}/{MAE}/lang_country_mae_summary.csv")
+    csv_path = (f"{EVALUATIONS_PATH}/{MAE}/scenario_country_mae.csv")
     if not os.path.exists(csv_path):
         print(f"Missing file: {csv_path}")
         return
@@ -615,7 +599,7 @@ def mae_rm_country():
             f"{test} MAE": "mean"
         }).reset_index()
 
-        agg = agg.sort_values(f"{test} MAE")
+        agg = agg.sort_values("Rainbow Map")
         countries = agg["Country"]
         rainbow = agg["Rainbow Map"]
         mae = agg[f"{test} MAE"]
@@ -626,25 +610,26 @@ def mae_rm_country():
         
         fig, ax1 = plt.subplots(figsize=figsize)
 
-        # Rainbow Map bars
-        ax1.bar(countries, rainbow, alpha=0.6, label="Rainbow Map")
-        ax1.set_ylabel("Rainbow Meter Score (%)")
+        # MAE bars
+        ax1.bar(countries, mae, alpha=0.6, label="MAE")
+        ax1.set_ylabel("Mean Absolute Error")
         ax1.tick_params(axis="x", rotation=rotation)
         ax1.set_xticks(range(len(countries)))
         ax1.set_xticklabels(countries, rotation=rotation, ha="right", fontsize=fontsize)
+        
+        # RM line
         ax2 = ax1.twinx()
-        ax2.plot(countries, mae, color="red", marker="o", linewidth=2, label=f"{test} MAE")
-        ax2.set_ylabel(f"{test} MAE")
+        ax2.plot(countries, rainbow, color="red", marker="o", linewidth=2, label="Rainbow Map")
+        ax2.set_ylabel("Rainbow Map Score (%)")
 
         lines1, labels1 = ax1.get_legend_handles_labels()
         lines2, labels2 = ax2.get_legend_handles_labels()
-        ax1.legend(lines1 + lines2, labels1 + labels2, loc="upper right", fontsize=fontsize)
+        ax1.legend(lines1 + lines2, labels1 + labels2, fontsize=fontsize)
         plt.margins(x=0.01) # Remove left/right spacing on x-axis
         plt.yticks(fontsize=fontsize)
         plt.grid(axis='y', color='gray', linestyle='--', linewidth=0.5)
         plt.tight_layout()
-        output_path = f"{GRAPHS_PATH}/MAE/mae_rm_country_{test}.png"
-        plt.savefig(output_path, dpi=300)
+        plt.savefig(f"{GRAPHS_PATH}/MAE/mae_rm_country_{test}.png", dpi=300)
 
     
 # Generate lineplots of the percentage scores across scenarios and countries
@@ -830,7 +815,7 @@ def percentage_model_country_distance():
             linewidths=0.2,
             linecolor="white",
             annot=True,
-            annot_kws={"fontsize":7},
+            annot_kws={"fontsize":10},
             fmt='.0f',
             cbar_kws={
                 #"shrink": 0.8,
@@ -877,6 +862,90 @@ def percentage_model_country_distance():
         plt.close()
         print(f"Saved: {savefig}")
 
+# Generate Language × Country MAE heatmaps
+def mae_language_country():
+
+    for test in [FACT, STANCE]:
+
+        csv_path = (
+            f"{EVALUATIONS_PATH}/{MAE}/"
+            f"language_country_{test.lower()}.csv"
+        )
+
+        if not os.path.exists(csv_path):
+            print(f"Missing file: {csv_path}")
+            continue
+
+        df = pd.read_csv(csv_path, sep=";")
+
+        # Create matrix
+        pivot = (
+            df.pivot_table(
+                index="language",
+                columns="country",
+                values="value",
+                aggfunc="mean"
+            )
+            .round(2)
+        )
+
+        # Optional ordering
+        languages = sorted(pivot.index)
+        countries = sorted(pivot.columns)
+
+        # Put the synthetic entries in convenient positions
+        if "English" in languages:
+            languages.remove("English")
+            languages.insert(0, "English")
+
+        if "No Country" in countries:
+            countries.remove("No Country")
+            countries.insert(0, "No Country")
+
+        pivot = pivot.loc[languages, countries]
+
+        plt.figure(figsize=(14, 8))
+
+        pivot = pivot *100
+        sns.heatmap(
+            pivot,
+            cmap=CMAP_RG_INVERTED,
+            mask=pivot.isna(),
+            #vmin=0,
+            #vmax=100,
+            annot=True,
+            #fmt=".2f",
+            annot_kws={
+                "fontsize":10
+            },
+            linewidths=0.3,
+            linecolor="grey",
+            cbar_kws={
+                "aspect": 40,      
+                "fraction": 0.03, 
+                "pad": 0.01
+            }
+        )
+    
+        #plt.xlabel("Country", fontsize=14)
+        #plt.xlabel(None)
+        #plt.ylabel("Language", fontsize=14)
+        #plt.ylabel(None)
+        plt.xlabel("")
+        plt.ylabel("")
+
+        plt.xticks(rotation=45, ha="right", fontsize=12)
+        plt.yticks(rotation=0, fontsize=12)
+
+        plt.tight_layout()
+
+        output_path = (f"{GRAPHS_PATH}/{MAE}/language_country_{test.lower()}.png")
+
+        plt.savefig(output_path, dpi=300)
+        plt.close()
+
+        print(f"Saved: {output_path}")
+
 
 #Back translation Heatmap
 back_translation()
@@ -886,7 +955,8 @@ model_performances()
 
 #Generate the Fact and Stance heatmaps of the MAEs errors of all the models   
 #mae_model_country()
-mae_country_language()
+#mae_country_language()
+mae_language_country()
 mae_rm_country()
 mae_scenario_country()
 

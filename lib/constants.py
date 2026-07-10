@@ -102,17 +102,17 @@ DEEPL = "DeepL"
 MODEL_LIST = [QWEN35_2, QWEN35_9, QWEN35_27, LLAMA32_3, LLAMA31_8, LLAMA31_70, DEEPSEEKV32, SONNET46, GPT54, GEMINI3_FLASH]
 
 MODEL_LABEL = {
-    QWEN35_2: "Qwen3.5 2B",
-    QWEN35_9: "Qwen3.5 9B",
-    QWEN35_27: "Qwen3.5 27B",
-    LLAMA32_3: "LlaMA 3.2 3B",
-    LLAMA31_8: "LlaMA 3.1 8B",
-    LLAMA31_70: "LlaMA 3.1 70B",
-    DEEPSEEKV32: "DeepSeek-V3.2",
-    SONNET46: "Sonnet 4.6",
+    QWEN35_2: "Qwen 2B",
+    QWEN35_9: "Qwen 9B",
+    QWEN35_27: "Qwen 27B",
+    LLAMA32_3: "LlaMA 3B",
+    LLAMA31_8: "LlaMA 8B",
+    LLAMA31_70: "LlaMA 70B",
+    DEEPSEEKV32: "DeepSeek",
+    SONNET46: "Sonnet",
     DEEPL: "DeepL",
-    GPT54 : 'GPT 5.4',
-    GEMINI3_FLASH: 'Gemini 3 Flash'
+    GPT54 : 'GPT',
+    GEMINI3_FLASH: 'Gemini'
 }
 
 #Return True if the results exists, otherwise False

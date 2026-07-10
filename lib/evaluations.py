@@ -72,7 +72,6 @@ def model_performances():
     }
 
     for scenario in SCENARIOS:
-
         # metric -> model -> label -> value
         data = {
             metric: defaultdict(dict)
@@ -81,8 +80,6 @@ def model_performances():
 
         # Iterate over models
         for model_name in MODEL_LIST:
-
-            model_label = MODEL_LABEL[model_name]
 
             # Iterate over countries
             for country_name, country_data in COUNTRIES_FILE.items():
@@ -115,11 +112,11 @@ def model_performances():
                         label = country_name
 
                     else:
-                        label = f"{language} - {country_name}"
+                        label = f"{language} - {country_id}"
 
                     # Store metric values
                     for metric_key, metric_col in metrics.items():
-                        data[metric_key][model_label][label] = round(
+                        data[metric_key][MODEL_LABEL[model_name]][label] = round(
                             means[metric_col],
                             2
                         )
@@ -151,9 +148,7 @@ def model_performances():
             )
 
             # Save CSV
-            df_metric.to_csv(
-                f"{EVALUATIONS_PATH}/{MODEL_PERFORMANCES_PATH}/{scenario}/{metric_key}.csv"
-            )
+            df_metric.to_csv(f"{EVALUATIONS_PATH}/{MODEL_PERFORMANCES_PATH}/{scenario}/{metric_key}.csv")
             
 #Create a table with the grouped scores of MAE and percentages across model-scenario(lan and country) 
 def general_stats():
@@ -305,7 +300,7 @@ def models_mae():
         result_df = result_df[["Model"] + SCENARIOS + ["Average"]]
 
         # Save CSV
-        output_path = (f"{EVALUATIONS_PATH}/{MAE}/models_{test}_mae_summary.csv")
+        output_path = (f"{EVALUATIONS_PATH}/{MAE}/models_{test}_mae.csv")
 
         result_df.to_csv(
             output_path,
@@ -476,7 +471,7 @@ def models_scenario_percentage():
     print(f"Saved: {output_path}")
 
 #Create a table with the MAEs calculated accross language and countries
-def language_country_mae():
+def scenario_country_mae():
     csv_path = f"{EVALUATIONS_PATH}/general_stats.csv"
 
     if not os.path.exists(csv_path):
@@ -590,7 +585,7 @@ def language_country_mae():
 
     output_path = (
         f"{EVALUATIONS_PATH}/{MAE}/"
-        f"lang_country_mae_summary.csv"
+        f"scenario_country_mae.csv"
     )
 
     merged_df.to_csv(
@@ -600,6 +595,72 @@ def language_country_mae():
     )
 
     print(f"Saved: {output_path}")
+    
+# Create two tables (Fact and Stance) with MAEs across language and countries
+def language_country_mae():
+    csv_path = f"{EVALUATIONS_PATH}/general_stats.csv"
+    if not os.path.exists(csv_path):
+        print(f"Missing file: {csv_path}")
+        return
+
+    df = pd.read_csv(csv_path, sep=";")
+    for test in [FACT, STANCE]:
+        value_col = f"{test} MAE"
+        rows = []
+
+        for scenario in SCENARIOS:
+            scenario_df = df[df[SCENARIO] == scenario].copy()
+
+            # ---------- Language Scenario ----------
+            if scenario == SCENARIO_LANGUAGE:
+                grouped = (
+                    scenario_df.groupby(LANGUAGES)[value_col]
+                    .mean()
+                    .reset_index()
+                )
+
+                for _, row in grouped.iterrows():
+                    rows.append({
+                        "language": row[LANGUAGES],
+                        "country": "No Country",
+                        "value": round(row[value_col], 2)
+                    })
+
+            # ---------- Country Scenario ----------
+            elif scenario == SCENARIO_COUNTRY:
+                grouped = (
+                    scenario_df.groupby(COUNTRY)[value_col]
+                    .mean()
+                    .reset_index()
+                )
+
+                for _, row in grouped.iterrows():
+                    rows.append({
+                        "language": "English",
+                        "country": row[COUNTRY],
+                        "value": round(row[value_col], 2)
+                    })
+
+            # ---------- Language-Country Scenario ----------
+            else:
+                grouped = (
+                    scenario_df.groupby([LANGUAGES, COUNTRY])[value_col]
+                    .mean()
+                    .reset_index()
+                )
+
+                for _, row in grouped.iterrows():
+                    rows.append({
+                        "language": row[LANGUAGES],
+                        "country": row[COUNTRY],
+                        "value": round(row[value_col], 2)
+                    })
+
+        out_df = pd.DataFrame(rows)
+        output_path = (f"{EVALUATIONS_PATH}/{MAE}/language_country_{test.lower()}.csv")
+
+        out_df.to_csv(output_path, sep=";", index=False)
+        print(f"Saved: {output_path}")
 
 def evaluate_country_model_distance():
     for test in [FACT, STANCE]:
@@ -638,6 +699,7 @@ models_mae()
 
 #Create a table with the MAEs calculated accross language and countries
 language_country_mae()
+scenario_country_mae()
 
 #Create a table with the percentage scores accross models and scenarios
 models_scenario_percentage()

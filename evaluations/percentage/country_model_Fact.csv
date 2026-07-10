@@ -1,4 +1,4 @@
-Country;Rainbow Map;Qwen3.5 2B;Qwen3.5 9B;Qwen3.5 27B;LlaMA 3.2 3B;LlaMA 3.1 8B;LlaMA 3.1 70B;DeepSeek-V3.2;Sonnet 4.6;GPT 5.4;Gemini 3 Flash
+Country;Rainbow Map;Qwen 2B;Qwen 9B;Qwen 27B;LlaMA 3B;LlaMA 8B;LlaMA 70B;DeepSeek;Sonnet;GPT;Gemini
 Albania;41;38;30;42;47;56;55;26;25;57;52
 Andorra;43;61;61;43;21;42;60;67;46;77;68
 Armenia;9;38;32;10;28;76;40;16;10;40;42
