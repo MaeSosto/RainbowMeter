@@ -676,13 +676,13 @@ def evaluate_country_model_distance():
 
         diff_df = df.copy()
         for col in model_cols:
-            diff_df[col] = (df[col] - df["Rainbow Map"]).abs()
+            diff_df[col] = (df[col] - df["Rainbow Map"])#.abs()
 
         model_matrix = diff_df.set_index("Country")[model_cols].T
 
         #model_matrix["tot_distance"] = model_matrix.sum(axis=1)
         model_matrix["avg_distance"] = model_matrix.iloc[:, :-1].mean(axis=1)
-        out_path = f"{EVALUATIONS_PATH}/percentage/country_model_{test}_distance.csv"
+        out_path = f"{EVALUATIONS_PATH}/percentage/model_country_distance_{test}.csv"
         model_matrix.to_csv(out_path, sep=";")
 
         print(f"Saved evaluation: {out_path}")

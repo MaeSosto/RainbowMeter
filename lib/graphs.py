@@ -790,7 +790,7 @@ def percentage_scenario_country():
         
 def percentage_model_country_distance():
     for test in [FACT, STANCE]:
-        csv_path = f"{EVALUATIONS_PATH}/percentage/country_model_{test}_distance.csv"
+        csv_path = f"{EVALUATIONS_PATH}/percentage/model_country_distance_{test}.csv"
         if not os.path.exists(csv_path):
             print(f"Missing file: {csv_path}")
             continue
@@ -807,14 +807,16 @@ def percentage_model_country_distance():
         #print(figsize)
         fig, ax = plt.subplots(figsize=figsize)
 
+        # Compute colors from absolute values
+        abs_df = df.abs()         
+    
         sns.heatmap(
-            df,
-            vmin=0,
-            vmax=100,
+            abs_df,
+            annot=df,   
             cmap=CMAP_RG_INVERTED,
             linewidths=0.2,
             linecolor="white",
-            annot=True,
+           # annot=True,
             annot_kws={"fontsize":10},
             fmt='.0f',
             cbar_kws={
