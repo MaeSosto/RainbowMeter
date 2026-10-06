@@ -105,9 +105,9 @@ MODEL_LABEL = {
     QWEN35_2: "Qwen 2B",
     QWEN35_9: "Qwen 9B",
     QWEN35_27: "Qwen 27B",
-    LLAMA32_3: "LlaMA 3B",
-    LLAMA31_8: "LlaMA 8B",
-    LLAMA31_70: "LlaMA 70B",
+    LLAMA32_3: "LLaMA 3B",
+    LLAMA31_8: "LLaMA 8B",
+    LLAMA31_70: "LLaMA 70B",
     DEEPSEEKV32: "DeepSeek",
     SONNET46: "Sonnet",
     DEEPL: "DeepL",
@@ -153,3 +153,15 @@ def get_rainbow_meter_file_default(scenario, language_code, country_id):
         return True,  df
     logger.error(f"⚠️ {result_path+scenario_path} is missing")
     return False, None
+
+def get_languages_list():
+    languages_list = []
+    seen_languages = set()
+
+    for country_name in COUNTRIES_FILE:
+        for lang, code in zip(COUNTRIES_FILE[country_name][LANGUAGES], COUNTRIES_FILE[country_name][LANGUAGES_CODE]):
+            if lang not in seen_languages:
+                languages_list.append({LANGUAGES: lang, LANGUAGES_CODE: code})
+                seen_languages.add(lang)
+    return languages_list
+    

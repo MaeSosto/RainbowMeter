@@ -100,9 +100,7 @@ def model_performances():
                     if existent_rm_df.empty:
                         continue
 
-                    means = existent_rm_df[
-                        list(metrics.values())
-                    ].mean()
+                    means = existent_rm_df[list(metrics.values())].mean()
 
                     # Label according to scenario
                     if scenario == SCENARIO_LANGUAGE:
@@ -361,6 +359,12 @@ def model_country_percentage():
             pivot,
             on="Country",
             how="left"
+        )
+        
+         # Average across model columns only
+        final_table["Average"] = final_table[existing_models].mean(
+            axis=1,
+            skipna=True
         )
 
         # Sort by country name

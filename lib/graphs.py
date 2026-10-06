@@ -5,6 +5,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from os import listdir
 from  matplotlib.colors import LinearSegmentedColormap
+from scipy.stats import spearmanr, pearsonr, shapiro
 
 CMAP_RG=LinearSegmentedColormap.from_list('rg',["r", "y", "g"], N=256) 
 CMAP_RG_INVERTED=LinearSegmentedColormap.from_list('rg',["g", "y", "r"], N=256) 
@@ -604,6 +605,18 @@ def mae_rm_country():
         rainbow = agg["Rainbow Map"]
         mae = agg[f"{test} MAE"]
         
+        #Check if the distributions are normal distributions performing Shapiro-Wilk test
+        stat, p_value = shapiro(rainbow)
+        print(f"Raimbow Map Shapiro-Wilk test Statistic: {stat:.4f} P-value: {p_value:.4f} --> {'The Rainbow Map IS NOT normally distributed' if p_value < 0.05 else 'The Rainbow Map IS normally distributed'}")
+        
+        stat, p_value = shapiro(mae)
+        if p_value < 0.05: #Calculate Spearman between Rainbow Map values and the MAEs
+            rho, p = spearmanr(mae, rainbow)
+            print(f"{test} IS NOT normally distributed --> Spearman rho = {rho:.3f} p = {p:.4f}")
+        else: #Calculate Pearson between Rainbow Map values and the MAEs
+            result = pearsonr(mae, rainbow)
+            print(f"{test} IS normally distributed --> Pearson Correlation: {result.statistic} P-value: {result.pvalue}")
+
         figsize = (16, 4)
         fontsize = 13
         rotation = 35
@@ -956,7 +969,6 @@ back_translation()
 model_performances()
 
 #Generate the Fact and Stance heatmaps of the MAEs errors of all the models   
-#mae_model_country()
 #mae_country_language()
 mae_language_country()
 mae_rm_country()

@@ -8,7 +8,7 @@ from google import genai
 from google.genai import types
 import re
 import deepl
-from transformers import AutoModelForCausalLM, AutoTokenizer, AutoProcessor, AutoModelForImageTextToText, pipeline
+from transformers import AutoTokenizer, AutoProcessor, AutoModelForImageTextToText, pipeline
 from dotenv import load_dotenv
 from anthropic import Anthropic
 from transformers import GenerationConfig
@@ -17,7 +17,7 @@ os.environ["HF_HUB_DISABLE_XET"] = "1"
 os.environ["HF_HUB_ENABLE_HF_TRANSFER"] = "0"
 
 load_dotenv()
-MAX_GENERATION_TOKEN = 10
+MAX_GENERATION_TOKEN = 100
 
 URL_OLLAMA_LOCAL = "http://localhost:11434/api"
 URL_LMSTUDIO_LOCAL = "http://localhost:1234"
@@ -38,7 +38,6 @@ class Model:
             DEEPSEEKV32: self.initialize_DeepSeek,
             SONNET46: self.initialize_Antrophic,
             GPT54: self.initialize_OpenAI, 
-            GPT54_MINI: self.initialize_OpenAI,
             GEMINI3_FLASH: self._initialize_GoogleGenAI,
             DEEPL: self.initialize_Deepl
         }
@@ -53,7 +52,6 @@ class Model:
             DEEPSEEKV32: self.request_OpenAi,
             SONNET46: self.request_Antrophic,
             GPT54: self.request_OpenAi, 
-            GPT54_MINI: self.request_OpenAi,
             GEMINI3_FLASH: self.request_GoogleGenAI
         }
         
@@ -106,17 +104,6 @@ class Model:
             return True
         self.client = OpenAI(api_key=api_key, base_url=URL_DEEPSEEK)
         return False
-
-    def _initialize_Ollama(self):
-        try:
-            response = requests.get(f"{URL_OLLAMA_LOCAL}/tags")
-            if not(response.status_code == 200):
-                logger.error(f"⚠️ Ollama server is not running")
-                return True
-            return False
-        except requests.RequestException:
-            logger.error(f"⚠️ Ollama server is not running")
-            return True
     
     def initialize_HuggingFace(self):
         logger.setLevel(logging.ERROR)
@@ -139,40 +126,6 @@ class Model:
         except Exception as X:
             logger.error(f"⚠️ Hugging Face model {self.model_name} cannot be initialized: {X}")
         return True
-    
-    def request_Ollama(self):
-        try:
-            response = requests.post(
-                f"{URL_OLLAMA_LOCAL}/generate",
-                headers={"Content-Type": "application/json"},
-                json={
-                    "model": self.model_name,
-                    "prompt": self.prompt,
-                    "messages": [{"role": "user", "content": self.prompt}],
-                    "stream": False,
-                    "max_new_tokens": MAX_GENERATION_TOKEN
-                }
-            )
-
-            if response.status_code != 200 or response == None:
-                # data = r.json()
-                # response = data["content"]["error"]
-                logger.error(f"⚠️ Ollama ERROR: {response.reason}")
-                return None
-
-            
-            response = response.json()
-            response = response["response"]
-
-            if response is None or response == "":
-                logger.error("_request_ollama: empty response")
-                return None
-
-            return response
-
-        except Exception as X:
-            logger.error(f"_request_ollama: {X}")
-            return None
     
     def request_GoogleGenAI(self):
         logger.setLevel(logging.ERROR)
@@ -269,36 +222,25 @@ class Model:
                     **inputs,
                     max_new_tokens=MAX_GENERATION_TOKEN,
                     max_length=None,
-                    pad_token_id=self.auto_processor.tokenizer.eos_token_id
+                    eos_token_id=self.auto_processor.tokenizer.eos_token_id
                 )
-                out_ = self.auto_processor.decode(outputs[0][inputs["input_ids"].shape[-1]:])
-                out_ = extract_model_answer(out_)
+                answer = self.auto_processor.decode(outputs[0][inputs["input_ids"].shape[-1]:])
+                answer = extract_model_answer(answer)
             else:
-                
                 generation_config = GenerationConfig(
                     do_sample=True,
                     max_new_tokens=MAX_GENERATION_TOKEN,
                     pad_token_id=self.auto_tokenizer.eos_token_id,
                 )
 
-                out_ = self.pipeline(
+                answer = self.pipeline(
                     self.prompt,
                     generation_config=generation_config,
                 )
-                # out_ = self.pipeline(
-                #     self.prompt,
-                #     do_sample=True,
-                #     max_new_tokens=MAX_GENERATION_TOKEN,
-                #     max_length=None,
-                #     pad_token_id=self.auto_tokenizer.eos_token_id,
-                # )
-
-                out_ = out_[0]["generated_text"]
-                print(f"MODELOUT:{out_}" )
-                out_ = extract_model_answer(out_)
-                print(f"MODELOUT_MOD:{out_}" )
+                answer = answer[0]["generated_text"]
+                answer = extract_model_answer(answer)
                 
-            return out_            
+            return answer            
         except Exception as X:
             logger.error(f"_request_huggingface: {X}")
             return None
@@ -328,3 +270,33 @@ def extract_model_answer(text):
     answer = re.sub(r"<\|.*?\|>", "", answer)
 
     return answer.strip()
+
+
+#Translate the given text in the specified language using DeepL    
+def deepl_translation(model, question, target_lang = "EN-US", source_lang = "EN"):
+    if target_lang == "pt":
+        target_lang = "pt-pt"
+    if target_lang == "en":
+        target_lang = "EN-GB"
+    if question == "":
+        return ""
+    try:
+        result = model.client.translate_text(question, target_lang=target_lang.upper(), source_lang=source_lang.upper())
+        return result.text
+    except Exception as X:
+        logger.error(f"deepl_translation: {X}")
+        return ""
+    
+#Translate the given text in the specified language using the given model
+def model_translation(model, text, language = "English"):
+    prompt = f"""Translate the text between <text> and </text> into {language}. Return ONLY the translation.
+            <text>{text}</text>"""
+    translation = ""
+    try: 
+        while translation == None or translation == "":
+            translation = model.call_model(prompt)
+        return translation
+    except Exception as X:
+        logger.error(f"translate: {X}")
+        return None
+        #return None
