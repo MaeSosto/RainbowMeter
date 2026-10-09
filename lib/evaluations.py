@@ -175,7 +175,6 @@ def general_stats():
             for country_name, country_data in COUNTRIES_FILE.items(): #tqdm.tqdm(
                 country_name = country_name
                 country_id = country_data[ID]
-                citizenship = country_data[CITIZENSHIP]
             
                 #Iterate on every language and citizenship 
                 for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
@@ -227,6 +226,29 @@ def general_stats():
     #Export Results
     results_df = pd.DataFrame(percentage_results)
     results_df.to_csv(f"{EVALUATIONS_PATH}/general_stats.csv", sep=";", index=False)
+
+#Return True if the results exists, otherwise False
+def get_rainbow_meter_file_answers(scenario, model_name, language_code = "", country_id = ""):
+    result_path = f"{RAINBOW_METER}/{scenario}/{model_name}/"
+    if scenario == SCENARIO_LANGUAGE:
+        scenario_path = f"rm_answers_{language_code}.csv"
+    elif scenario == SCENARIO_COUNTRY:
+        scenario_path = f"rm_answers_{country_id}.csv"
+    else:
+        scenario_path = f"rm_answers_{language_code}_{country_id}.csv"
+    if os.path.exists(result_path+scenario_path):
+        
+        df = pd.read_csv(result_path+scenario_path, sep=";", index_col=CRITERION_ID)
+        if df.empty:
+            logger.error(f"The rainbow meter {result_path+scenario_path} is empty")
+            return pd.DataFrame()
+        if df.shape[0] == TOT_CRITERIA_NUM:
+            return df
+        else:
+            logger.error(f"⚠️ {result_path+scenario_path} is incomplete")
+    else:
+        logger.error(f"⚠️ {result_path+scenario_path} is missing")
+    return pd.DataFrame()
 
 # Create summary tables for Fact and Stance
 def models_mae():

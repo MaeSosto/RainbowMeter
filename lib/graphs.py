@@ -6,8 +6,11 @@ import matplotlib.pyplot as plt
 from os import listdir
 from  matplotlib.colors import LinearSegmentedColormap
 from scipy.stats import spearmanr, pearsonr, shapiro
+import matplotlib.colors as mcolors
+from matplotlib.colors import LinearSegmentedColormap
 
 CMAP_RG=LinearSegmentedColormap.from_list('rg',["r", "y", "g"], N=256) 
+CMAP_RG_WHITE = LinearSegmentedColormap.from_list("red_white_green",["red", "white", "green"])
 CMAP_RG_INVERTED=LinearSegmentedColormap.from_list('rg',["g", "y", "r"], N=256) 
 
 EVALUATIONS_PATH = "evaluations"
@@ -820,32 +823,24 @@ def percentage_model_country_distance():
         #print(figsize)
         fig, ax = plt.subplots(figsize=figsize)
 
-        # Compute colors from absolute values
-        abs_df = df.abs()         
-    
         sns.heatmap(
-            abs_df,
-            annot=df,   
-            cmap=CMAP_RG_INVERTED,
+            df,
+            annot=df,
+            cmap=CMAP_RG_WHITE,
+            vmin=-100,
+            vmax=100,
+            center=0,
             linewidths=0.2,
             linecolor="white",
-           # annot=True,
-            annot_kws={"fontsize":10},
-            fmt='.0f',
+            annot_kws={"fontsize": 10},
+            fmt=".0f",
             cbar_kws={
-                #"shrink": 0.8,
-                "aspect": 40,      # larger → thinner
-                "fraction": 0.03,  # width of colorbar
+                "aspect": 40,
+                "fraction": 0.03,
                 "pad": 0.01
             },
-        ax=ax
+            ax=ax
         )
-        
-        # ylabel, xlabel = "Models", "Countries"
-        
-        # ax.set_xlabel(xlabel, fontsize=fontsize)
-        # ax.set_ylabel(ylabel, fontsize=fontsize)
-
         
         # Bigger labels
         ax.set_xticklabels(

@@ -10,88 +10,58 @@ COH_VAL_SCORE = "Weight coherence by validity"
 class Rainbow_Meter:
     #Return True if the Rainbow map is complete, otherwise return False (and therefore needs to be calculated)
     def __init__(self, model_name):
-        self.model = Model(model_name)
-        error = self.model.initialize_model()
-        if error: #If there are no errors in initializing the model
-            logger.info("Error initializing the model")
-            return None
+        self.model_name = model_name
         
         #Iterate on the scenario
         for scenario in SCENARIOS:
             self.scenario = scenario
-            logger.info(f"############ {self.model.model_name} - {scenario} ############")
             
             #Iterate on every country
             for country_name, country_data in COUNTRIES_FILE.items(): # tqdm.tqdm(
-            #         COUNTRIES_FILE.items(),
-            #         total=len(COUNTRIES_FILE),
-            #         desc=f"🔄 {self.model.model_name} - {self.scenario}"
-            #     ):
                 self.country_name = country_name
                 self.country_id = country_data[ID]
-                self.citizenship = country_data[CITIZENSHIP]
             
                 #Iterate on every language and citizenship 
                 for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
                     self.language = COUNTRIES_FILE[country_name][LANGUAGES][country_identity_num]
                     self.language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num]
                     
-                    rainbow_meter = {
-                            CRITERION_ID: [],
-                            FACT: [], 
-                            SUPPORT: [], 
-                            OPPOSITION: [],
-                            f"{STANCE}" : [],
-                            f"{FACT} {COHERENCE}" : [],
-                            f"{FACT} {VALIDITY}" : [],
-                            f"{FACT} {COH_VAL_SCORE}" : [],
-                            f"{STANCE} {COHERENCE}" : [],
-                            f"{STANCE} {VALIDITY}" : [],
-                            f"{STANCE} {COH_VAL_SCORE}"  : [],
-                        }
-                    
-                    #Retrieve the Rainbow Meter of a specific language (if exist)
-                    #if self.scenario == SCENARIO_LANGUAGE:
-                    rm_language_exist, complete_rm_language = get_rainbow_meter_file_default(
-                        scenario = self.scenario, 
-                        language_code = self.language_code, 
-                        country_id = self.country_id
-                    )
-                    if not rm_language_exist: #If the Rainbow Meter questionnaire in doesn't exist in that language than we cannot compare the results
+                    #Retrieve the Rainbow Meter questions of a specific language and scenario
+                    rainbow_meter_questions = self.get_raimbow_meter_questions()
+                    if rainbow_meter_questions.empty: #If the Rainbow Meter questionnaire in doesn't exist in that language than we cannot compare the results
+                        logger.error(f"⚠️ The Rainbow Meter questions file {language} doesn't exist")
                         continue
                     
-                    rm_existent = get_rainbow_meter_file_answers(
-                        scenario = self.scenario,
-                        model_name= self.model.model_name,
-                        language_code = self.language_code,
-                        country_id = self.country_id
-                    )
-                    num_answers = len(rm_existent) #Number of lines in the existent rainbow meter file
+                    rainbow_meter, num_answers = self.get_rainbow_meter_file_answers()
                     if num_answers == TOT_CRITERIA_NUM:
-                        #logger.info(f"- {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_country else f'{self.country_id} in {self.language_code}'}")
                         continue
-                    rainbow_meter = self.fill_in_rm(rainbow_meter, rm_existent)
-                    for idx, row in tqdm.tqdm(complete_rm_language[num_answers:].iterrows(), 
-                                                    total=len(complete_rm_language[num_answers:]), 
-                                                    desc=f"🔄 {self.model.model_name} - {self.scenario} : {language if self.scenario == SCENARIO_LANGUAGE else self.country_id if self.scenario == SCENARIO_COUNTRY else f'{self.country_id} in {self.language_code}'}",
-                                                    leave= False
+                    
+                    #Initialize the model
+                    self.model = Model(model_name)
+                    error = self.model.initialize_model()
+                    if error: #If there are no errors in initializing the model
+                        logger.error("Error initializing the model")
+                        return None
+                    logger.info(f"############ {self.model_name} - {scenario} ############")
+                    
+                    for idx, row in tqdm.tqdm(rainbow_meter_questions[num_answers:].iterrows(), 
+                                            total=TOT_CRITERIA_NUM-num_answers, 
+                                            desc=f"🔄 {self.model_name} - {self.scenario} : {f'{language} ({self.language_code})' if self.scenario == SCENARIO_LANGUAGE else f'{self.country_name} ({self.country_id})' if self.scenario == SCENARIO_COUNTRY else f'{self.country_name} in {self.language} ({self.language_code}_{self.country_id})'}",
+                                            leave= False
                                             ):
-                        rainbow_meter[CRITERION_ID].append(idx)
+                        rainbow_meter[CRITERION_ID].append(int(idx))
                         
                         for question_type in QUESTION_TYPES:
                             full_prompt, possible_binary_answers = self.get_prompt(row[question_type])
-                            print(f"FULLPROMPT: {full_prompt} - {possible_binary_answers}")
                             # Generate answers
                             question_responses = []
                             while len(question_responses) < MAX_NUM_ANSWERS:
                                 resp = self.model.call_model(full_prompt)
-                                print(f"RESP: {resp}")
                                 
                                 if resp == None or resp == "":
                                     continue
                                 
                                 resp_ = self.get_binary_answer(resp, possible_binary_answers)
-                                print(f"FINAL: {resp_}")
                                 question_responses.append(resp_)
 
                             rainbow_meter[question_type].append(self.combine_binary_answers(question_responses))
@@ -109,38 +79,59 @@ class Rainbow_Meter:
                         #Export Rainbow Meter
                         rainbow_meter_df = pd.DataFrame(rainbow_meter)
                         self.export_rm_result(rainbow_meter_df)
-        logger.info(f"✅ {self.model.model_name} anwer generations completed!")
+        logger.info(f"✅ {self.model_name} answer generations completed!")
     
-    #Return True if the results exists, otherwise False
-    def rm_result_exist(self):
-        result_path = f"{RAINBOW_METER}/{self.scenario}/{self.model.model_name}/"
+    #Get the Rainbow Meter file based on the scenario
+    def get_raimbow_meter_questions(self):
+        result_path = f"{RAINBOW_METER_DATA_PATH}/{self.scenario}/"
         if self.scenario == SCENARIO_LANGUAGE:
-            scenario_path = f"rm_answers_{self.language_code}.csv"
+            scenario_path = f"rainbow_meter_{self.language_code}.csv"
         elif self.scenario == SCENARIO_COUNTRY:
-            scenario_path = f"rm_answers_{self.country_id}.csv"
+            scenario_path = f"rainbow_meter_{self.country_id}.csv"
         else:
-            scenario_path = f"rm_answers_{self.language_code}_{self.country_id}.csv"
-        return os.path.exists(result_path+scenario_path), result_path+scenario_path #If a rainbow meter with the looked characteristics exist
-    
-    
-    #Export and save the Rainbow Meter
-    def export_rm_result(self, rainbow_meter):
-        result_path = f"{RAINBOW_METER}/{self.scenario}/{self.model.model_name}/"
-        if self.scenario == SCENARIO_LANGUAGE:
-            scenario_path = f"rm_answers_{self.language_code}.csv"
-        elif self.scenario == SCENARIO_COUNTRY:
-            scenario_path = f"rm_answers_{self.country_id}.csv"
-        else:
-            scenario_path = f"rm_answers_{self.language_code}_{self.country_id}.csv"
-        os.makedirs(result_path, exist_ok=True)
-        rainbow_meter.to_csv(result_path+scenario_path, sep=";", index=False)
+            scenario_path = f"rainbow_meter_{self.language_code}_{self.country_id}.csv"
+        if os.path.exists(result_path+ scenario_path): #If exist
+            df = pd.read_csv(result_path+scenario_path, sep=";")
+            #print(f"read: {result_path+ scenario_path}")
+            return df
+        logger.error(f"⚠️ The Rainbow Meter questions file {result_path+scenario_path} is missing")
+        return pd.DataFrame()
 
-    def fill_in_rm(self, rainbow_meter, df):
-        #If a RM exist starts from there
-        if df.shape[0] < TOT_CRITERIA_NUM: #The RM exist but it's incomplete
-            #If the csv contains answers already, then fill it up until there and continue from there
-            for _, row in df[:df.shape[0]].iterrows():
-                rainbow_meter[CRITERION_ID].append(row[CRITERION_ID])
+    #Return True if the results exists, otherwise False
+    def get_rainbow_meter_file_answers(self):
+        rainbow_meter = {
+            CRITERION_ID: [],
+            FACT: [], 
+            SUPPORT: [], 
+            OPPOSITION: [],
+            f"{STANCE}" : [],
+            f"{FACT} {COHERENCE}" : [],
+            f"{FACT} {VALIDITY}" : [],
+            f"{FACT} {COH_VAL_SCORE}" : [],
+            f"{STANCE} {COHERENCE}" : [],
+            f"{STANCE} {VALIDITY}" : [],
+            f"{STANCE} {COH_VAL_SCORE}"  : [],
+        }
+        
+        result_path = f"{RAINBOW_METER}/{self.scenario}/{self.model_name}/"
+        if self.scenario == SCENARIO_LANGUAGE:
+            scenario_path = f"rm_answers_{self.language_code}.csv"
+        elif self.scenario == SCENARIO_COUNTRY:
+            scenario_path = f"rm_answers_{self.country_id}.csv"
+        else:
+            scenario_path = f"rm_answers_{self.language_code}_{self.country_id}.csv"
+        
+        if os.path.exists(result_path+scenario_path):
+            df = pd.read_csv(result_path+scenario_path, sep=";")#, index_col=CRITERION_ID)
+            if df.shape[0] == TOT_CRITERIA_NUM: #Return the pd with all the answers
+                logger.info(f"{result_path+scenario_path} complete")
+                return rainbow_meter, df.shape[0]
+            if df.empty: #There is no file with no answers
+                logger.info(f"The Rainbow Meter answers file {result_path+scenario_path} is empty")
+                return rainbow_meter, 0
+            #The RM exist but it's incomplete, then fill it up until there and continue from there
+            for _, row in df.iterrows():
+                rainbow_meter[CRITERION_ID].append(int(row[CRITERION_ID]))
                 rainbow_meter[FACT].append(row[FACT])
                 rainbow_meter[SUPPORT].append(row[SUPPORT])
                 rainbow_meter[OPPOSITION].append(row[OPPOSITION])
@@ -151,8 +142,30 @@ class Rainbow_Meter:
                 rainbow_meter[f"{STANCE} {COHERENCE}"].append(row[f"{STANCE} {COHERENCE}"])
                 rainbow_meter[f"{STANCE} {VALIDITY}"].append(row[f"{STANCE} {VALIDITY}"])
                 rainbow_meter[f"{STANCE} {COH_VAL_SCORE}"].append(row[f"{STANCE} {COH_VAL_SCORE}"])
-        return rainbow_meter
+            return rainbow_meter, df.shape[0]
 
+    #Return True if the results exists, otherwise False
+    def rm_result_exist(self):
+        result_path = f"{RAINBOW_METER}/{self.scenario}/{self.model_name}/"
+        if self.scenario == SCENARIO_LANGUAGE:
+            scenario_path = f"rm_answers_{self.language_code}.csv"
+        elif self.scenario == SCENARIO_COUNTRY:
+            scenario_path = f"rm_answers_{self.country_id}.csv"
+        else:
+            scenario_path = f"rm_answers_{self.language_code}_{self.country_id}.csv"
+        return os.path.exists(result_path+scenario_path), result_path+scenario_path #If a rainbow meter with the looked characteristics exist
+    
+    #Export and save the Rainbow Meter
+    def export_rm_result(self, rainbow_meter):
+        result_path = f"{RAINBOW_METER}/{self.scenario}/{self.model_name}/"
+        if self.scenario == SCENARIO_LANGUAGE:
+            scenario_path = f"rm_answers_{self.language_code}.csv"
+        elif self.scenario == SCENARIO_COUNTRY:
+            scenario_path = f"rm_answers_{self.country_id}.csv"
+        else:
+            scenario_path = f"rm_answers_{self.language_code}_{self.country_id}.csv"
+        os.makedirs(result_path, exist_ok=True)
+        rainbow_meter.to_csv(result_path+scenario_path, sep=";", index=False)
 
     #Return yes/no/unsure/undefined based on the answer
     def get_binary_answer(self, response, answ_options):
@@ -207,6 +220,7 @@ def model_scores(answers):
     
 
 #the results are in the results/rainbow_meter folder
-model_name = GEMINI3_FLASH
-rainbow_meter = Rainbow_Meter(model_name)
+model_list = [QWEN35_2, QWEN35_9, QWEN35_27, LLAMA32_3, DEEPSEEKV32, SONNET46, GPT54, GEMINI3_FLASH]
+for model in model_list:
+    rainbow_meter = Rainbow_Meter(model)
 

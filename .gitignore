@@ -5,3 +5,5 @@ __pycache__/
 .python-version
 slurmout/
 run.sh
+prompting_8.py
+prompting_70.py

@@ -50,7 +50,6 @@ NAME = "name"
 ID = "country_id"
 LANGUAGES = "languages"
 LANGUAGES_CODE = "languages_code"
-CITIZENSHIP = "citizenships"
 
 #Rainbow Meter
 FACT = "Fact"
@@ -114,45 +113,6 @@ MODEL_LABEL = {
     GPT54 : 'GPT',
     GEMINI3_FLASH: 'Gemini'
 }
-
-#Return True if the results exists, otherwise False
-def get_rainbow_meter_file_answers(scenario, model_name, language_code = "", country_id = ""):
-    result_path = f"{RAINBOW_METER}/{scenario}/{model_name}/"
-    if scenario == SCENARIO_LANGUAGE:
-        scenario_path = f"rm_answers_{language_code}.csv"
-    elif scenario == SCENARIO_COUNTRY:
-        scenario_path = f"rm_answers_{country_id}.csv"
-    else:
-        scenario_path = f"rm_answers_{language_code}_{country_id}.csv"
-    if os.path.exists(result_path+scenario_path):
-        
-        df = pd.read_csv(result_path+scenario_path, sep=";", index_col=CRITERION_ID)
-        if df.empty:
-            logger.error(f"The rainbow meter {result_path+scenario_path} is empty")
-            return pd.DataFrame()
-        if df.shape[0] == TOT_CRITERIA_NUM:
-            return df
-        else:
-            logger.error(f"⚠️ {result_path+scenario_path} is incomplete")
-    else:
-        logger.error(f"⚠️ {result_path+scenario_path} is missing")
-    return pd.DataFrame()
-
-#Get the Rainbow Meter file based on the scenario
-def get_rainbow_meter_file_default(scenario, language_code, country_id):
-    result_path = f"{RAINBOW_METER_DATA_PATH}/{scenario}/"
-    if scenario == SCENARIO_LANGUAGE:
-        scenario_path = f"rainbow_meter_{language_code}.csv"
-    elif scenario == SCENARIO_COUNTRY:
-        scenario_path = f"rainbow_meter_{country_id}.csv"
-    else:
-        scenario_path = f"rainbow_meter_{language_code}_{country_id}.csv"
-    if os.path.exists(result_path+ scenario_path): #If exist
-        df = pd.read_csv(result_path+scenario_path, sep=";")
-        print(f"read: {result_path+ scenario_path}")
-        return True,  df
-    logger.error(f"⚠️ {result_path+scenario_path} is missing")
-    return False, None
 
 def get_languages_list():
     languages_list = []
