@@ -602,6 +602,7 @@ def mae_rm_country():
             "Rainbow Map": "mean",
             f"{test} MAE": "mean",
             test: "mean"
+
         }).reset_index()
 
         agg = agg.sort_values("Rainbow Map")
@@ -611,6 +612,7 @@ def mae_rm_country():
         rainbow_meter_scores = agg[test]
         
         print(f"############################# {test} Statistics #############################")
+        
         #Check if the distributions are normal distributions performing Shapiro-Wilk test
         stat, p_value = shapiro(rainbow)
         print(f"Raimbow Map Shapiro-Wilk test Statistic: {stat:.4f} P-value: {p_value:.4f} --> {'The Rainbow Map IS NOT normally distributed' if p_value < 0.05 else 'The Rainbow Map IS normally distributed'}")
@@ -623,16 +625,15 @@ def mae_rm_country():
             result = pearsonr(mae, rainbow)
             print(f"{test} MAE IS normally distributed --> Pearson Correlation: {result.statistic} P-value: {result.pvalue}")
 
-        stat, p_value = shapiro(rainbow_meter_scores)
-        if p_value < 0.05: #Calculate Spearman between Rainbow Map values and the MAEs
-            rho, p = spearmanr(rainbow_meter_scores, rainbow)
-            print(f"{test} Rainbow Meter Scores ARE NOT normally distributed --> Spearman rho = {rho:.3f} p = {p:.4f}")
-        else: #Calculate Pearson between Rainbow Map values and the MAEs
-            result = pearsonr(rainbow_meter_scores, rainbow)
-            print(f"{test} Rainbow Meter Scores ARE normally distributed --> Pearson Correlation: {result.statistic} P-value: {result.pvalue}")
+            stat, p_value = shapiro(rainbow_meter_scores)
+            if p_value < 0.05: #Calculate Spearman between Rainbow Map values and the MAEs
+                rho, p = spearmanr(rainbow_meter_scores, rainbow)
+                print(f"{test} Rainbow Meter Scores ARE NOT normally distributed --> Spearman rho = {rho:.3f} p = {p:.4f}")
+            else: #Calculate Pearson between Rainbow Map values and the MAEs
+                result = pearsonr(rainbow_meter_scores, rainbow)
+                print(f"{test} Rainbow Meter Scores ARE normally distributed --> Pearson Correlation: {result.statistic} P-value: {result.pvalue}")
 
-        print(f"######################################################################")
-        
+            print(f"######################################################################")
         figsize = (16, 4)
         fontsize = 13
         rotation = 35
@@ -974,17 +975,17 @@ def mae_language_country():
 back_translation()
 
 #Weight coherence by validity scores
-# model_performances()
+model_performances()
 
-# #Generate the Fact and Stance heatmaps of the MAEs errors of all the models   
-# #mae_country_language()
-# mae_language_country()
-# mae_rm_country()
-# mae_scenario_country()
+#Generate the Fact and Stance heatmaps of the MAEs errors of all the models   
+#mae_country_language()
+mae_language_country()
+mae_rm_country()
+mae_scenario_country()
 
-# #Generate a lineplots of the percentage errors accross scenarios and countries
-# percentage_scenario_country()
-# percentage_model_country_distance()
+#Generate a lineplots of the percentage errors accross scenarios and countries
+percentage_scenario_country()
+percentage_model_country_distance()
 
 
 print(f"✅ Graphs Generated")
