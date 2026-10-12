@@ -124,7 +124,7 @@ class Rainbow_Meter:
         if os.path.exists(result_path+scenario_path):
             df = pd.read_csv(result_path+scenario_path, sep=";")#, index_col=CRITERION_ID)
             if df.shape[0] == TOT_CRITERIA_NUM: #Return the pd with all the answers
-                logger.info(f"{result_path+scenario_path} complete")
+                #logger.info(f"{result_path+scenario_path} complete")
                 return rainbow_meter, df.shape[0]
             if df.empty: #There is no file with no answers
                 logger.info(f"The Rainbow Meter answers file {result_path+scenario_path} is empty")
@@ -220,7 +220,7 @@ def model_scores(answers):
     
 
 #the results are in the results/rainbow_meter folder
-model_list = [QWEN35_2, QWEN35_9, QWEN35_27, LLAMA32_3, DEEPSEEKV32, SONNET46, GPT54, GEMINI3_FLASH]
+model_list = MODEL_LIST
 for model in model_list:
     rainbow_meter = Rainbow_Meter(model)
 
