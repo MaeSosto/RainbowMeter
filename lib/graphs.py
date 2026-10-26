@@ -1,38 +1,31 @@
-from constants import *
+from lib.constants import *
+from scipy.stats import spearmanr, pearsonr, shapiro
 import pandas as pd
-import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-from os import listdir
 from  matplotlib.colors import LinearSegmentedColormap
-from scipy.stats import spearmanr, pearsonr, shapiro
-import matplotlib.colors as mcolors
 from matplotlib.colors import LinearSegmentedColormap
 
 CMAP_RG=LinearSegmentedColormap.from_list('rg',["r", "y", "g"], N=256) 
 CMAP_RG_WHITE = LinearSegmentedColormap.from_list("red_white_green",["red", "white", "green"])
 CMAP_RG_INVERTED=LinearSegmentedColormap.from_list('rg',["g", "y", "r"], N=256) 
 
-EVALUATIONS_PATH = "evaluations"
-MODEL_PERFORMANCES_PATH = "model_performances"
-MAE = "MAE"
-PERCENTAGE = "percentage"
-GRAPHS_PATH = "graphs"
+
 os.makedirs(GRAPHS_PATH, exist_ok=True)
 MAE_PATH =f"{GRAPHS_PATH}/{MAE}/"
 os.makedirs(MAE_PATH, exist_ok=True)
 PERCENTAGE_PATH = f"{GRAPHS_PATH}/{PERCENTAGE}/" 
 os.makedirs(PERCENTAGE_PATH, exist_ok=True)
 for s in SCENARIOS:
-    os.makedirs(f"{GRAPHS_PATH}/{MODEL_PERFORMANCES_PATH}/{s}", exist_ok=True)
+    os.makedirs(f"{GRAPHS_PATH}/{COH_VAL}/{s}", exist_ok=True)
 
 #Generate back translation dataframe and heatmap
 def back_translation():
     df = pd.read_csv(f"data/back_translation.csv", sep=";", index_col="model")
 
     # Remove avg_score if present
-    if "avg_score" in df.columns:
-        df = df.drop(columns=["avg_score"])
+    if AVG in df.columns:
+        df = df.drop(columns=[AVG])
 
     # Convert to numeric (in case some values are read as strings)
     df = df.apply(pd.to_numeric, errors="coerce")
@@ -60,10 +53,10 @@ def back_translation():
             },
     )
 
-    # plt.xlabel("Language")
-    # plt.ylabel("Model")
+    # plt.xlabel(LANGUAGE)
+    # plt.ylabel("model")
     plt.ylabel(None)
-    #plt.title("Models Performance in Back Translation Test")
+    #plt.title("models Performance in Back Translation Test")
     plt.yticks(rotation=rotation, fontsize=fontsize, ha='right', va='center', rotation_mode='anchor')
     plt.xticks(rotation=rotation, ha='right', fontsize=fontsize)
     plt.tight_layout()
@@ -156,18 +149,18 @@ def generate_heatmap(
 def model_performances():
 
     metrics = {
-        "fact_coh": "Fact Coherence",
-        "fact_val": "Fact Validity",
-        "fact_coh_val": "Fact Weight coherence by validity",
-        "stance_coh": "Stance Coherence",
-        "stance_val": "Stance Validity",
-        "stance_coh_val": "Stance Weight coherence by validity",
+        "fact_coh": f"Fact {COH}",
+        "fact_val": f"Fact {VAL}",
+        "fact_coh_val": f"Fact {COH_VAL}",
+        "stance_coh": f"Stance {COH}",
+        "stance_val": f"Stance {VAL}",
+        "stance_coh_val": f"Stance {COH_VAL}",
     }
 
     for scenario in SCENARIOS:
         for m, title in metrics.items():
 
-            file_path = (f"{EVALUATIONS_PATH}/{MODEL_PERFORMANCES_PATH}/{scenario}/{m}.csv")
+            file_path = (f"{EVALUATIONS_PATH}/{COH_VAL}/{scenario}/{m}.csv")
             if not os.path.exists(file_path):
                 continue
 
@@ -176,18 +169,18 @@ def model_performances():
 
             # Convert only data columns to numeric
             df_metric = df_metric.apply(pd.to_numeric, errors="coerce")
-            avg_col = f"{title.split(' ')[0]} Average"
+            avg_col = f"{title.split(' ')[0]} {AVG}"
             if avg_col in df_metric.columns:
                 df_metric = df_metric.drop(columns=[avg_col])
                 
             # Sort only languages
             df_metric = df_metric.sort_index(axis=1)
 
-            #xlabel = "Language" if scenario == SCENARIO_LANGUAGE else "Country" if scenario == SCENARIO_COUNTRY else "Lanaguage - Country" 
+            #xlabel = LANGUAGE if scenario == SCENARIO_LANGUAGE else COUNTRY if scenario == SCENARIO_COUNTRY else "Lanaguage - country" 
             
             generate_heatmap(
                 df=df_metric,
-                savefig=f"{GRAPHS_PATH}/{MODEL_PERFORMANCES_PATH}/{scenario}/{m}.png",
+                savefig=f"{GRAPHS_PATH}/{COH_VAL}/{scenario}/{m}.png",
                 #transpose=True,
                 annot=False
             )
@@ -210,39 +203,39 @@ def mae_model_country():
             df = df_scenario[df_scenario[SCENARIO] == scenario].copy()
 
             # Define x-axis labels depending on scenario
-            if scenario == SCENARIO_LANGUAGE:
-                df["x_label"] = df["languages"].astype(str)
+            if scenario == LAN_SCENARIO:
+                df["x_label"] = df[LANGUAGE].astype(str)
 
-            elif scenario == SCENARIO_COUNTRY:
-                df["x_label"] = df["Country"].astype(str)
+            elif scenario == COU_SCEANRIO:
+                df["x_label"] = df[COUNTRY].astype(str)
 
-            elif scenario == SCENARIO_LAN_NAT:
-                df["x_label"] = (df["languages"].astype(str)+ " | "+ df["Country"].astype(str))
+            elif scenario == LAN_COU_SCENARIO:
+                df["x_label"] = (df[LANGUAGE].astype(str)+ " | "+ df[COUNTRY].astype(str))
 
             # Aggregate mean MAE
-            df = (df.groupby(["Model", "x_label"], as_index=False)[f"{test} MAE"].mean())
+            df = (df.groupby([MODEL, "x_label"], as_index=False)[f"{test} MAE"].mean())
 
             # Rename models
-            df["Model"] = df["Model"].astype(str).map(MODEL_LABEL)
+            df[MODEL] = df[MODEL].astype(str).map(MODEL_LABEL)
 
             ordered_labels = [
                 MODEL_LABEL.get(model, model)
                 for model in MODEL_LIST
             ]
 
-            df["Model"] = pd.Categorical(
-                df["Model"],
+            df[MODEL] = pd.Categorical(
+                df[MODEL],
                 categories=ordered_labels,
                 ordered=True,
             )
 
-            df = df.sort_values(["Model", "x_label"])
+            df = df.sort_values([MODEL, "x_label"])
 
             # Pivot table
             pivot = df.pivot_table(
-                index="Model",
+                index=MODEL,
                 columns="x_label",
-                values=f"{test} MAE",
+                values=f"{test} {MAE}",
                 observed=False
             )
 
@@ -259,14 +252,14 @@ def mae_model_country():
             )
 
             plt.xlabel(
-                "Language"
-                if scenario == SCENARIO_LANGUAGE
-                else "Country"
-                if scenario == SCENARIO_COUNTRY
-                else "Language | Country"
+                LANGUAGE
+                if scenario == LAN_SCENARIO
+                else COUNTRY
+                if scenario == COU_SCEANRIO
+                else "language | country"
             )
 
-            plt.ylabel("Model")
+            plt.ylabel(MODEL)
             #plt.title(f"{test} MAE Heatmap")
             plt.xticks(rotation=40, ha="right", fontsize=14)
             plt.yticks(fontsize=14)
@@ -297,25 +290,25 @@ def mae_model_country():
 #             df[
 #                 df[language_col].notna()
 #             ][
-#                 ["language", language_col]
+#                 [LANGUAGE, language_col]
 #             ]
 #             .copy()
 #             .rename(columns={
-#                 "language": "Language",
+#                 LANGUAGE: LANGUAGE,
 #                 language_col: "Value"
 #             })
 #         )
 
-#         # Country scenario rows
+#         # country scenario rows
 #         country_rows = (
 #             df[
 #                 df[country_col].notna()
 #             ][
-#                 ["country", country_col]
+#                 [COUNTRY, country_col]
 #             ]
 #             .copy()
 #             .rename(columns={
-#                 "country": "Country",
+#                 COUNTRY: COUNTRY,
 #                 country_col: "Value"
 #             })
 #         )
@@ -326,22 +319,22 @@ def mae_model_country():
 #                 df[lang_nat_col].notna()
 #             ][
 #                 [
-#                     "language",
-#                     "country",
+#                     LANGUAGE,
+#                     COUNTRY,
 #                     lang_nat_col
 #                 ]
 #             ]
 #             .copy()
 #             .rename(columns={
-#                 "language": "Language",
-#                 "country": "Country",
+#                 LANGUAGE: LANGUAGE,
+#                 COUNTRY: COUNTRY,
 #                 lang_nat_col: "Value"
 #             })
 #         )
 
 #         # Unique labels
-#         languages = sorted(set(language_rows["Language"].dropna())|set(lang_country_rows["Language"].dropna()))
-#         countries = sorted(set(country_rows["Country"].dropna())|set(lang_country_rows["Country"].dropna()))
+#         languages = sorted(set(language_rows[LANGUAGE].dropna())|set(lang_country_rows[LANGUAGE].dropna()))
+#         countries = sorted(set(country_rows[COUNTRY].dropna())|set(lang_country_rows[COUNTRY].dropna()))
 #         aggregate_row = ("English")#SCENARIO_LABELS[SCENARIO_COUNTRY])
 #         aggregate_col = ("English") #SCENARIO_LABELS[SCENARIO_LANGUAGE])
 #         full_rows = (languages + [aggregate_row])
@@ -351,15 +344,15 @@ def mae_model_country():
 
 #         # Fill language averages
 #         for _, row in language_rows.iterrows():
-#             matrix.loc[row["Language"], aggregate_col] = row["Value"]
+#             matrix.loc[row[LANGUAGE], aggregate_col] = row["Value"]
 
 #         # Fill country averages
 #         for _, row in country_rows.iterrows():
-#             matrix.loc[aggregate_row, row["Country"]] = row["Value"]
+#             matrix.loc[aggregate_row, row[COUNTRY]] = row["Value"]
 
 #         # Fill language-country values
 #         for _, row in lang_country_rows.iterrows():
-#             matrix.loc[row["Language"], row["Country"]] = row["Value"]
+#             matrix.loc[row[LANGUAGE], row[COUNTRY]] = row["Value"]
 
 #         # Row ordering
 #         row_scores = []
@@ -489,59 +482,59 @@ def mae_scenario_country():
     df = pd.read_csv(csv_path, sep=";")
 
     for test in [FACT, STANCE]:
-        language_col = (f"language_scenario_{test}_MAE")
-        country_col = (f"country_scenario_{test}_MAE")
-        lang_country_col = (f"language_country_scenario_{test}_MAE")
+        language_col = (f"lan_{test}_MAE")
+        country_col = (f"cou_{test}_MAE")
+        lang_country_col = (f"lan_cou_{test}_MAE")
 
         # LANGUAGE → aggregate to country axis
         language_df = (
             df[df[language_col].notna()]
-            [["country", language_col]]
+            [[COUNTRY, language_col]]
             .copy()
-            .groupby("country", as_index=False)
+            .groupby(COUNTRY, as_index=False)
             .mean()
             .rename(columns={
-                "country": "Country",
-                language_col: "language_scenario_mae"
+                COUNTRY: COUNTRY,
+                language_col: "lan_mae"
             })
         )
 
         # COUNTRY scenario (already country-level)
         country_df = (
             df[df[country_col].notna()]
-            [["country", country_col]]
+            [[COUNTRY, country_col]]
             .drop_duplicates()
             .rename(columns={
-                "country": "Country",
-                country_col: "country_scenario_mae"
+                COUNTRY: COUNTRY,
+                country_col: "cou_mae"
             })
         )
 
         # LANGUAGE-COUNTRY scenario
         lang_country_df = (
             df[df[lang_country_col].notna()]
-            [["country", lang_country_col]]
+            [[COUNTRY, lang_country_col]]
             .rename(columns={
-                "country": "Country",
-                lang_country_col: "language_country_scenario_mae"
+                COUNTRY: COUNTRY,
+                lang_country_col: "lan_cou_mae"
             })
         )
 
         # Merge on country only
         merged = country_df.merge(
             language_df,
-            on="Country",
+            on=COUNTRY,
             how="outer"
         )
 
         merged = merged.merge(
             lang_country_df,
-            on="Country",
+            on=COUNTRY,
             how="outer"
         )
 
         # Sort by country scenario
-        merged = merged.sort_values("Country")
+        merged = merged.sort_values(COUNTRY)
 
         # Plot
         figsize = (16, 4)
@@ -550,29 +543,29 @@ def mae_scenario_country():
         
         sns.lineplot(
             data=merged,
-            x="Country",
-            y="language_scenario_mae",
+            x=COUNTRY,
+            y="lan_mae",
             marker="o",
-            label=SCENARIO_LABELS[SCENARIO_LANGUAGE],
+            label=SCENARIO_LABELS[LAN_SCENARIO],
         )
 
         sns.lineplot(
             data=merged,
-            x="Country",
-            y="country_scenario_mae",
+            x=COUNTRY,
+            y="cou_mae",
             marker="o",
-            label=SCENARIO_LABELS[SCENARIO_COUNTRY],
+            label=SCENARIO_LABELS[COU_SCEANRIO],
         )
 
         sns.lineplot(
             data=merged,
-            x="Country",
-            y="language_country_scenario_mae",
+            x=COUNTRY,
+            y="lan_cou_mae",
             marker="o",
-            label=SCENARIO_LABELS[SCENARIO_LAN_NAT],
+            label=SCENARIO_LABELS[LAN_COU_SCENARIO],
         )
 
-        #plt.xlabel("Country")
+        #plt.xlabel(COUNTRY)
         plt.margins(x=0.01) # Remove left/right spacing on x-axis
         #plt.ylim(0, 1)
         plt.xlabel(None)
@@ -598,7 +591,7 @@ def mae_rm_country():
 
     for test in [FACT, STANCE]:
         # Aggregate by country (important if multiple rows per country)
-        agg = df.groupby("Country").agg({
+        agg = df.groupby(COUNTRY).agg({
             "Rainbow Map": "mean",
             f"{test} MAE": "mean",
             test: "mean"
@@ -606,7 +599,7 @@ def mae_rm_country():
         }).reset_index()
 
         agg = agg.sort_values("Rainbow Map")
-        countries = agg["Country"]
+        countries = agg[COUNTRY]
         rainbow = agg["Rainbow Map"]
         mae = agg[f"{test} MAE"]
         rainbow_meter_scores = agg[test]
@@ -676,55 +669,55 @@ def percentage_scenario_country():
         per_col = test
 
         df_language = df_all[
-            df_all[SCENARIO] == SCENARIO_LANGUAGE
+            df_all[SCENARIO] == LAN_SCENARIO
         ].copy()
 
         df_country = df_all[
-            df_all[SCENARIO] == SCENARIO_COUNTRY
+            df_all[SCENARIO] == COU_SCEANRIO
         ].copy()
 
         df_lang_nat = df_all[
-            df_all[SCENARIO] == SCENARIO_LAN_NAT
+            df_all[SCENARIO] == LAN_COU_SCENARIO
         ].copy()
 
         # Aggregate scenario scores
         language_agg = (
             df_language.groupby(
-                ["Country", "languages"]
+                [COUNTRY, LANGUAGE]
             )[per_col]
             .mean()
             .reset_index()
             .rename(columns={
-                per_col: "language_scenario_per"
+                per_col: "lan_per"
             })
         )
 
         country_agg = (
             df_country.groupby(
-                ["Country"]
+                [COUNTRY]
             )[per_col]
             .mean()
             .reset_index()
             .rename(columns={
-                per_col: "country_scenario_per"
+                per_col: "cou_per"
             })
         )
 
         lang_nat_agg = (
             df_lang_nat.groupby(
-                ["Country", "languages"]
+                [COUNTRY, LANGUAGE]
             )[per_col]
             .mean()
             .reset_index()
             .rename(columns={
-                per_col: "language_country_scenario_per"
+                per_col: "lan_cou_per"
             })
         )
 
         # Aggregate Rainbow Map values
         rainbow_agg = (
             df_all.groupby(
-                ["Country", "languages"]
+                [COUNTRY, LANGUAGE]
             )["Rainbow Map"]
             .mean()
             .reset_index()
@@ -736,19 +729,19 @@ def percentage_scenario_country():
         # Merge everything together
         merged = language_agg.merge(
             country_agg,
-            on="Country",
+            on=COUNTRY,
             how="left",
         )
 
         merged = merged.merge(
             lang_nat_agg,
-            on=["Country", "languages"],
+            on=[COUNTRY, LANGUAGE],
             how="left",
         )
 
         merged = merged.merge(
             rainbow_agg,
-            on=["Country", "languages"],
+            on=[COUNTRY, LANGUAGE],
             how="left",
         )
 
@@ -763,32 +756,32 @@ def percentage_scenario_country():
 
         sns.lineplot(
             data=merged,
-            x="Country",
-            y="language_scenario_per",
+            x=COUNTRY,
+            y="lan_per",
             marker="o",
-            label=SCENARIO_LABELS[SCENARIO_LANGUAGE],
+            label=SCENARIO_LABELS[LAN_SCENARIO],
         )
 
         sns.lineplot(
             data=merged,
-            x="Country",
-            y="country_scenario_per",
+            x=COUNTRY,
+            y="cou_per",
             marker="o",
-            label=SCENARIO_LABELS[SCENARIO_COUNTRY],
+            label=SCENARIO_LABELS[COU_SCEANRIO],
         )
 
         sns.lineplot(
             data=merged,
-            x="Country",
-            y="language_country_scenario_per",
+            x=COUNTRY,
+            y="lan_cou_per",
             marker="o",
-            label=SCENARIO_LABELS[SCENARIO_LAN_NAT],
+            label=SCENARIO_LABELS[LAN_COU_SCENARIO],
         )
 
         # Rainbow Map reference line
         sns.lineplot(
             data=merged,
-            x="Country",
+            x=COUNTRY,
             y="rainbow_map_score",
             marker="o",
             linestyle="--",
@@ -796,7 +789,7 @@ def percentage_scenario_country():
         )
 
         #plt.title(f"{test} Rainbow Meter Score (%) Across Scenarios")
-        #plt.xlabel("Country", fontsize= fontsize)
+        #plt.xlabel(COUNTRY, fontsize= fontsize)
         plt.xlabel(None)
         plt.margins(x=0.01) # Remove left/right spacing on x-axis
         plt.ylabel("Rainbow Meter Score (%)", fontsize= fontsize)
@@ -828,7 +821,7 @@ def percentage_model_country_distance():
         df = pd.read_csv(csv_path, sep=";", index_col=0)
 
         #df = df[df.index != "tot_distance"]
-        df = df.drop('avg_distance', axis=1)
+        df = df.drop(AVG, axis=1)
 
         figsize = (16, 4)
         rotation = 35
@@ -886,7 +879,7 @@ def percentage_model_country_distance():
         plt.close()
         print(f"Saved: {savefig}")
 
-# Generate Language × Country MAE heatmaps
+# Generate Language × country MAE heatmaps
 def mae_language_country():
 
     for test in [FACT, STANCE]:
@@ -905,8 +898,8 @@ def mae_language_country():
         # Create matrix
         pivot = (
             df.pivot_table(
-                index="language",
-                columns="country",
+                index=LANGUAGE,
+                columns=COUNTRY,
                 values="value",
                 aggfunc="mean"
             )
@@ -922,9 +915,9 @@ def mae_language_country():
             languages.remove("English")
             languages.insert(0, "English")
 
-        if "No Country" in countries:
-            countries.remove("No Country")
-            countries.insert(0, "No Country")
+        if "-" in countries:
+            countries.remove("-")
+            countries.insert(0, "-")
 
         pivot = pivot.loc[languages, countries]
 
@@ -951,9 +944,9 @@ def mae_language_country():
             }
         )
     
-        #plt.xlabel("Country", fontsize=14)
+        #plt.xlabel(COUNTRY, fontsize=14)
         #plt.xlabel(None)
-        #plt.ylabel("Language", fontsize=14)
+        #plt.ylabel(LANGUAGE, fontsize=14)
         #plt.ylabel(None)
         plt.xlabel("")
         plt.ylabel("")
@@ -986,6 +979,5 @@ mae_scenario_country()
 #Generate a lineplots of the percentage errors accross scenarios and countries
 percentage_scenario_country()
 percentage_model_country_distance()
-
 
 print(f"✅ Graphs Generated")

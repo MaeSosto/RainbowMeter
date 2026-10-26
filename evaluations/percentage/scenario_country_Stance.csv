@@ -1,4 +1,4 @@
-,Country,languages,language_scenario_per,country_scenario_per,language_country_scenario_per,rainbow_map_score
+,country,language,lan_per,cou_per,lan_cou_per,rainbow_map_score
 51,Russia,Russian,73.125,63.965999999999994,61.842,2.0
 4,Azerbaijan,Azerbaijani,66.941,64.07300000000001,62.561,2.25
 61,Turkey,Turkish,71.467,72.298,64.92,4.75

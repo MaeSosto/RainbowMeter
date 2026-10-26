@@ -1,25 +1,15 @@
-import pandas as pd
 import data
 import logging
 import torch
 import json
-import pdb
-import tqdm
 import os
+import re
 
-# =============================
 # Logging Configuration
-# =============================
 logger = logging.getLogger()
-#logging.basicConfig(filename='.log', encoding='utf-8', level=logging.DEBUG)
 logging.basicConfig(level=logging.INFO)
-# console = logging.StreamHandler()
-# console.setLevel(logging.INFO)
-# logger.addHandler(console)
 
-# =============================
 # Device Configuration
-# =============================
 if torch.backends.mps.is_available():
     device = torch.device('cpu')  # Temporarily using CPU over MPS
 elif torch.cuda.is_available():   
@@ -27,8 +17,6 @@ elif torch.cuda.is_available():
 else: 
     device = torch.device('cpu')
     
-#print(torch.cuda.is_available())
-#print(torch.cuda.get_device_name(0))
 
 torch.set_default_device(device)
 logger.info(f"Using device: {device}")
@@ -38,12 +26,9 @@ CRITERION_ID = "criterion_id"
 RAINBOW_MAP = "Rainbow Map"
 CATEGORY = "Category"
 SUBCATEGORY = "Subcategory"
-RAINBOW_MAP_DF = pd.read_csv("data/rainbow_map/rainbow_map.csv", delimiter=";", index_col="country_id")
-CRITERIA_WEIGHTS_DF = pd.read_csv("data/rainbow_map/criteria_weights.csv", delimiter=";", index_col=CRITERION_ID)
-RAINBOW_MAP_CATEGORIES = ["Equality & non-discrimination", "Family", "Hate crime & hate speech", "Legal gender recognition", "Intersex bodily integrity", "Civil society space", "Asylum"]
 with open("data/countries.json") as f:
     COUNTRIES_FILE = json.load(f)
-TOT_CRITERIA_NUM = (RAINBOW_MAP_DF.shape[1])-2
+RAINBOW_MAP_CATEGORIES = ["Equality & non-discrimination", "Family", "Hate crime & hate speech", "Legal gender recognition", "Intersex bodily integrity", "Civil society space", "Asylum"]
 
 #Countries
 NAME = "name"
@@ -51,29 +36,39 @@ ID = "country_id"
 LANGUAGES = "languages"
 LANGUAGES_CODE = "languages_code"
 
+#Evaluations and Grapohs
+COH = "Coherence"
+VAL = "val" 
+COH_VAL = "coh-val"
+EVALUATIONS_PATH = "evaluations"
+MAE = "MAE"
+PERCENTAGE = "percentage"
+GRAPHS_PATH = "graphs"
+AVG = "avg"
+
 #Rainbow Meter
 FACT = "Fact"
 SUPPORT = "Support"
 OPPOSITION = "Opposition"
 STANCE = "Stance"
 QUESTION_TYPES = [FACT, SUPPORT, OPPOSITION]
-STANCE = "Stance"
 YES = "yes"
 NO = "no"
 UNDEFINED = "undefined"
 RAINBOW_MAP = "Rainbow Map"
-COUNTRY = "Country"
-MODEL = "Model"
-SCENARIO = "Scenario"
+COUNTRY = "country"
+LANGUAGE = "language"
+MODEL = "model"
+SCENARIO = "scenario"
 
-SCENARIO_LANGUAGE = "language_scenario"
-SCENARIO_COUNTRY = "country_scenario"
-SCENARIO_LAN_NAT = "language_country_scenario"
-SCENARIOS = [SCENARIO_LANGUAGE, SCENARIO_COUNTRY, SCENARIO_LAN_NAT]
+LAN_SCENARIO = "lan"
+COU_SCEANRIO = "cou"
+LAN_COU_SCENARIO = "lan_cou"
+SCENARIOS = [LAN_SCENARIO, COU_SCEANRIO, LAN_COU_SCENARIO]
 SCENARIO_LABELS = {
-    SCENARIO_LANGUAGE: "Language",
-    SCENARIO_COUNTRY: "Country",
-    SCENARIO_LAN_NAT: "Language-Country"
+    LAN_SCENARIO: "Language",
+    COU_SCEANRIO: "Country",
+    LAN_COU_SCENARIO: "Language-Country"
 }
 
 #Create Project Folder Structure
@@ -83,7 +78,6 @@ for s in SCENARIOS:
     os.makedirs(f"{RAINBOW_METER}/{s}", exist_ok=True)
 
 RAINBOW_METER_DATA_PATH = "data/rainbow_meter"
-RAINBOW_METER_EN = pd.read_csv(f"{RAINBOW_METER_DATA_PATH}/{SCENARIO_LANGUAGE}/rainbow_meter_en.csv", sep=";", index_col=CRITERION_ID)
 
 ### MODEL LIST ###
 QWEN35_2 = "Qwen/Qwen3.5-2B" #HF
@@ -121,7 +115,7 @@ def get_languages_list():
     for country_name in COUNTRIES_FILE:
         for lang, code in zip(COUNTRIES_FILE[country_name][LANGUAGES], COUNTRIES_FILE[country_name][LANGUAGES_CODE]):
             if lang not in seen_languages:
-                languages_list.append({LANGUAGES: lang, LANGUAGES_CODE: code})
+                languages_list.append({LANGUAGE: lang, LANGUAGES_CODE: code})
                 seen_languages.add(lang)
     return languages_list
     

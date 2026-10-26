@@ -1,11 +1,11 @@
-from constants import *
-from models import *
+from lib.constants import *
+from lib.models import Model, model_translation, deepl_translation
+import pandas as pd
 import json
-import requests
-import random
+import tqdm
 logging.getLogger('deepl').setLevel(logging.WARNING)
 
-RAINBOW_METER_EN = pd.read_csv(f"{RAINBOW_METER_DATA_PATH}/{SCENARIO_LANGUAGE}/rainbow_meter_en.csv", sep=";", index_col=CRITERION_ID)
+RAINBOW_METER_EN = pd.read_csv(f"{RAINBOW_METER_DATA_PATH}/{LAN_SCENARIO}/rainbow_meter_en.csv", sep=";", index_col=CRITERION_ID)
 API_URL = "https://router.huggingface.co/hf-inference/models/sentence-transformers/all-MiniLM-L6-v2"
 NUM_SAMPLES_QUESTIONS = 3
 
@@ -38,14 +38,14 @@ def clean_translation(text):
     return max(filtered, key=len)
 
 #translate the English Rainbow Meter questions prompt from to all the other languages and populate the scenario folders nested in the data/rainbow_meter folder            
-def translate_rainbow_meter():
-    if MAIN_TRANSLATOR_MODEL == DEEPL and MODEL_MONTENEGRIN_EXCEPTION != "":
-        model_montenegrin = Model(MODEL_MONTENEGRIN_EXCEPTION)
-    if model_montenegrin.initialize_model():
-        logger.error("translate_rainbow_meter: failed to initialize montenegrin model")
-        return None
+def translate_rainbow_meter(main_model = DEEPL, exception_model = QWEN35_27):
+    if main_model == DEEPL and exception_model != "":
+        model_montenegrin = Model(exception_model)
+        if model_montenegrin.initialize_model():
+            logger.error("translate_rainbow_meter: failed to initialize montenegrin model")
+            return None
     
-    model = Model(MAIN_TRANSLATOR_MODEL)
+    model = Model(main_model)
     if model.initialize_model():
         logger.error("translate_rainbow_meter: failed to initialize main translation model")
         return None
@@ -72,9 +72,9 @@ def translate_rainbow_meter():
                 }
 
                 # Determine output path once
-                if scenario == SCENARIO_LANGUAGE:
+                if scenario == LAN_SCENARIO:
                     rm_path = f"{result_path}/rainbow_meter_{language_code}.csv"
-                elif scenario == SCENARIO_COUNTRY:
+                elif scenario == COU_SCEANRIO:
                     rm_path = f"{result_path}/rainbow_meter_{country_id}.csv"
                 else:
                     rm_path = f"{result_path}/rainbow_meter_{language_code}_{country_id}.csv"
@@ -91,18 +91,18 @@ def translate_rainbow_meter():
                         base_text = row[q_type].lower()
 
                         try:
-                            # Country only → no translation
-                            if scenario == SCENARIO_COUNTRY or language == "English":
+                            # country only → no translation
+                            if scenario == COU_SCEANRIO or language == "English":
                                 question = f"In {"the " if country_name == "United Kingdom" or country_name == "Netherlands" else ""}{country_name}, {base_text}"
                             else:
                                 # Build input text
-                                text = base_text if scenario == SCENARIO_LANGUAGE else f"In {country_name}, {base_text}"  # LANGUAGE + Country
+                                text = base_text if scenario == LAN_SCENARIO else f"In {country_name}, {base_text}"  # LANGUAGE + country
 
                                 # Translation logic
-                                if (language == "Montenegrin" or language_codes == "cnr") and MAIN_TRANSLATOR_MODEL == DEEPL and MODEL_MONTENEGRIN_EXCEPTION != "":
+                                if (language == "Montenegrin" or language_codes == "cnr") and main_model == DEEPL and exception_model != "":
                                     question = clean_translation(model_translation(model_montenegrin, text, language))
                                 else:
-                                    question = deepl_translation(model, text, language_code) if MAIN_TRANSLATOR_MODEL == DEEPL else model_translation(model, text, language) 
+                                    question = deepl_translation(model, text, language_code) if main_model == DEEPL else model_translation(model, text, language) 
                                 
                         except Exception as e:
                             logger.error(f"translate_rainbow_meter: {e}")
@@ -119,14 +119,14 @@ def translate_rainbow_meter():
                 break
 
 #translate the default prompt from English to all the other languages and populate the file prompt.json
-def translate_prompt():
-    if MAIN_TRANSLATOR_MODEL == DEEPL and MODEL_MONTENEGRIN_EXCEPTION != "":
-        model_montenegrin = Model(MODEL_MONTENEGRIN_EXCEPTION)
-    if model_montenegrin.initialize_model():
-        logger.error("translate_prompt: failed to initialize montenegrin model")
-        return None
+def translate_prompt(main_model = DEEPL, exception_model = QWEN35_27):
+    if main_model == DEEPL and exception_model != "":
+        model_montenegrin = Model(exception_model)
+        if model_montenegrin.initialize_model():
+            logger.error("translate_prompt: failed to initialize montenegrin model")
+            return None
     
-    model = Model(MAIN_TRANSLATOR_MODEL)
+    model = Model(main_model)
     if model.initialize_model():
         logger.error("translate_prompt: failed to initialize main translation model")
         return None
@@ -159,20 +159,11 @@ def translate_prompt():
                 prompt_json[language] = {}
                 prompt = prompt_json["English"]["prompt"]
                 
-                #for key, val in row_results["English"].items():
-                # if translation_model == DEEPL and language == "Montenegrin":
-                #     translation = model_translation(model_exception, prompt, language)
-                # el
-                # if MAIN_TRANSLATOR_MODEL == DEEPL:
-                #     translation = deepl_translation(model, prompt, language_code, "EN")
-                # else:
-                #     translation = model_translation(model, prompt, language)
-                
-                    # Translation logic
-                if (language == "Montenegrin" or language_code == "cnr") and MAIN_TRANSLATOR_MODEL == DEEPL and MODEL_MONTENEGRIN_EXCEPTION != "":
+                # Translation logic
+                if (language == "Montenegrin" or language_code == "cnr") and main_model == DEEPL and exception_model != "":
                     translation = model_translation(model_montenegrin, prompt, language)
                 else:
-                    translation = deepl_translation(model, prompt, language) if MAIN_TRANSLATOR_MODEL == DEEPL else model_translation(model, prompt, language) 
+                    translation = deepl_translation(model, prompt, language) if main_model == DEEPL else model_translation(model, prompt, language) 
                 
 
                 prompt_json[language]["prompt"] = translation
@@ -200,10 +191,10 @@ def translate_prompt():
                 with open("data/prompt.json", "w", encoding="utf-8") as f:
                     json.dump(prompt_json, f, indent=4, ensure_ascii=False)
     
-#Translate the prompt instructions
-MAIN_TRANSLATOR_MODEL = DEEPL
-# With TRANSLATION_MODEL = DEEPL this is necessary
-MODEL_MONTENEGRIN_EXCEPTION = QWEN35_27
+# #Translate the prompt instructions
+# main_model = DEEPL
+# # With TRANSLATION_MODEL = DEEPL this is necessary
+# exception_model = QWEN35_27
 
-translate_prompt()
-translate_rainbow_meter()
+# translate_prompt(main_model, exception_model)
+# translate_rainbow_meter(main_model, exception_model)

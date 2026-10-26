@@ -1,4 +1,4 @@
-Model;language_scenario_Fact;language_scenario_Stance;country_scenario_Fact;country_scenario_Stance;language_country_scenario_Fact;language_country_scenario_Stance;Fact_Average;Stance_Average
+model;lan_Fact;lan_Stance;cou_Fact;cou_Stance;lan_cou_Fact;lan_cou_Stance;Fact_avg;Stance_avg
 Qwen 2B;48;63;82;74;47;63;59;67
 Qwen 9B;51;75;44;82;46;72;47;76
 Qwen 27B;51;81;36;89;43;76;43;82

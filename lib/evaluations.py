@@ -1,23 +1,20 @@
-# Create data
-from constants import *
+from lib.constants import *
 import scipy.stats as stats
 import numpy as np
+import pandas as pd
 from collections import defaultdict
 from sklearn.metrics import mean_absolute_error as mae
 
+RAINBOW_MAP_DF = pd.read_csv("data/rainbow_map/scores.csv", delimiter=";", index_col="country_id")
+CRITERIA_WEIGHTS_DF = pd.read_csv("data/rainbow_map/criteria.csv", delimiter=";", index_col=CRITERION_ID)
+TOT_CRITERIA_NUM = (RAINBOW_MAP_DF.shape[1])-2
 WEIGHT_LIST = CRITERIA_WEIGHTS_DF["Weight"].values.astype(float).tolist()
 
-MODEL_PERFORMANCES_PATH = "model_performances"
-MAE = "MAE"
-PERCENTAGE = "percentage"
-EVALUATIONS_PATH = f"evaluations"
 os.makedirs(EVALUATIONS_PATH, exist_ok=True)
-MAE_PATH =f"{EVALUATIONS_PATH}/{MAE}/"
-os.makedirs(MAE_PATH, exist_ok=True)
-PERCENTAGE_PATH = f"{EVALUATIONS_PATH}/{PERCENTAGE}/" 
-os.makedirs(PERCENTAGE_PATH, exist_ok=True)
+os.makedirs(f"{EVALUATIONS_PATH}/{MAE}/", exist_ok=True)
+os.makedirs(f"{EVALUATIONS_PATH}/{PERCENTAGE}/" , exist_ok=True)
 for s in SCENARIOS:
-    os.makedirs(f"{EVALUATIONS_PATH}/{MODEL_PERFORMANCES_PATH}/{s}", exist_ok=True)
+    os.makedirs(f"{EVALUATIONS_PATH}/{COH_VAL}/{s}", exist_ok=True)
     
 def wilcoxon(group1, group2):
     return round(stats.wilcoxon(group1, group2).statistic.astype(float),2), round(stats.wilcoxon(group1, group2).pvalue.astype(float), 2)
@@ -60,15 +57,15 @@ def citeria_adjustment(rm_scores):
     return np.multiply(adjusted_scores, adjusted_weights).astype(float).tolist()
 
 #Creates a table with the model performances in matter of Coherence and Valitidy
-def model_performances():
+def calculate_coh_val():
 
     metrics = {
-        "fact_coh": "Fact Coherence",
-        "fact_val": "Fact Validity",
-        "fact_coh_val": "Fact Weight coherence by validity",
-        "stance_coh": "Stance Coherence",
-        "stance_val": "Stance Validity",
-        "stance_coh_val": "Stance Weight coherence by validity",
+        "fact_coh": f"{FACT} {COH}",
+        "fact_val": f"{FACT} {VAL}",
+        "fact_coh_val": f"{FACT} {COH_VAL}",
+        "stance_coh": f"{STANCE} {COH}",
+        "stance_val": f"{STANCE} {VAL}",
+        "stance_coh_val": f"{STANCE} {COH_VAL}",
     }
 
     for scenario in SCENARIOS:
@@ -86,7 +83,7 @@ def model_performances():
 
                 country_id = country_data[ID]
 
-                for idx, language in enumerate(country_data[LANGUAGES]):
+                for idx, language in enumerate(country_data[LANGUAGE]):
 
                     language_code = country_data[LANGUAGES_CODE][idx]
 
@@ -103,10 +100,10 @@ def model_performances():
                     means = existent_rm_df[list(metrics.values())].mean()
 
                     # Label according to scenario
-                    if scenario == SCENARIO_LANGUAGE:
+                    if scenario == LAN_SCENARIO:
                         label = language
 
-                    elif scenario == SCENARIO_COUNTRY:
+                    elif scenario == COU_SCEANRIO:
                         label = country_name
 
                     else:
@@ -136,9 +133,9 @@ def model_performances():
 
             # Add average column
             if "fact" in metric_key.lower():
-                avg_col = "Fact Average"
+                avg_col = "{FACT} {AVG}"
             else:
-                avg_col = "Stance Average"
+                avg_col = "{STANCE} {AVG}"
 
             df_metric[avg_col] = (
                 df_metric.mean(axis=1)
@@ -146,7 +143,7 @@ def model_performances():
             )
 
             # Save CSV
-            df_metric.to_csv(f"{EVALUATIONS_PATH}/{MODEL_PERFORMANCES_PATH}/{scenario}/{metric_key}.csv")
+            df_metric.to_csv(f"{EVALUATIONS_PATH}/{COH_VAL}/{scenario}/{metric_key}.csv")
             
 #Create a table with the grouped scores of MAE and percentages across model-scenario(lan and country) 
 def general_stats():
@@ -155,7 +152,7 @@ def general_stats():
         MODEL: [],
         SCENARIO: [],
         COUNTRY: [],
-        LANGUAGES: [],
+        LANGUAGE: [],
         FACT: [],
         STANCE: [],
         RAINBOW_MAP: [],
@@ -177,7 +174,7 @@ def general_stats():
                 country_id = country_data[ID]
             
                 #Iterate on every language and citizenship 
-                for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGES]):
+                for country_identity_num, language in enumerate(COUNTRIES_FILE[country_name][LANGUAGE]):
                     language = language
                     language_code = COUNTRIES_FILE[country_name][LANGUAGES_CODE][country_identity_num]
                 
@@ -193,7 +190,7 @@ def general_stats():
                     
                     percentage_results[MODEL].append(model_name)
                     percentage_results[SCENARIO].append(scenario)
-                    percentage_results[LANGUAGES].append(language)
+                    percentage_results[LANGUAGE].append(language)
                     percentage_results[COUNTRY].append(country_name)
                     
                     #Get the Rainbow Map real Scores of that country-lan
@@ -220,8 +217,8 @@ def general_stats():
                     wil1, wil2 = wilcoxon(rainbow_meter_stance_scores, rainbow_map_scores)
                     percentage_results[STANCE+" "+ "Statistics"].append(wil1) 
                     percentage_results[STANCE+" "+ "Pvalue"].append(wil2)
-                    percentage_results[FACT+" MAE"].append(round(mae(rainbow_map_scores, rainbow_meter_fact_scores), 2))
-                    percentage_results[STANCE+" MAE"].append(round(mae(rainbow_map_scores, rainbow_meter_stance_scores), 2))
+                    percentage_results[f"{FACT} {MAE}"].append(round(mae(rainbow_map_scores, rainbow_meter_fact_scores), 2))
+                    percentage_results[f"{STANCE} {MAE}"].append(round(mae(rainbow_map_scores, rainbow_meter_stance_scores), 2))
                         
     #Export Results
     results_df = pd.DataFrame(percentage_results)
@@ -230,9 +227,9 @@ def general_stats():
 #Return True if the results exists, otherwise False
 def get_rainbow_meter_file_answers(scenario, model_name, language_code = "", country_id = ""):
     result_path = f"{RAINBOW_METER}/{scenario}/{model_name}/"
-    if scenario == SCENARIO_LANGUAGE:
+    if scenario == LAN_SCENARIO:
         scenario_path = f"rm_answers_{language_code}.csv"
-    elif scenario == SCENARIO_COUNTRY:
+    elif scenario == COU_SCEANRIO:
         scenario_path = f"rm_answers_{country_id}.csv"
     else:
         scenario_path = f"rm_answers_{language_code}_{country_id}.csv"
@@ -270,12 +267,12 @@ def models_mae():
 
         # Iterate through models in fixed order
         for model in MODEL_LIST:
-            model_df = df[df["Model"] == model]
+            model_df = df[df[MODEL] == model]
 
             if model_df.empty:
                 continue
 
-            row = {"Model": MODEL_LABEL.get(model, model)}
+            row = {MODEL: MODEL_LABEL.get(model, model)}
 
             total_sig = 0
             total_n = 0
@@ -299,25 +296,25 @@ def models_mae():
                 total_n += n
                 maes.append(mae)
 
-            # Average column
+            # {AVG} column
             avg_mae = round(np.mean(maes), 2)
-            row["Average"] = (f"{avg_mae} {round(float(total_sig/total_n)*100, 0)}\\%")
+            row["{AVG}"] = (f"{avg_mae} {round(float(total_sig/total_n)*100, 0)}\\%")
             rows.append(row)
 
         # Create dataframe
         result_df = pd.DataFrame(rows)
 
         # Preserve ordering
-        result_df["Model"] = pd.Categorical(
-            result_df["Model"],
+        result_df[MODEL] = pd.Categorical(
+            result_df[MODEL],
             categories=ordered_models,
             ordered=True
         )
 
-        result_df = result_df.sort_values("Model")
+        result_df = result_df.sort_values(MODEL)
 
         # Reorder columns
-        result_df = result_df[["Model"] + SCENARIOS + ["Average"]]
+        result_df = result_df[[MODEL] + SCENARIOS + ["{AVG}"]]
 
         # Save CSV
         output_path = (f"{EVALUATIONS_PATH}/{MAE}/models_{test}_mae.csv")
@@ -341,20 +338,20 @@ def model_country_percentage():
     df = pd.read_csv(csv_path, sep=";")
 
     for test in [FACT, STANCE]:
-        # Average stance score for each model-country pair
+        # {AVG} stance score for each model-country pair
         stance_table = (
-            df.groupby(["Country", "Model"])[test]
+            df.groupby([COUNTRY, MODEL])[test]
             .mean()
             .reset_index()
         )
 
         # Replace model names with labels
-        stance_table["Model"] = stance_table["Model"].map(lambda x: MODEL_LABEL.get(x, x))
+        stance_table[MODEL] = stance_table[MODEL].map(lambda x: MODEL_LABEL.get(x, x))
 
         # Pivot models into columns
         pivot = stance_table.pivot(
-            index="Country",
-            columns="Model",
+            index=COUNTRY,
+            columns=MODEL,
             values=test
         )
 
@@ -371,7 +368,7 @@ def model_country_percentage():
 
         # Rainbow Map score per country
         rainbow_table = (
-            df.groupby("Country")["Rainbow Map"]
+            df.groupby(COUNTRY)["Rainbow Map"]
             .mean()
             .reset_index()
         )
@@ -379,18 +376,18 @@ def model_country_percentage():
         # Merge Rainbow Map with model scores
         final_table = rainbow_table.merge(
             pivot,
-            on="Country",
+            on=COUNTRY,
             how="left"
         )
         
-         # Average across model columns only
-        final_table["Average"] = final_table[existing_models].mean(
+         # {AVG} across model columns only
+        final_table["{AVG}"] = final_table[existing_models].mean(
             axis=1,
             skipna=True
         )
 
         # Sort by country name
-        final_table = final_table.sort_values("Country")
+        final_table = final_table.sort_values(COUNTRY)
 
         # Remove decimals
         numeric_cols = final_table.select_dtypes(include=["number"]).columns
@@ -428,13 +425,13 @@ def models_scenario_percentage():
         scenario_df = df[df[SCENARIO] == scenario].copy()
 
         # Replace model names with labels
-        scenario_df["Model"] = scenario_df["Model"].map(
+        scenario_df[MODEL] = scenario_df[MODEL].map(
             lambda x: MODEL_LABEL.get(x, x)
         )
 
         # Aggregate per model
         aggregated = (
-            scenario_df.groupby("Model")[["Fact", "Stance"]]
+            scenario_df.groupby(MODEL)[["{FACT}", "{STANCE}"]]
             .mean()
             .round(0)
             .astype("Int64")
@@ -444,8 +441,8 @@ def models_scenario_percentage():
         # Rename columns to include scenario
         aggregated.rename(
             columns={
-                "Fact": f"{scenario}_Fact",
-                "Stance": f"{scenario}_Stance",
+                "{FACT}": f"{scenario}_Fact",
+                "{STANCE}": f"{scenario}_Stance",
             },
             inplace=True
         )
@@ -456,7 +453,7 @@ def models_scenario_percentage():
         else:
             merged_df = merged_df.merge(
                 aggregated,
-                on="Model",
+                on=MODEL,
                 how="outer"
             )
 
@@ -464,14 +461,14 @@ def models_scenario_percentage():
     fact_cols = [c for c in merged_df.columns if c.endswith("_Fact")]
     stance_cols = [c for c in merged_df.columns if c.endswith("_Stance")]
 
-    merged_df["Fact_Average"] = (
+    merged_df["{FACT}_{AVG}"] = (
         merged_df[fact_cols]
         .mean(axis=1)
         .round(0)
         .astype("Int64")
     )
 
-    merged_df["Stance_Average"] = (
+    merged_df["{STANCE}_{AVG}"] = (
         merged_df[stance_cols]
         .mean(axis=1)
         .round(0)
@@ -479,13 +476,13 @@ def models_scenario_percentage():
     )
 
     # Preserve ordering
-    merged_df["Model"] = pd.Categorical(
-        merged_df["Model"],
+    merged_df[MODEL] = pd.Categorical(
+        merged_df[MODEL],
         categories=ordered_models,
         ordered=True
     )
 
-    merged_df = merged_df.sort_values("Model")
+    merged_df = merged_df.sort_values(MODEL)
 
     output_path = (
         f"{EVALUATIONS_PATH}/{PERCENTAGE}/"
@@ -512,34 +509,34 @@ def scenario_country_mae():
             df[SCENARIO] == scenario
         ].copy()
 
-        if scenario == SCENARIO_LANGUAGE:
+        if scenario == LAN_SCENARIO:
             grouped = (
-                scenario_df.groupby(LANGUAGES)[
-                    ["Fact MAE", "Stance MAE"]
+                scenario_df.groupby(LANGUAGE)[
+                    ["{FACT} MAE", "{STANCE} MAE"]
                 ]
                 .mean()
                 .reset_index()
             )
             # map language → all countries it appears in
             lang_country_map = df[
-                [LANGUAGES, COUNTRY]
+                [LANGUAGE, COUNTRY]
             ].drop_duplicates()
             aggregated = grouped.merge(
                 lang_country_map,
-                on=LANGUAGES,
+                on=LANGUAGE,
                 how="left"
             )
 
-        elif scenario == SCENARIO_COUNTRY:
+        elif scenario == COU_SCEANRIO:
             grouped = (
                 scenario_df.groupby(COUNTRY)[
-                    ["Fact MAE", "Stance MAE"]
+                    ["{FACT} MAE", "{STANCE} MAE"]
                 ]
                 .mean()
                 .reset_index()
             )
             country_lang_map = df[
-                [LANGUAGES, COUNTRY]
+                [LANGUAGE, COUNTRY]
             ].drop_duplicates()
             aggregated = grouped.merge(
                 country_lang_map,
@@ -550,9 +547,9 @@ def scenario_country_mae():
         else:
             aggregated = (
                 scenario_df.groupby(
-                    [LANGUAGES, COUNTRY]
+                    [LANGUAGE, COUNTRY]
                 )[
-                    ["Fact MAE", "Stance MAE"]
+                    [f"{FACT} {MAE}", f"{STANCE} {MAE}"]
                 ]
                 .mean()
                 .reset_index()
@@ -560,19 +557,19 @@ def scenario_country_mae():
 
         aggregated = aggregated.rename(
             columns={
-                LANGUAGES: "language",
-                COUNTRY: "country",
-                "Fact MAE": f"{scenario}_Fact_MAE",
-                "Stance MAE": f"{scenario}_Stance_MAE",
+                LANGUAGE: LANGUAGE,
+                COUNTRY: COUNTRY,
+                f"{FACT} {MAE}": f"{scenario}_{FACT}_{MAE}",
+                f"{STANCE} {MAE}": f"{scenario}_{STANCE}_{MAE}",
             }
         )
 
         aggregated = aggregated[
             [
-                "language",
-                "country",
-                f"{scenario}_Fact_MAE",
-                f"{scenario}_Stance_MAE",
+                LANGUAGE,
+                COUNTRY,
+                f"{scenario}_{FACT}_{MAE}",
+                f"{scenario}_{STANCE}_{MAE}",
             ]
         ]
 
@@ -581,7 +578,7 @@ def scenario_country_mae():
         else:
             merged_df = merged_df.merge(
                 aggregated,
-                on=["language", "country"],
+                on=[LANGUAGE, COUNTRY],
                 how="outer"
             )
 
@@ -597,14 +594,14 @@ def scenario_country_mae():
 
     # ---- Final column order ----
     final_cols = [
-        "language",
-        "country",
-        "language_scenario_Fact_MAE",
-        "language_scenario_Stance_MAE",
-        "country_scenario_Fact_MAE",
-        "country_scenario_Stance_MAE",
-        "language_country_scenario_Fact_MAE",
-        "language_country_scenario_Stance_MAE"
+        LANGUAGE, 
+        COUNTRY,
+        f"{LAN_SCENARIO}_{FACT}_{MAE}",
+        f"{LAN_SCENARIO}_{STANCE}_{MAE}",
+        f"{COU_SCEANRIO}_{FACT}_{MAE}",
+        f"{COU_SCEANRIO}_{STANCE}_{MAE}",
+        f"{LAN_COU_SCENARIO}_{FACT}_{MAE}",
+        f"{LAN_COU_SCENARIO}_{STANCE}_{MAE}"
     ]
 
     merged_df = merged_df[final_cols]
@@ -631,29 +628,29 @@ def language_country_mae():
 
     df = pd.read_csv(csv_path, sep=";")
     for test in [FACT, STANCE]:
-        value_col = f"{test} MAE"
+        value_col = f"{test} {MAE}"
         rows = []
 
         for scenario in SCENARIOS:
             scenario_df = df[df[SCENARIO] == scenario].copy()
 
             # ---------- Language Scenario ----------
-            if scenario == SCENARIO_LANGUAGE:
+            if scenario == LAN_SCENARIO:
                 grouped = (
-                    scenario_df.groupby(LANGUAGES)[value_col]
+                    scenario_df.groupby(LANGUAGE)[value_col]
                     .mean()
                     .reset_index()
                 )
 
                 for _, row in grouped.iterrows():
                     rows.append({
-                        "language": row[LANGUAGES],
-                        "country": "No Country",
+                        LANGUAGE: row[LANGUAGE],
+                        COUNTRY: "-",
                         "value": round(row[value_col], 2)
                     })
 
-            # ---------- Country Scenario ----------
-            elif scenario == SCENARIO_COUNTRY:
+            # ---------- country Scenario ----------
+            elif scenario == COU_SCEANRIO:
                 grouped = (
                     scenario_df.groupby(COUNTRY)[value_col]
                     .mean()
@@ -662,23 +659,23 @@ def language_country_mae():
 
                 for _, row in grouped.iterrows():
                     rows.append({
-                        "language": "English",
-                        "country": row[COUNTRY],
+                        LANGUAGE: "English",
+                        COUNTRY: row[COUNTRY],
                         "value": round(row[value_col], 2)
                     })
 
-            # ---------- Language-Country Scenario ----------
+            # ---------- Language-country Scenario ----------
             else:
                 grouped = (
-                    scenario_df.groupby([LANGUAGES, COUNTRY])[value_col]
+                    scenario_df.groupby([LANGUAGE, COUNTRY])[value_col]
                     .mean()
                     .reset_index()
                 )
 
                 for _, row in grouped.iterrows():
                     rows.append({
-                        "language": row[LANGUAGES],
-                        "country": row[COUNTRY],
+                        LANGUAGE: row[LANGUAGE],
+                        COUNTRY: row[COUNTRY],
                         "value": round(row[value_col], 2)
                     })
 
@@ -698,16 +695,16 @@ def evaluate_country_model_distance():
 
         df = pd.read_csv(csv_path, sep=";")
 
-        model_cols = [c for c in df.columns if c not in ["Country", "Rainbow Map"]]
+        model_cols = [c for c in df.columns if c not in [COUNTRY, "Rainbow Map"]]
 
         diff_df = df.copy()
         for col in model_cols:
             diff_df[col] = (df[col] - df["Rainbow Map"])#.abs()
 
-        model_matrix = diff_df.set_index("Country")[model_cols].T
+        model_matrix = diff_df.set_index(COUNTRY)[model_cols].T
 
         #model_matrix["tot_distance"] = model_matrix.sum(axis=1)
-        model_matrix["avg_distance"] = model_matrix.iloc[:, :-1].mean(axis=1)
+        model_matrix[AVG] = model_matrix.iloc[:, :-1].mean(axis=1)
         out_path = f"{EVALUATIONS_PATH}/percentage/model_country_distance_{test}.csv"
         model_matrix.to_csv(out_path, sep=";")
 
@@ -715,7 +712,7 @@ def evaluate_country_model_distance():
 
 #All the results are in the results/evaluations folder
 #Creates a table with the model performances in matter of Coherence and Valitidy
-model_performances()
+calculate_coh_val()
 
 #Create a table with the grouped scores of MAE and percentages across model-scenario(lan and country) 
 general_stats()

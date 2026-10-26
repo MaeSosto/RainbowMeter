@@ -1,4 +1,4 @@
-language;country;language_scenario_Fact_MAE;language_scenario_Stance_MAE;country_scenario_Fact_MAE;country_scenario_Stance_MAE;language_country_scenario_Fact_MAE;language_country_scenario_Stance_MAE
+language;country;lan_Fact_MAE;lan_Stance_MAE;cou_Fact_MAE;cou_Stance_MAE;lan_cou_Fact_MAE;lan_cou_Stance_MAE
 Albanian;Albania;0.62;0.72;0.53;0.68;0.53;0.67
 Albanian;Kosovo;0.62;0.72;0.53;0.78;0.53;0.69
 Albanian;North Macedonia;0.62;0.72;0.56;0.8;0.54;0.73

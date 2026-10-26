@@ -1,44 +1,44 @@
 language;country;value
-Albanian;No Country;0.62
-Armenian;No Country;0.63
-Azerbaijani;No Country;0.55
-Belarusian;No Country;0.66
-Bokmål;No Country;0.63
-Bosnian;No Country;0.56
-Bulgarian;No Country;0.6
-Catalan;No Country;0.65
-Croatian;No Country;0.58
-Czech;No Country;0.63
-Danish;No Country;0.6
-Dutch;No Country;0.61
-English;No Country;0.63
-Estonian;No Country;0.56
-Finnish;No Country;0.62
-French;No Country;0.65
-Georgian;No Country;0.6
-German;No Country;0.63
-Greek;No Country;0.68
-Hungarian;No Country;0.66
-Icelandic;No Country;0.63
-Irish;No Country;0.63
-Italian;No Country;0.71
-Latvian;No Country;0.61
-Lithuanian;No Country;0.67
-Luxembourgish;No Country;0.54
-Macedonian;No Country;0.63
-Maltese;No Country;0.73
-Montenegrin;No Country;0.55
-Polish;No Country;0.62
-Portuguese;No Country;0.58
-Romanian;No Country;0.65
-Russian;No Country;0.65
-Serbian;No Country;0.61
-Slovak;No Country;0.6
-Slovene;No Country;0.65
-Spanish;No Country;0.61
-Swedish;No Country;0.62
-Turkish;No Country;0.51
-Ukrainian;No Country;0.62
+Albanian;-;0.62
+Armenian;-;0.63
+Azerbaijani;-;0.55
+Belarusian;-;0.66
+Bokmål;-;0.63
+Bosnian;-;0.56
+Bulgarian;-;0.6
+Catalan;-;0.65
+Croatian;-;0.58
+Czech;-;0.63
+Danish;-;0.6
+Dutch;-;0.61
+English;-;0.63
+Estonian;-;0.56
+Finnish;-;0.62
+French;-;0.65
+Georgian;-;0.6
+German;-;0.63
+Greek;-;0.68
+Hungarian;-;0.66
+Icelandic;-;0.63
+Irish;-;0.63
+Italian;-;0.71
+Latvian;-;0.61
+Lithuanian;-;0.67
+Luxembourgish;-;0.54
+Macedonian;-;0.63
+Maltese;-;0.73
+Montenegrin;-;0.55
+Polish;-;0.62
+Portuguese;-;0.58
+Romanian;-;0.65
+Russian;-;0.65
+Serbian;-;0.61
+Slovak;-;0.6
+Slovene;-;0.65
+Spanish;-;0.61
+Swedish;-;0.62
+Turkish;-;0.51
+Ukrainian;-;0.62
 English;Albania;0.53
 English;Andorra;0.46
 English;Armenia;0.35

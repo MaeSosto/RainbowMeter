@@ -1,4 +1,4 @@
-Country;Rainbow Map;Qwen 2B;Qwen 9B;Qwen 27B;LLaMA 3B;LLaMA 8B;LLaMA 70B;DeepSeek;Sonnet;GPT;Gemini;Average
+country;Rainbow Map;Qwen 2B;Qwen 9B;Qwen 27B;LLaMA 3B;LLaMA 8B;LLaMA 70B;DeepSeek;Sonnet;GPT;Gemini;avg
 Albania;41;68;70;79;63;66;72;78;75;84;59;71
 Andorra;43;66;78;84;60;71;73;79;82;84;59;74
 Armenia;9;67;73;79;60;59;71;77;62;87;55;69

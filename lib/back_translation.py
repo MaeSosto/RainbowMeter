@@ -1,11 +1,12 @@
-from constants import *
-from models import *
-from langdetect import detect
-from langdetect import DetectorFactory
-from lingua import Language, LanguageDetectorBuilder
+from lib.constants import *
+from lib.models import *
+from lingua import LanguageDetectorBuilder
 import random
+import requests
+import tqdm
+import pandas as pd
 
-DetectorFactory.seed = 0
+RAINBOW_METER_EN = pd.read_csv(f"{RAINBOW_METER_DATA_PATH}/{LAN_SCENARIO}/rainbow_meter_en.csv", sep=";", index_col=CRITERION_ID)
 SIMILARITY_API = "https://router.huggingface.co/hf-inference/models/sentence-transformers/all-MiniLM-L6-v2"
 NUM_SAMPLES_QUESTIONS = 3
 
@@ -15,12 +16,12 @@ if api_key is None:
 else:
     DEEPL_TRANSLATOR = deepl.DeepLClient("your-api-key")
     
-def detect_language(text):
-    result = DEEPL_TRANSLATOR.translate_text(
-        text,
-        target_lang="EN-GB"
-    )
-    return result.detected_source_lang
+# def detect_language(text):
+#     result = DEEPL_TRANSLATOR.translate_text(
+#         text,
+#         target_lang="EN-GB"
+#     )
+#     return result.detected_source_lang
 
 #Clean the given text
 def clean_translation(text):
@@ -52,7 +53,7 @@ def clean_translation(text):
 
 def load_create_question_list(languages_list):
     # Load or create question list
-    questions_path = f"data/questions.json"
+    questions_path = f"data/bt_questions.json"
     if os.path.exists(questions_path):
         with open(questions_path, "r", encoding="utf-8") as f:
             questions_list = json.load(f)
@@ -65,14 +66,14 @@ def load_create_question_list(languages_list):
             json.dump(questions_list, f, ensure_ascii=False, indent=2)
 
     # Load or create dataframe
-    return ["model"] + [lang[LANGUAGES] for lang in languages_list] + ["avg_score"], questions_list
+    return ["model"] + [lang[LANGUAGES] for lang in languages_list] + [AVG], questions_list
     
 # Calculate the similarity score using the embedding model "sentence-transformers/paraphrase-MiniLM-L6v2."
 # Given two sentences, it return the similarity score (between 0 and 1)
 def similarity_test(original, translated):
     try:
         response = requests.post(SIMILARITY_API, headers = {
-                "Authorization": f"Bearer {os.getenv('HF_TOKEN')}"
+                "Authorization": f"Bearer {os.getenv('HF_API_KEY')}"
             }, json={
         "inputs": {
             "source_sentence": original,
@@ -91,7 +92,7 @@ def similarity_test(original, translated):
         return None
         
 #Given a model, a question list and a language, it calculates the average similarity scores between the original questions from the question list and their translated version in the provided language
-def test_system_translation(model, question_list, language):
+def calculate_similarity(model, question_list, language):
     similarity = []
     for question in question_list:
         translation = ""
@@ -130,7 +131,7 @@ def test_system_translation(model, question_list, language):
                         translation_attempt = translation_attempt + 1
                 
         except Exception as X:
-            logger.error(f"test_system_translation: {X}")
+            logger.error(f"calculate_similarity: {X}")
             return None
         
         if translation == "" or "" == back_transation or not well_translated:
@@ -141,8 +142,7 @@ def test_system_translation(model, question_list, language):
     return sum(similarity)/ len(similarity)
 
 #Create the back_translation file, which contatins the average scores of back translation similarity test of every model in every language
-def test_systems_translation_abilities(model_list):
-
+def back_translation_test(model_name):
     languages_list = []
     seen_languages = set()
 
@@ -158,45 +158,44 @@ def test_systems_translation_abilities(model_list):
     csv_path = f"data/back_translation.csv"
     df = pd.read_csv(csv_path, sep=";") if os.path.exists(csv_path) else pd.DataFrame(columns=columns)
 
-    for model_name in model_list:
-        model_label = MODEL_LABEL[model_name]
+    model_label = MODEL_LABEL[model_name]
 
-        # Ensure model row exists
-        if model_label not in df["model"].values:
-            new_row = {col: None for col in df.columns}
-            new_row["model"] = model_label
-            df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+    # Ensure model row exists
+    if model_label not in df["model"].values:
+        new_row = {col: None for col in df.columns}
+        new_row["model"] = model_label
+        df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
 
-        row_idx = df.index[df["model"] == model_label][0]
+    row_idx = df.index[df["model"] == model_label][0]
 
-        # --------- Skip model if all languages + avg_score are already filled ---------
-        lang_values = df.loc[row_idx, [lang[LANGUAGES] for lang in languages_list]]
-        avg_value = df.loc[row_idx, "avg_score"]
-        if lang_values.notna().all() and pd.notna(avg_value):
-            print(f"Skipping {model_label}: all languages already completed")
+    # --------- Skip model if all languages + avg_score are already filled ---------
+    lang_values = df.loc[row_idx, [lang[LANGUAGES] for lang in languages_list]]
+    avg_value = df.loc[row_idx, AVG]
+    if lang_values.notna().all() and pd.notna(avg_value):
+        print(f"Skipping {model_label}: all languages already completed")
+        return
+
+    model = Model(model_name)
+    error = model.initialize_model()
+    if error:
+        return
+
+    for language in tqdm.tqdm(languages_list, desc=f"Testing {model_label}"):
+        # Skip already computed languages
+        if pd.notna(df.loc[row_idx, language[LANGUAGES]]):
             continue
+        if language['languages_code'] == 'en':
+            score = 1
+        else:
+            score = calculate_similarity(model, questions_list, language)
+        df.loc[row_idx, language[LANGUAGES]] = round(score, 2) if score is not None else 0.0
 
-        model = Model(model_name)
-        error = model.initialize_model()
-        if error:
-            continue
-
-        for language in tqdm.tqdm(languages_list, desc=f"Testing {model_label}"):
-            # Skip already computed languages
-            if pd.notna(df.loc[row_idx, language[LANGUAGES]]):
-                continue
-            if language['languages_code'] == 'en':
-                score = 1
-            else:
-                score = test_system_translation(model, questions_list, language)
-            df.loc[row_idx, language[LANGUAGES]] = round(score, 2) if score is not None else 0.0
-
-            # Compute the average score, without considering Montenegrin
-            lang_scores = pd.to_numeric(df.loc[row_idx, [lang[LANGUAGES] for lang in languages_list if lang[LANGUAGES] != 'Montenegrin']], errors="coerce")
-            df.loc[row_idx, "avg_score"] = round(lang_scores.mean(), 2)
-            
-            df.to_csv(csv_path, sep=";", index=False)
+        # Compute the average score, without considering Montenegrin
+        lang_scores = pd.to_numeric(df.loc[row_idx, [lang[LANGUAGES] for lang in languages_list if lang[LANGUAGES] != 'Montenegrin']], errors="coerce")
+        df.loc[row_idx, AVG] = round(lang_scores.mean(), 2)
+        
+        df.to_csv(csv_path, sep=";", index=False)
 
 # #Check models ability to support the langauges bit back translation 
-model_list = [LLAMA31_70]
-test_systems_translation_abilities(model_list)
+# model_name = LLAMA31_70
+# test_systems_translation_abilities(model_name)

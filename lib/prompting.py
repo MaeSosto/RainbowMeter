@@ -1,11 +1,30 @@
-from constants import *
-from models import *
+from lib.constants import *
+from lib.models import *
 import numpy as np
+import tqdm
+import pandas as pd
 
 MAX_NUM_ANSWERS = 5 #Num answer we want for each criterion-stance
-COHERENCE = "Coherence"
-VALIDITY = "Validity"
-COH_VAL_SCORE = "Weight coherence by validity" 
+RAINBOW_MAP_DF = pd.read_csv("data/rainbow_map/scores.csv", delimiter=";", index_col="country_id")
+CRITERIA_WEIGHTS_DF = pd.read_csv("data/rainbow_map/criteria.csv", delimiter=";", index_col=CRITERION_ID)
+TOT_CRITERIA_NUM = (RAINBOW_MAP_DF.shape[1])-2
+
+def model_scores(answers):
+    valid_mapping = {YES: 1, NO: 0}
+    valid_answers = [valid_mapping[a] for a in answers if a in valid_mapping]
+    n_valid = len(valid_answers)
+    
+    if n_valid == 0:
+        coherence = float('nan')  # undefined
+        validity = 0.0
+        final_score = 0.0
+    else:
+        p = sum(valid_answers) / n_valid
+        coherence = 1 - 4 * p * (1 - p)
+        validity = n_valid / MAX_NUM_ANSWERS
+        final_score = coherence * validity
+    
+    return coherence, validity, final_score
 
 class Rainbow_Meter:
     #Return True if the Rainbow map is complete, otherwise return False (and therefore needs to be calculated)
@@ -46,7 +65,7 @@ class Rainbow_Meter:
                     
                     for idx, row in tqdm.tqdm(rainbow_meter_questions[num_answers:].iterrows(), 
                                             total=TOT_CRITERIA_NUM-num_answers, 
-                                            desc=f"🔄 {self.model_name} - {self.scenario} : {f'{language} ({self.language_code})' if self.scenario == SCENARIO_LANGUAGE else f'{self.country_name} ({self.country_id})' if self.scenario == SCENARIO_COUNTRY else f'{self.country_name} in {self.language} ({self.language_code}_{self.country_id})'}",
+                                            desc=f"🔄 {self.model_name} - {self.scenario} : {f'{language} ({self.language_code})' if self.scenario == LAN_SCENARIO else f'{self.country_name} ({self.country_id})' if self.scenario == COU_SCEANRIO else f'{self.country_name} in {self.language} ({self.language_code}_{self.country_id})'}",
                                             leave= False
                                             ):
                         rainbow_meter[CRITERION_ID].append(int(idx))
@@ -72,9 +91,9 @@ class Rainbow_Meter:
                             if question_type in {FACT, OPPOSITION}:
                                 coherence, validity, final_score = model_scores(question_responses)
                                 prefix = FACT if question_type == FACT else STANCE
-                                rainbow_meter[f"{prefix} {COHERENCE}"].append(round(coherence, 2))
-                                rainbow_meter[f"{prefix} {VALIDITY}"].append(round(validity, 2))
-                                rainbow_meter[f"{prefix} {COH_VAL_SCORE}"].append(round(final_score, 2))
+                                rainbow_meter[f"{prefix} {COH}"].append(round(coherence, 2))
+                                rainbow_meter[f"{prefix} {VAL}"].append(round(validity, 2))
+                                rainbow_meter[f"{prefix} {COH_VAL}"].append(round(final_score, 2))
                                 
                         #Export Rainbow Meter
                         rainbow_meter_df = pd.DataFrame(rainbow_meter)
@@ -84,9 +103,9 @@ class Rainbow_Meter:
     #Get the Rainbow Meter file based on the scenario
     def get_raimbow_meter_questions(self):
         result_path = f"{RAINBOW_METER_DATA_PATH}/{self.scenario}/"
-        if self.scenario == SCENARIO_LANGUAGE:
+        if self.scenario == LAN_SCENARIO:
             scenario_path = f"rainbow_meter_{self.language_code}.csv"
-        elif self.scenario == SCENARIO_COUNTRY:
+        elif self.scenario == COU_SCEANRIO:
             scenario_path = f"rainbow_meter_{self.country_id}.csv"
         else:
             scenario_path = f"rainbow_meter_{self.language_code}_{self.country_id}.csv"
@@ -105,18 +124,18 @@ class Rainbow_Meter:
             SUPPORT: [], 
             OPPOSITION: [],
             f"{STANCE}" : [],
-            f"{FACT} {COHERENCE}" : [],
-            f"{FACT} {VALIDITY}" : [],
-            f"{FACT} {COH_VAL_SCORE}" : [],
-            f"{STANCE} {COHERENCE}" : [],
-            f"{STANCE} {VALIDITY}" : [],
-            f"{STANCE} {COH_VAL_SCORE}"  : [],
+            f"{FACT} {COH}" : [],
+            f"{FACT} {VAL}" : [],
+            f"{FACT} {COH_VAL}" : [],
+            f"{STANCE} {COH}" : [],
+            f"{STANCE} {VAL}" : [],
+            f"{STANCE} {COH_VAL}"  : [],
         }
         
         result_path = f"{RAINBOW_METER}/{self.scenario}/{self.model_name}/"
-        if self.scenario == SCENARIO_LANGUAGE:
+        if self.scenario == LAN_SCENARIO:
             scenario_path = f"rm_answers_{self.language_code}.csv"
-        elif self.scenario == SCENARIO_COUNTRY:
+        elif self.scenario == COU_SCEANRIO:
             scenario_path = f"rm_answers_{self.country_id}.csv"
         else:
             scenario_path = f"rm_answers_{self.language_code}_{self.country_id}.csv"
@@ -136,20 +155,20 @@ class Rainbow_Meter:
                 rainbow_meter[SUPPORT].append(row[SUPPORT])
                 rainbow_meter[OPPOSITION].append(row[OPPOSITION])
                 rainbow_meter[f"{STANCE}"].append(row[f"{STANCE}"])
-                rainbow_meter[f"{FACT} {COHERENCE}"].append(row[f"{FACT} {COHERENCE}"])
-                rainbow_meter[f"{FACT} {VALIDITY}"].append(row[f"{FACT} {VALIDITY}"])
-                rainbow_meter[f"{FACT} {COH_VAL_SCORE}"].append(row[f"{FACT} {COH_VAL_SCORE}"])
-                rainbow_meter[f"{STANCE} {COHERENCE}"].append(row[f"{STANCE} {COHERENCE}"])
-                rainbow_meter[f"{STANCE} {VALIDITY}"].append(row[f"{STANCE} {VALIDITY}"])
-                rainbow_meter[f"{STANCE} {COH_VAL_SCORE}"].append(row[f"{STANCE} {COH_VAL_SCORE}"])
+                rainbow_meter[f"{FACT} {COH}"].append(row[f"{FACT} {COH}"])
+                rainbow_meter[f"{FACT} {VAL}"].append(row[f"{FACT} {VAL}"])
+                rainbow_meter[f"{FACT} {COH_VAL}"].append(row[f"{FACT} {COH_VAL}"])
+                rainbow_meter[f"{STANCE} {COH}"].append(row[f"{STANCE} {COH}"])
+                rainbow_meter[f"{STANCE} {VAL}"].append(row[f"{STANCE} {VAL}"])
+                rainbow_meter[f"{STANCE} {COH_VAL}"].append(row[f"{STANCE} {COH_VAL}"])
             return rainbow_meter, df.shape[0]
 
     #Return True if the results exists, otherwise False
     def rm_result_exist(self):
         result_path = f"{RAINBOW_METER}/{self.scenario}/{self.model_name}/"
-        if self.scenario == SCENARIO_LANGUAGE:
+        if self.scenario == LAN_SCENARIO:
             scenario_path = f"rm_answers_{self.language_code}.csv"
-        elif self.scenario == SCENARIO_COUNTRY:
+        elif self.scenario == COU_SCEANRIO:
             scenario_path = f"rm_answers_{self.country_id}.csv"
         else:
             scenario_path = f"rm_answers_{self.language_code}_{self.country_id}.csv"
@@ -158,9 +177,9 @@ class Rainbow_Meter:
     #Export and save the Rainbow Meter
     def export_rm_result(self, rainbow_meter):
         result_path = f"{RAINBOW_METER}/{self.scenario}/{self.model_name}/"
-        if self.scenario == SCENARIO_LANGUAGE:
+        if self.scenario == LAN_SCENARIO:
             scenario_path = f"rm_answers_{self.language_code}.csv"
-        elif self.scenario == SCENARIO_COUNTRY:
+        elif self.scenario == COU_SCEANRIO:
             scenario_path = f"rm_answers_{self.country_id}.csv"
         else:
             scenario_path = f"rm_answers_{self.language_code}_{self.country_id}.csv"
@@ -196,31 +215,13 @@ class Rainbow_Meter:
             data = json.load(f)
 
         #The only case where the questions are in english as default
-        language = "English" if self.scenario == SCENARIO_COUNTRY else self.language
+        language = "English" if self.scenario == COU_SCEANRIO else self.language
         lang_data = data[language]
         
         return f"{criterion}\n{lang_data.get('prompt')}", [lang_data.get(YES), lang_data.get(NO)]
 
-def model_scores(answers):
-    valid_mapping = {YES: 1, NO: 0}
-    valid_answers = [valid_mapping[a] for a in answers if a in valid_mapping]
-    n_valid = len(valid_answers)
-    
-    if n_valid == 0:
-        coherence = float('nan')  # undefined
-        validity = 0.0
-        final_score = 0.0
-    else:
-        p = sum(valid_answers) / n_valid
-        coherence = 1 - 4 * p * (1 - p)
-        validity = n_valid / MAX_NUM_ANSWERS
-        final_score = coherence * validity
-    
-    return coherence, validity, final_score
-    
-
 #the results are in the results/rainbow_meter folder
-model_list = MODEL_LIST
-for model in model_list:
-    rainbow_meter = Rainbow_Meter(model)
+# model_list = MODEL_LIST
+# for model in model_list:
+#     Rainbow_Meter(model)
 

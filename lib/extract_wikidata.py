@@ -1,8 +1,6 @@
 import json
 import sys
 from collections import OrderedDict
-
-from deep_translator import GoogleTranslator
 from SPARQLWrapper import JSON, SPARQLWrapper
 
 ENDPOINT_URL = "https://query.wikidata.org/sparql"
@@ -117,7 +115,7 @@ for country in countries_langs:
     #     print(country, countries_langs[country]["citizenships"])
 
 
-#print(countries_langs)
+print("✅ Languages and countries retrieved")
 print("Total languages found: ", len(count_languages))
 print("Total unique languages found: ", len(set(count_languages)))
 print("Total countries: ", len(countries_langs))

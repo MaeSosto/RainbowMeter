@@ -1,17 +1,12 @@
-from constants import *
-import requests
-from openai import OpenAI
-#import google.generativeai as genai
-#from google import genai
-#import google.generativeai as genai
-from google import genai
-from google.genai import types
-import re
-import deepl
+from lib.constants import *
 from transformers import AutoTokenizer, AutoProcessor, AutoModelForImageTextToText, pipeline
+from transformers import GenerationConfig
+from google import genai
 from dotenv import load_dotenv
 from anthropic import Anthropic
-from transformers import GenerationConfig
+from google.genai import types
+from openai import OpenAI
+import deepl
 
 os.environ["HF_HUB_DISABLE_XET"] = "1"
 os.environ["HF_HUB_ENABLE_HF_TRANSFER"] = "0"
@@ -71,9 +66,9 @@ class Model:
 
     def _initialize_GoogleGenAI(self):
         logger.setLevel(logging.ERROR) 
-        api_key = os.getenv('GENAI_API_KEY')
+        api_key = os.getenv('GOOGLE_CLOUD_API_KEY')
         if api_key is None:
-            logger.error(f"⚠️ GENAI_API_KEY is missing")
+            logger.error(f"⚠️ GOOGLE_CLOUD_API_KEY is missing")
             return True
         # genai.configure(api_key=api_key) 
         # self.client = genai.GenerativeModel(self.model_name)
@@ -225,7 +220,7 @@ class Model:
                     eos_token_id=self.auto_processor.tokenizer.eos_token_id
                 )
                 answer = self.auto_processor.decode(outputs[0][inputs["input_ids"].shape[-1]:])
-                answer = extract_model_answer(answer)
+                answer = self.extract_model_answer(answer)
             else:
                 generation_config = GenerationConfig(
                     do_sample=True,
@@ -238,7 +233,7 @@ class Model:
                     generation_config=generation_config,
                 )
                 answer = answer[0]["generated_text"]
-                answer = extract_model_answer(answer)
+                answer = self.extract_model_answer(answer)
                 
             return answer            
         except Exception as X:
@@ -254,22 +249,22 @@ class Model:
             logger.error(X)
             return None
 
-def extract_model_answer(text):
-    # Split on the chatbot marker
-    parts = text.split("<|CHATBOT_TOKEN|>")
-    if len(parts) < 2:
-        answer = text
-    else:
-        answer = parts[-1]
+    def extract_model_answer(self, text):
+        # Split on the chatbot marker
+        parts = text.split("<|CHATBOT_TOKEN|>")
+        if len(parts) < 2:
+            answer = text
+        else:
+            answer = parts[-1]
 
-    # Remove specific unwanted ending patterns
-    answer = answer.replace("<|im_end|>\n<|endoftext|>", "")
-    answer = answer.replace("<|im_end|><|endoftext|>", "")
+        # Remove specific unwanted ending patterns
+        answer = answer.replace("<|im_end|>\n<|endoftext|>", "")
+        answer = answer.replace("<|im_end|><|endoftext|>", "")
 
-    # Remove any remaining special tokens like <|...|>
-    answer = re.sub(r"<\|.*?\|>", "", answer)
+        # Remove any remaining special tokens like <|...|>
+        answer = re.sub(r"<\|.*?\|>", "", answer)
 
-    return answer.strip()
+        return answer.strip()
 
 
 #Translate the given text in the specified language using DeepL    
